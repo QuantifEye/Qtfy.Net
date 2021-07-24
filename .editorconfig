@@ -1,0 +1,57 @@
+# editorconfig.org
+root = true
+
+[*]
+indent_style             = space
+indent_size              = 2
+end_of_line              = lf
+charset                  = utf-8
+trim_trailing_whitespace = true
+insert_final_newline     = true
+
+
+[*.cs]
+indent_size = 4
+
+# "elements must be ordered by access"
+# justification: this rule results in utility methods being far from where they are used.
+dotnet_diagnostic.SA1202.severity = silent
+
+# "Provide a method named xxx as a friendly alternate for operator op_xxx"
+# This may be added back in the futute
+dotnet_diagnostic.CA2225.severity = silent
+
+# partial elements should be documented.
+dotnet_diagnostic.SA1601.severity = silent
+
+# This code base is intended ofr a mathematically mature audiance.
+# unneccessary parentheses impede readability.
+dotnet_diagnostic.SA1407.severity = silent
+
+# extranious null checks
+# caveat emptor.
+# dotnet_diagnostic.CA1062.severity = silent
+
+# satic members should appear befor non-static members
+# this results in utility methods being far from where they are used.
+dotnet_diagnostic.SA1204.severity = silent
+
+# array is a multidimensional array. Replace it with a jagged array if possible.
+# numeric libraries use multidimensional arrays.
+dotnet_diagnostic.CA1814.severity = silent
+
+# Exception type System.IndexOutOfRangeException is reserved by the runtime.
+# dotnet_diagnostic.CA2201.severity = silent
+
+# creates an exception of type IndexOutOfRangeException,
+# an exception type that should not be raised in a property.
+# If this exception instance might be raised, use a different exception type, convert this property into a method,
+# or change this property's logic so that it no longer raises an exception.
+dotnet_diagnostic.CA1065.severity = silent
+
+# Readonly fields should appear before non-readonly fields
+# affects cache locality
+dotnet_diagnostic.SA1214.severity = silent
+
+# Some classes are implemented as stateles singletons, and require instance members.
+dotnet_diagnostic.CA1822.severity = silent

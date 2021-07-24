@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>$(QtfyTargetFramework)</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Qtfy.Net/Qtfy.Net.csproj" />
+  </ItemGroup>
+</Project>

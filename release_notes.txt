@@ -1,0 +1,6 @@
+v1.0.0
+========================================================================================
+- added type BigRational
+  - an arbitrary precision rational number
+- added static class Combinatorics
+  - added methods that allow the iteration of a power set.

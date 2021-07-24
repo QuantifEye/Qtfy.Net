@@ -1,0 +1,20 @@
+language: csharp
+mono: none
+dotnet: 5.0
+dist: bionic
+git:
+  depth: false
+
+branches:
+  only:
+  - master
+  - dev
+
+script: bash build/travis_build_and_test.sh
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: bash build/travis_deploy.sh $NUGETAPIKEY $NUGETSOURCE
+  on:
+    branch: master

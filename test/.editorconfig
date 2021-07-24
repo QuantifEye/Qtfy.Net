@@ -1,0 +1,28 @@
+
+[*.cs]
+
+## documentation in test assembly not enforced
+
+# missing xml comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = silent
+
+# elements must be documented
+dotnet_diagnostic.SA1600.severity = silent
+
+#partial elements must be documented
+dotnet_diagnostic.SA1601.severity = silent
+
+# property documentation must have value text
+dotnet_diagnostic.SA1610.severity = silent
+
+# element parameters must be documented
+dotnet_diagnostic.SA1611.severity = silent
+
+# parameter spans multiple lines
+dotnet_diagnostic.SA1118.severity = silent
+
+# validate parameter parameter is non-null before using it
+dotnet_diagnostic.CA1062.severity = silent
+
+# test case classes are instantiated by unit test framefork
+dotnet_diagnostic.CA1812.severity = silent

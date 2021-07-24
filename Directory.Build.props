@@ -1,0 +1,55 @@
+<Project>
+
+  <!-- the most recently-released version. last thing to change before performing release. -->
+  <PropertyGroup>
+    <Version>0.0.1</Version>
+    <QtfyTargetFramework>net5.0</QtfyTargetFramework>
+  </PropertyGroup>
+
+  <!-- general properties -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <!-- packaging properties, if the repository becomes a suite of dlls, some or all
+       of these properties need to move to the individual project files. -->
+  <PropertyGroup>
+    <Description>The .Net core library for the QuantifEye project.</Description>
+    <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildThisFileDirectory)/release_notes.txt"))</PackageReleaseNotes>
+    <PackageTags>arbitrary;extended;precision;arithmetic;bigrational;combinatorics;number;numerics;rational</PackageTags>
+    <AssemblyTitle>Qtfy.Net</AssemblyTitle>
+    <Authors>Qtfy Authers</Authors>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/QuantifEye/Qtfy.Net</RepositoryUrl>
+  </PropertyGroup>
+
+  <!-- properties to get sourceLink and debug symbols to work. -->
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <!-- dotnet code analysis and style cop settings -->
+  <PropertyGroup>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <EnableNetAnalysers>true</EnableNetAnalysers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json" />
+  </ItemGroup>
+
+</Project>
