@@ -6,10 +6,8 @@
 
 namespace Qtfy.Net.Numerics.Tests.Distributions
 {
-    using System;
     using NUnit.Framework;
     using Qtfy.Net.Numerics.Distributions;
-    using static System.Math;
 
     public class StandardNormalDistributionTests
     {
@@ -47,14 +45,6 @@ namespace Qtfy.Net.Numerics.Tests.Distributions
         public void TestQuantileFunction(double probability, double expected)
         {
             Assert.AreEqual(expected, StandardNormalDistribution.Instance.Quantile(probability));
-            Assert.AreEqual(expected, StandardNormalDistribution.QuantileFunction(probability));
-        }
-
-        [Test]
-        public void TestInvalidQuantileFunction()
-        {
-            Assert.Throws<ArgumentException>(() => _ = StandardNormalDistribution.QuantileFunction(BitDecrement(0d)));
-            Assert.Throws<ArgumentException>(() => _ = StandardNormalDistribution.QuantileFunction(BitIncrement(1d)));
         }
 
         [TestCase(1.0, -1.41893853320467274178045451569708215806201947)]

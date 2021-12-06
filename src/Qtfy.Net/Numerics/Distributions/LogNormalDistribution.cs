@@ -120,61 +120,9 @@ namespace Qtfy.Net.Numerics.Distributions
         /// <inheritdoc />
         public double CumulativeDistribution(double x)
         {
-            return CumulativeDistributionFunctionImpl(x, this.Mu, this.Sigma);
-        }
-
-        /// <summary>
-        /// The cumulative distribution function for the log-normal distribution.
-        /// </summary>
-        /// <param name="x">
-        /// The point at which to evaluate the function.
-        /// </param>
-        /// <param name="mu">
-        /// The mu parameter of the related normal distribution.
-        /// </param>
-        /// <param name="sigma">
-        /// The sigma parameter of the related normal distribution.
-        /// </param>
-        /// <returns>
-        /// The probability that a random variable is less than or equal to <paramref name="x"/>.
-        /// </returns>
-        /// <exception cref="ArgumentException">
-        /// If <paramref name="mu"/> is infinite or nan.
-        /// If <paramref name="sigma"/> is infinite or nan.
-        /// If <paramref name="sigma"/> is less than or equal to zero.
-        /// </exception>
-        public static double CumulativeDistributionFunction(double x, double mu, double sigma)
-        {
-            NormalDistribution.ValidateParameters(mu, sigma);
-            return CumulativeDistributionFunctionImpl(x, mu, sigma);
-        }
-
-        /// <summary>
-        /// The cumulative distribution function for the log-normal distribution, i.e.
-        /// private backend to function before.
-        /// </summary>
-        /// <param name="x">
-        /// The point at which to evaluate the function.
-        /// </param>
-        /// <param name="mu">
-        /// The mu parameter of the related normal distribution.
-        /// </param>
-        /// <param name="sigma">
-        /// The sigma parameter of the related normal distribution.
-        /// </param>
-        /// <returns>
-        /// The probability that a random variable is less than or equal to <paramref name="x"/>.
-        /// </returns>
-        /// <exception cref="ArgumentException">
-        /// If <paramref name="mu"/> is infinite or nan.
-        /// If <paramref name="sigma"/> is infinite or nan.
-        /// If <paramref name="sigma"/> is less than or equal to zero.
-        /// </exception>
-        private static double CumulativeDistributionFunctionImpl(double x, double mu, double sigma)
-        {
             return x <= 0d
                 ? 0d
-                : FusedMultiplyAdd(Erf((Log(x) - mu) / (Constants.SqrtTwo * sigma)), 0.5, 0.5);
+                : FusedMultiplyAdd(Erf((Log(x) - this.Mu) / (Constants.SqrtTwo * this.Sigma)), 0.5, 0.5);
         }
     }
 }

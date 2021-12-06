@@ -27,36 +27,5 @@ namespace Qtfy.Net.Numerics
         {
             return (T[])self.Clone();
         }
-
-        /// <summary>
-        /// Checks if the values in left are equal to the corresponding value in right.
-        /// Note that NaN values in corresponding positions are treated as considered unequal.
-        /// </summary>
-        /// <param name="left">
-        /// The first array.
-        /// </param>
-        /// <param name="right">
-        /// The second array.
-        /// </param>
-        /// <returns>
-        /// An indication of the values in the arrays are equal.
-        /// </returns>
-        internal static bool ValueEquals(double[] left, double[] right)
-        {
-            if (left.Length != right.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < left.Length; ++i)
-            {
-                if (left[i] != right[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
     }
 }

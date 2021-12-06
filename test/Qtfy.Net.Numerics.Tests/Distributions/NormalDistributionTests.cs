@@ -57,7 +57,6 @@ namespace Qtfy.Net.Numerics.Tests.Distributions
         public void TestQuantile(double mu, double sigma, double probability, double expected)
         {
             IsClose(expected, new NormalDistribution(mu, sigma).Quantile(probability));
-            IsClose(expected, NormalDistribution.QuantileFunction(probability, mu, sigma));
         }
 
         [TestCase(0, 1, -0.1)]
@@ -96,7 +95,6 @@ namespace Qtfy.Net.Numerics.Tests.Distributions
         public void TestCumulativeDistribution(double mu, double sigma, double x, double expected)
         {
             IsClose(expected, new NormalDistribution(mu, sigma).CumulativeDistribution(x));
-            IsClose(expected, NormalDistribution.CumulativeDistributionFunction(x, mu, sigma));
         }
     }
 }

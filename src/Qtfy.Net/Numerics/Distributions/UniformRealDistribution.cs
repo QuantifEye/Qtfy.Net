@@ -102,53 +102,8 @@ namespace Qtfy.Net.Numerics.Distributions
         /// <inheritdoc />
         public double CumulativeDistribution(double x)
         {
-            return CumulativeDistributionFunctionImpl(x, this.Min, this.Max);
-        }
-
-        /// <summary>
-        /// The cumulative distribution function for the continuous uniform distribution.
-        /// </summary>
-        /// <param name="x">
-        /// The value at which to evaluate the function.
-        /// </param>
-        /// <param name="min">
-        /// The minimum parameter value of the distribution.
-        /// </param>
-        /// <param name="max">
-        /// The parameter value of the distribution.
-        /// </param>
-        /// <returns>
-        /// The probability that a random variable is less than or equal to <paramref name="x"/>.
-        /// </returns>
-        /// <exception cref="ArgumentException">
-        /// If <paramref name="min"/> is infinite or nan.
-        /// If <paramref name="max"/> is infinite or nan.
-        /// or if <paramref name="min"/> is greater-than-or-equal-to <paramref name="max"/>.
-        /// </exception>
-        public static double CumulativeDistributionFunction(double x, double min, double max)
-        {
-            ValidateParameters(min, max);
-            return CumulativeDistributionFunctionImpl(x, min, max);
-        }
-
-        /// <summary>
-        /// The cumulative distribution function for the continuous uniform distribution, i.e.
-        /// private backend to the function before.
-        /// </summary>
-        /// <param name="x">
-        /// The value at which to evaluate the function.
-        /// </param>
-        /// <param name="min">
-        /// The minimum parameter value of the distribution.
-        /// </param>
-        /// <param name="max">
-        /// The parameter value of the distribution.
-        /// </param>
-        /// <returns>
-        /// The probability that a random variable is less than or equal to <paramref name="x"/>.
-        /// </returns>
-        private static double CumulativeDistributionFunctionImpl(double x, double min, double max)
-        {
+            var min = this.Min;
+            var max = this.Max;
             if (x <= min)
             {
                 return 0d;

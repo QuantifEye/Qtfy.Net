@@ -92,13 +92,6 @@ namespace Qtfy.Net.Numerics.Random.SeedSequences
             }
         }
 
-        /// <summary>
-        /// Private backend to function before.
-        /// </summary>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="bufferLenght">The buffer lenght.</param>
-        /// <param name="seeds">The seeds.</param>
-        /// <param name="seedSize">The seed size.</param>
         private static unsafe void GenerateImpl(uint* buffer, uint bufferLenght, uint* seeds, uint seedSize)
         {
             unchecked

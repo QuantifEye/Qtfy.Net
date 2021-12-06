@@ -40,7 +40,6 @@ namespace Qtfy.Net.Numerics.Tests.Distributions
         public void TestCumulativeDistribution(double x, double probability)
         {
             Assert.AreEqual(probability, Distribution.CumulativeDistribution(x));
-            Assert.AreEqual(probability, StandardUniformDistribution.CumulativeDistributionFunction(x));
         }
 
         [TestCase(0.5, 1d)]

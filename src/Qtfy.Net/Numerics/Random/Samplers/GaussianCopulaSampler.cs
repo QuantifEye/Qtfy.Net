@@ -30,7 +30,7 @@ namespace Qtfy.Net.Numerics.Random.Samplers
         /// The Cholesky factorization of the correlation matrix.
         /// </param>
         /// <param name="order">
-        /// The order variable.
+        /// The size of rows (or columns of the original correlation matrix).
         /// </param>
         private GaussianCopulaSampler(IRandomNumberEngine engine, double[] choleskyFactor, int order)
         {
@@ -41,7 +41,7 @@ namespace Qtfy.Net.Numerics.Random.Samplers
         }
 
         /// <summary>
-        /// Gets the length of the arrays <see cref="GetNext"/> returns.
+        /// Gets the length of the array <see cref="GetNext"/> returns.
         /// </summary>
         public int Length { get; }
 
@@ -54,11 +54,11 @@ namespace Qtfy.Net.Numerics.Random.Samplers
             this.standardNormalSampler.Fill(normals);
             unsafe
             {
-                fixed (double* fPin = this.choleskyFactor, nPin = normals, rPin = result)
+                fixed (double* cPin = this.choleskyFactor, nPin = normals, rPin = result)
                 {
                     var r = rPin;
                     var rEnd = rPin + resultSize;
-                    Multiply(fPin, nPin, rPin, rEnd);
+                    Multiply(cPin, nPin, rPin, rEnd);
                     do
                     {
                         *r = StandardNormalDistribution.CumulativeDistributionFunction(*r);

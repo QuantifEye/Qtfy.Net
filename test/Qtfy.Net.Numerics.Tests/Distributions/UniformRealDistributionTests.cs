@@ -103,7 +103,6 @@ namespace Qtfy.Net.Numerics.Tests.Distributions
         public void TestCumulativeDistribution(double min, double max, double x, double expected)
         {
             IsClose(expected, new UniformRealDistribution(min, max).CumulativeDistribution(x));
-            IsClose(expected, UniformRealDistribution.CumulativeDistributionFunction(x, min, max));
         }
     }
 }

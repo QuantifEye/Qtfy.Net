@@ -115,7 +115,6 @@ namespace Qtfy.Net.Numerics.Tests.Distributions
         public void TestCumulativeDistribution(double mu, double sigma, double x, double expected)
         {
             IsClose(expected, new LogNormalDistribution(mu, sigma).CumulativeDistribution(x));
-            IsClose(expected, LogNormalDistribution.CumulativeDistributionFunction(x, mu, sigma));
         }
     }
 }

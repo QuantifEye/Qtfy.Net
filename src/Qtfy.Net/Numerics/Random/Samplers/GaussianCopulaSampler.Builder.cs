@@ -11,8 +11,8 @@ namespace Qtfy.Net.Numerics.Random.Samplers
     public sealed partial class GaussianCopulaSampler
     {
         /// <summary>
-        /// An object that is able to create <see cref="MultivariateNormalSampler"/>s with the
-        /// same mean vector and covariance matrix, but with different <see cref="IRandomNumberEngine"/>s.
+        /// An object that is able to create <see cref="GaussianCopulaSampler"/>s with the
+        /// same covariance matrix, but with different <see cref="IRandomNumberEngine"/>s.
         /// </summary>
         public sealed class Builder
         {

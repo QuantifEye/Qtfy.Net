@@ -42,20 +42,6 @@ namespace Qtfy.Net.Numerics.Distributions
         /// <inheritdoc />
         public double CumulativeDistribution(double x)
         {
-            return CumulativeDistributionFunction(x);
-        }
-
-        /// <summary>
-        /// The cumulative distribution function of the standard uniform distribution.
-        /// </summary>
-        /// <param name="x">
-        /// The value at which to evaluate the function.
-        /// </param>
-        /// <returns>
-        /// The probability that a random variable is less than or equal to <paramref name="x"/>.
-        /// </returns>
-        public static double CumulativeDistributionFunction(double x)
-        {
             if (x <= 0d)
             {
                 return 0d;

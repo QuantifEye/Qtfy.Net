@@ -30,7 +30,7 @@ namespace Qtfy.Net.Numerics
             1.4142135623730950488016887242096980785696718753769480731766797379907324784621070388503875343276415727;
 
         /// <summary>
-        /// The natural logarithm of two multiplied by two.
+        /// The natural logarithm of two multiplied by two. That is <c>ln(2) * 2</c>.
         /// </summary>
         public const double TwoLnTwo =
             1.386294361119890618834464242916353136151000268720510508241360018986787243939389431211726653992837375;

@@ -75,23 +75,6 @@ namespace Qtfy.Net.Numerics.Distributions
         /// </exception>
         public double Quantile(double probability)
         {
-            return QuantileFunction(probability);
-        }
-
-        /// <summary>
-        /// Calculates the quantile of function of the distribution.
-        /// </summary>
-        /// <param name="probability">
-        /// The value at which to evaluate the function.
-        /// </param>
-        /// <returns>
-        /// The required quantile of the standard normal distribution.
-        /// </returns>
-        /// <exception cref="ArgumentException">
-        /// If <paramref name="probability"/> is not in range [0, 1].
-        /// </exception>
-        public static double QuantileFunction(double probability)
-        {
             if (probability >= 0d && probability <= 1d)
             {
                 return Constants.SqrtTwo * SpecialFunctions.ErfInv(Math.FusedMultiplyAdd(2d, probability, -1d));

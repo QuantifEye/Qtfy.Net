@@ -14,15 +14,6 @@ namespace Qtfy.Net.Numerics
     /// </summary>
     public static partial class SpecialFunctions
     {
-        /// <summary>
-        /// Help function for approximating the inverse error function on a certain interval, see Erf function below.
-        /// </summary>
-        /// <param name="z">
-        /// The point at which to evaluate the help function.
-        /// </param>
-        /// <returns>
-        /// A double value used in the inverse Erf function.
-        /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static double ErfInvImplA(double z)
         {
@@ -83,15 +74,6 @@ namespace Qtfy.Net.Numerics
             return n / d;
         }
 
-        /// <summary>
-        /// Help function for approximating the inverse error function on a certain interval, see Erf function below.
-        /// </summary>
-        /// <param name="z">
-        /// The point at which to evaluate the help function.
-        /// </param>
-        /// <returns>
-        /// A double value used in the inverse Erf function.
-        /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static double ErfInvImplB(double z)
         {
@@ -152,15 +134,6 @@ namespace Qtfy.Net.Numerics
             return n / d;
         }
 
-        /// <summary>
-        /// Help function for approximating the inverse error function on a certain interval, see Erf function below.
-        /// </summary>
-        /// <param name="z">
-        /// The point at which to evaluate the help function.
-        /// </param>
-        /// <returns>
-        /// A double value used in the inverse Erf function.
-        /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static double ErfInvImplC(double z)
         {
@@ -224,15 +197,6 @@ namespace Qtfy.Net.Numerics
             return n / d;
         }
 
-        /// <summary>
-        /// Help function for approximating the inverse error function on a certain interval, see Erf function below.
-        /// </summary>
-        /// <param name="z">
-        /// The point at which to evaluate the help function.
-        /// </param>
-        /// <returns>
-        /// A double value used in the inverse Erf function.
-        /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static double ErfInvImplD(double z)
         {
@@ -287,15 +251,6 @@ namespace Qtfy.Net.Numerics
             return n / d;
         }
 
-        /// <summary>
-        /// Help function for approximating the inverse error function on a certain interval, see Erf function below.
-        /// </summary>
-        /// <param name="z">
-        /// The point at which to evaluate the help function.
-        /// </param>
-        /// <returns>
-        /// A double value used in the inverse Erf function.
-        /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static double ErfInvImplE(double z)
         {
@@ -350,15 +305,6 @@ namespace Qtfy.Net.Numerics
             return n / d;
         }
 
-        /// <summary>
-        /// Help function for approximating the inverse error function on a certain interval, see Erf function below.
-        /// </summary>
-        /// <param name="z">
-        /// The point at which to evaluate the help function.
-        /// </param>
-        /// <returns>
-        /// A double value used in the inverse Erf function.
-        /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static double ErfInvImplF(double z)
         {
@@ -410,15 +356,6 @@ namespace Qtfy.Net.Numerics
             return n / d;
         }
 
-        /// <summary>
-        /// Help function for approximating the inverse error function on a certain interval, see Erf function below.
-        /// </summary>
-        /// <param name="z">
-        /// The point at which to evaluate the help function.
-        /// </param>
-        /// <returns>
-        /// A double value used in the inverse Erf function.
-        /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static double ErfInvImplG(double z)
         {
