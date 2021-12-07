@@ -1,8 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>$(QtfyTargetFramework)</TargetFramework>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="MathNet.Numerics" />
-  </ItemGroup>
 </Project>

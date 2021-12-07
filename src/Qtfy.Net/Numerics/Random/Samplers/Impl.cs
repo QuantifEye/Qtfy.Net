@@ -7,7 +7,6 @@
 namespace Qtfy.Net.Numerics.Random.Samplers
 {
     using System;
-    using MathNet.Numerics.LinearAlgebra;
 
     /// <summary>
     /// Implementation functions for samplers.
@@ -38,7 +37,7 @@ namespace Qtfy.Net.Numerics.Random.Samplers
         {
             CheckDimensions(covarianceMatrix);
             CheckCovarianceValues(covarianceMatrix);
-            return FactorMatrix(covarianceMatrix);
+            return PackedCholeskyDecomposition(covarianceMatrix);
         }
 
         /// <summary>
@@ -66,36 +65,73 @@ namespace Qtfy.Net.Numerics.Random.Samplers
         {
             CheckDimensions(correlationMatrix);
             CheckCorrelationValues(correlationMatrix);
-            return FactorMatrix(correlationMatrix);
+            return PackedCholeskyDecomposition(correlationMatrix);
         }
 
         /// <summary>
-        /// Performs a Cholesky decomposition.
+        /// Performs the cholesky decomposition of the matrix, and returns it in packed  lower triangular form.
         /// </summary>
-        /// <returns>
-        /// The result of the Cholesky decomposition stored in a packed triangular array.
-        /// </returns>
         /// <param name="matrix">
-        /// The matrix to be factored.
+        /// The matrix to factor.
         /// </param>
-        /// <exception cref="ArgumentNullException">If <paramref name="matrix"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentException">If <paramref name="matrix"/> is not a square matrix.</exception>
-        /// <exception cref="ArgumentException">If <paramref name="matrix"/> is not positive definite.</exception>
-        private static double[] FactorMatrix(double[,] matrix)
+        /// <returns>
+        /// The row major lower triangular matrix data of the decomposition.
+        /// </returns>
+        private static double[] PackedCholeskyDecomposition(double[,] matrix)
         {
-            var cov = Matrix<double>.Build.DenseOfArray(matrix);
-            var rows = cov.RowCount;
-            var factor = cov.Cholesky().Factor;
-            var result = new double[(rows * (rows + 1)) / 2];
-            for (int r = 0, d = 0; r < rows; ++r)
+            unsafe
             {
-                for (var c = 0; c <= r; ++c, ++d)
+                var order = matrix.GetLength(0);
+                var result = new double[order * (order + 1) / 2];
+                fixed (double* m = matrix, r = result)
                 {
-                    result[d] = factor[r, c];
+                    PackedCholeskyDecompositionImpl(m, r, order);
                 }
-            }
 
-            return result;
+                return result;
+            }
+        }
+
+        private static unsafe void PackedCholeskyDecompositionImpl(double* matrix, double* result, int order)
+        {
+            nint i, j, k;
+            double* outputRowJ, inputRow, outputRowI;
+            double sum;
+
+            outputRowI = result;
+            for (i = 0; i < order; i++)
+            {
+                inputRow = matrix + order * i;
+                outputRowI += i;
+                outputRowJ = result;
+                for (j = 0; j < i; j++)
+                {
+                    outputRowJ += j;
+                    sum = 0.0;
+                    for (k = 0; k < j; k++)
+                    {
+                        sum += outputRowI[k] * outputRowJ[k];
+                    }
+
+                    outputRowI[j] = 1.0 / outputRowJ[j] * (*inputRow - sum);
+                    ++inputRow;
+                }
+
+                outputRowJ += i;
+                sum = 0.0;
+                for (k = 0; k < i; k++)
+                {
+                    sum += outputRowI[k] * outputRowJ[k];
+                }
+
+                sum = Math.Sqrt(*inputRow - sum);
+                if (sum <= 0d || !double.IsFinite(sum))
+                {
+                    throw new ArgumentException("expected positive definite matrix.");
+                }
+
+                outputRowI[i] = sum;
+            }
         }
 
         /// <summary>
