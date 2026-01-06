@@ -4,6 +4,8 @@
 bin/
 obj/
 
+.DS_Store
+
 coverage
 packages
 

@@ -4,77 +4,76 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Distributions
+namespace Qtfy.Net.Numerics.Distributions;
+
+using System;
+
+/// <summary>
+/// A standard uniform distribution. That is a continuous uniform distribution on [0, 1].
+/// </summary>
+public class StandardUniformDistribution : IContinuousDistribution
 {
-    using System;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StandardUniformDistribution"/> class.
+    /// </summary>
+    private StandardUniformDistribution()
+    {
+    }
 
     /// <summary>
-    /// A standard uniform distribution. That is a continuous uniform distribution on [0, 1].
+    /// Gets the singleton instance of this distribution.
     /// </summary>
-    public class StandardUniformDistribution : IContinuousDistribution
+    public static StandardUniformDistribution Instance { get; } = new ();
+
+    /// <inheritdoc />
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="probability"/> is not in range [0, 1].
+    /// </exception>
+    public double Quantile(double probability)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StandardUniformDistribution"/> class.
-        /// </summary>
-        private StandardUniformDistribution()
+        if (probability >= 0d && probability <= 1d)
         {
+            return probability;
         }
 
-        /// <summary>
-        /// Gets the singleton instance of this distribution.
-        /// </summary>
-        public static StandardUniformDistribution Instance { get; } = new ();
+        throw new ArgumentException("invalid probability");
+    }
 
-        /// <inheritdoc />
-        /// <exception cref="ArgumentException">
-        /// If <paramref name="probability"/> is not in range [0, 1].
-        /// </exception>
-        public double Quantile(double probability)
+    /// <inheritdoc />
+    public double CumulativeDistribution(double x)
+    {
+        if (x <= 0d)
         {
-            if (probability >= 0d && probability <= 1d)
-            {
-                return probability;
-            }
-
-            throw new ArgumentException("invalid probability");
+            return 0d;
         }
 
-        /// <inheritdoc />
-        public double CumulativeDistribution(double x)
+        if (x >= 1d)
         {
-            if (x <= 0d)
-            {
-                return 0d;
-            }
-
-            if (x >= 1d)
-            {
-                return 1d;
-            }
-
-            return x;
+            return 1d;
         }
 
-        /// <inheritdoc />
-        public double Density(double x)
-        {
-            if (double.IsNaN(x))
-            {
-                return double.NaN;
-            }
+        return x;
+    }
 
-            return x >= 0d && x <= 1d ? 1d : 0d;
+    /// <inheritdoc />
+    public double Density(double x)
+    {
+        if (double.IsNaN(x))
+        {
+            return double.NaN;
         }
 
-        /// <inheritdoc />
-        public double DensityLn(double x)
-        {
-            if (double.IsNaN(x))
-            {
-                return double.NaN;
-            }
+        return x >= 0d && x <= 1d ? 1d : 0d;
+    }
 
-            return x >= 0 && x <= 1d ? 0d : double.NegativeInfinity;
+    /// <inheritdoc />
+    public double DensityLn(double x)
+    {
+        if (double.IsNaN(x))
+        {
+            return double.NaN;
         }
+
+        return x >= 0 && x <= 1d ? 0d : double.NegativeInfinity;
     }
 }

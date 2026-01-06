@@ -4,60 +4,59 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests.Distributions
+namespace Qtfy.Net.Numerics.Tests.Distributions;
+
+using System;
+using NUnit.Framework;
+using Qtfy.Net.Numerics.Distributions;
+
+internal sealed class StandardUniformDistributionTests
 {
-    using System;
-    using NUnit.Framework;
-    using Qtfy.Net.Numerics.Distributions;
+    private static readonly StandardUniformDistribution Distribution = StandardUniformDistribution.Instance;
 
-    public class StandardUniformDistributionTests
+    [TestCase(1.0)]
+    [TestCase(0.0)]
+    [TestCase(0.5)]
+    [TestCase(0.123)]
+    public void TestQuantile(double p)
     {
-        private static readonly StandardUniformDistribution Distribution = StandardUniformDistribution.Instance;
+        Assert.That(Distribution.Quantile(p), Is.EqualTo(p));
+    }
 
-        [TestCase(1.0)]
-        [TestCase(0.0)]
-        [TestCase(0.5)]
-        [TestCase(0.123)]
-        public void TestQuantile(double p)
-        {
-            Assert.AreEqual(p, Distribution.Quantile(p));
-        }
+    [TestCase(-0.1)]
+    [TestCase(1.1)]
+    public void TestInvalidQuantile(double p)
+    {
+        Assert.Throws<ArgumentException>(
+            () => _ = Distribution.Quantile(p));
+    }
 
-        [TestCase(-0.1)]
-        [TestCase(1.1)]
-        public void TestInvalidQuantile(double p)
-        {
-            Assert.Throws<ArgumentException>(
-                () => _ = Distribution.Quantile(p));
-        }
+    [TestCase(-0.1, 0.0)]
+    [TestCase(0.0, 0.0)]
+    [TestCase(0.1, 0.1)]
+    [TestCase(1.0, 1.0)]
+    [TestCase(1.1, 1.0)]
+    [TestCase(double.NaN, double.NaN)]
+    public void TestCumulativeDistribution(double x, double probability)
+    {
+        Assert.That(Distribution.CumulativeDistribution(x), Is.EqualTo(probability));
+    }
 
-        [TestCase(-0.1, 0.0)]
-        [TestCase(0.0, 0.0)]
-        [TestCase(0.1, 0.1)]
-        [TestCase(1.0, 1.0)]
-        [TestCase(1.1, 1.0)]
-        [TestCase(double.NaN, double.NaN)]
-        public void TestCumulativeDistribution(double x, double probability)
-        {
-            Assert.AreEqual(probability, Distribution.CumulativeDistribution(x));
-        }
+    [TestCase(0.5, 1d)]
+    [TestCase(-0.1, 0d)]
+    [TestCase(-1.1, 0d)]
+    [TestCase(double.NaN, double.NaN)]
+    public void TestDensity(double x, double expected)
+    {
+        Assert.That(Distribution.Density(x), Is.EqualTo(expected));
+    }
 
-        [TestCase(0.5, 1d)]
-        [TestCase(-0.1, 0d)]
-        [TestCase(-1.1, 0d)]
-        [TestCase(double.NaN, double.NaN)]
-        public void TestDensity(double x, double expected)
-        {
-            Assert.AreEqual(expected, Distribution.Density(x));
-        }
-
-        [TestCase(0.5, 0d)]
-        [TestCase(-0.1, double.NegativeInfinity)]
-        [TestCase(-1.1, double.NegativeInfinity)]
-        [TestCase(double.NaN, double.NaN)]
-        public void TestDensityLn(double x, double expected)
-        {
-            Assert.AreEqual(expected, Distribution.DensityLn(x));
-        }
+    [TestCase(0.5, 0d)]
+    [TestCase(-0.1, double.NegativeInfinity)]
+    [TestCase(-1.1, double.NegativeInfinity)]
+    [TestCase(double.NaN, double.NaN)]
+    public void TestDensityLn(double x, double expected)
+    {
+        Assert.That(Distribution.DensityLn(x), Is.EqualTo(expected));
     }
 }

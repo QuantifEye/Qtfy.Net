@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Qtfy.Net/Qtfy.Net.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Qtfy.Net.Numerics.Tests/Qtfy.Net.Numerics.Tests.csproj" />
+  </Folder>
+</Solution>

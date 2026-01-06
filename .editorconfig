@@ -28,6 +28,9 @@ dotnet_diagnostic.SA1601.severity = silent
 # unneccessary parentheses impede readability.
 dotnet_diagnostic.SA1407.severity = silent
 
+# makes collection expressions emit warning
+dotnet_diagnostic.SA1010.severity = silent
+
 # extranious null checks
 # caveat emptor.
 # dotnet_diagnostic.CA1062.severity = silent

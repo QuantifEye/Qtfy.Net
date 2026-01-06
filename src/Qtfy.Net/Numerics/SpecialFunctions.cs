@@ -4,19 +4,18 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics
-{
-    using System.Diagnostics.CodeAnalysis;
+namespace Qtfy.Net.Numerics;
 
-    [SuppressMessage(
-        "StyleCop.CSharp.ReadabilityRules",
-        "SA1117:ParametersMustBeOnSameLineOrSeparateLines",
-        Justification = "Reviewed.")]
-    [SuppressMessage(
-        "StyleCop.CSharp.ReadabilityRules",
-        "SA1116:SplitParametersMustStartOnLineAfterDeclaration",
-        Justification = "Reviewed.")]
-    public static partial class SpecialFunctions
-    {
-    }
+using System.Diagnostics.CodeAnalysis;
+
+[SuppressMessage(
+    "StyleCop.CSharp.ReadabilityRules",
+    "SA1117:ParametersMustBeOnSameLineOrSeparateLines",
+    Justification = "Reviewed.")]
+[SuppressMessage(
+    "StyleCop.CSharp.ReadabilityRules",
+    "SA1116:SplitParametersMustStartOnLineAfterDeclaration",
+    Justification = "Reviewed.")]
+public static partial class SpecialFunctions
+{
 }

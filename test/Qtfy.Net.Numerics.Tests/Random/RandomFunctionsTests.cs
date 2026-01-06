@@ -4,44 +4,35 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests.Random
+namespace Qtfy.Net.Numerics.Tests.Random;
+
+using System;
+using NUnit.Framework;
+using Qtfy.Net.Numerics.Random;
+
+internal sealed class RandomFunctionsTests
 {
-    using System;
-    using NUnit.Framework;
-    using Qtfy.Net.Numerics.Random;
-
-    public class RandomFunctionsTests
+    [Test]
+    public void TestCanonicalMin()
     {
-        [Test]
-        public void TestCanonicalMin()
-        {
-            Assert.AreEqual(
-                0d,
-                RandomFunctions.Canonical(0UL));
-        }
+        Assert.That(RandomFunctions.Canonical(0UL), Is.EqualTo(0d));
+    }
 
-        [Test]
-        public void TestCanonicalMax()
-        {
-            Assert.AreEqual(
-                Math.BitDecrement(1d),
-                RandomFunctions.Canonical(ulong.MaxValue));
-        }
+    [Test]
+    public void TestCanonicalMax()
+    {
+        Assert.That(RandomFunctions.Canonical(ulong.MaxValue), Is.EqualTo(Math.BitDecrement(1d)));
+    }
 
-        [Test]
-        public void TestIncrementedCanonicalCanonicalMin()
-        {
-            Assert.AreEqual(
-                1d - Math.BitDecrement(1d),
-                RandomFunctions.IncrementedCanonical(0UL));
-        }
+    [Test]
+    public void TestIncrementedCanonicalCanonicalMin()
+    {
+        Assert.That(RandomFunctions.IncrementedCanonical(0UL), Is.EqualTo(1d - Math.BitDecrement(1d)));
+    }
 
-        [Test]
-        public void TestIncrementedCanonicalCanonicalMax()
-        {
-            Assert.AreEqual(
-                1d,
-                RandomFunctions.IncrementedCanonical(ulong.MaxValue));
-        }
+    [Test]
+    public void TestIncrementedCanonicalCanonicalMax()
+    {
+        Assert.That(RandomFunctions.IncrementedCanonical(ulong.MaxValue), Is.EqualTo(1d));
     }
 }

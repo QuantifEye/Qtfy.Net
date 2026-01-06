@@ -4,78 +4,76 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests
+namespace Qtfy.Net.Numerics.Tests;
+
+using System;
+using NUnit.Framework;
+
+internal sealed class SpecialFunctionsTests
 {
-    using System;
-    using NUnit.Framework;
-
-    public class SpecialFunctionsTests
+    private static unsafe void TestHelper(
+        double min,
+        double max,
+        double inc,
+        double error,
+        delegate*<double, double> expectedFunction,
+        delegate*<double, double> actualFunction)
     {
-        private static unsafe void TestHelper(
-            double min,
-            double max,
-            double inc,
-            double error,
-            delegate*<double, double> expectedFunction,
-            delegate*<double, double> actualFunction)
+        for (var x = min; x < max; x += inc)
         {
-            for (var x = min; x < max; x += inc)
+            var expected = expectedFunction(x);
+            var actual = actualFunction(x);
+            if (Math.Abs(expected - actual) > error)
             {
-                var expected = expectedFunction(x);
-                var actual = actualFunction(x);
-                if (Math.Abs(expected - actual) > error)
-                {
-                    Assert.AreEqual(expected, actual, error);
-                }
+                Assert.That(expected, Is.EqualTo(actual).Within(error), $"Expected {expected} but got {actual}");
             }
         }
+    }
 
-        [Test]
-        public void TestErrorFunction()
+    [Test]
+    public void TestErrorFunction()
+    {
+        unsafe
         {
-            unsafe
-            {
-                TestHelper(
-                    -120d,
-                    120d,
-                    0.01,
-                    TestUtils.Error * 2,
-                    &MathNet.Numerics.SpecialFunctions.Erf,
-                    &Qtfy.Net.Numerics.SpecialFunctions.Erf);
-            }
+            TestHelper(
+                -120d,
+                120d,
+                0.01,
+                TestUtils.Error * 2,
+                &MathNet.Numerics.SpecialFunctions.Erf,
+                &Qtfy.Net.Numerics.SpecialFunctions.Erf);
         }
+    }
 
-        [Test]
-        public void TestInverseErrorFunctionRange()
+    [Test]
+    public void TestInverseErrorFunctionRange()
+    {
+        unsafe
         {
-            unsafe
-            {
-                TestHelper(
-                    -1d,
-                    1d,
-                    0.00001,
-                    TestUtils.Error * 4,
-                    &MathNet.Numerics.SpecialFunctions.ErfInv,
-                    &Qtfy.Net.Numerics.SpecialFunctions.ErfInv);
-            }
+            TestHelper(
+                -1d,
+                1d,
+                0.00001,
+                TestUtils.Error * 4,
+                &MathNet.Numerics.SpecialFunctions.ErfInv,
+                &Qtfy.Net.Numerics.SpecialFunctions.ErfInv);
         }
+    }
 
-        [TestCase(1d - TestUtils.Error, TestUtils.Error)]
-        public void TestInverseErrorFunctionValue(double input, double error)
-        {
-            Assert.AreEqual(
-                MathNet.Numerics.SpecialFunctions.ErfInv(input),
-                Qtfy.Net.Numerics.SpecialFunctions.ErfInv(input),
-                error);
-        }
+    [TestCase(1d - TestUtils.Error, TestUtils.Error)]
+    public void TestInverseErrorFunctionValue(double input, double error)
+    {
+        Assert.That(
+            actual: MathNet.Numerics.SpecialFunctions.ErfInv(input),
+            expression: Is.EqualTo(Qtfy.Net.Numerics.SpecialFunctions.ErfInv(input)).Within(error));
+    }
 
-        [Test]
-        public void TestInverseErrorFunctionLimits()
-        {
-            Assert.True(double.IsPositiveInfinity(SpecialFunctions.ErfInv(1d)));
-            Assert.True(double.IsNegativeInfinity(SpecialFunctions.ErfInv(-1d)));
-            Assert.IsNaN(SpecialFunctions.ErfInv(Math.BitDecrement(-1d)));
-            Assert.IsNaN(SpecialFunctions.ErfInv(Math.BitIncrement(1d)));
-        }
+    [Test]
+    public void TestInverseErrorFunctionLimits()
+    {
+        Assert.That(SpecialFunctions.ErfInv(1d), Is.EqualTo(double.PositiveInfinity));
+        Assert.That(SpecialFunctions.ErfInv(-1d), Is.EqualTo(double.NegativeInfinity));
+        Assert.That(SpecialFunctions.ErfInv(Math.BitDecrement(-1d)), Is.NaN);
+        Assert.That(SpecialFunctions.ErfInv(Math.BitIncrement(1d)), Is.NaN);
     }
 }

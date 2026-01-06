@@ -4,65 +4,64 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests.Distributions
+namespace Qtfy.Net.Numerics.Tests.Distributions;
+
+using NUnit.Framework;
+using Qtfy.Net.Numerics.Distributions;
+
+internal sealed class StandardNormalDistributionTests
 {
-    using NUnit.Framework;
-    using Qtfy.Net.Numerics.Distributions;
-
-    public class StandardNormalDistributionTests
+    [Test]
+    public void TestMean()
     {
-        [Test]
-        public void TestMean()
-        {
-            Assert.AreEqual(0d, StandardNormalDistribution.Instance.Mean);
-        }
+        Assert.That(StandardNormalDistribution.Instance.Mean, Is.Zero);
+    }
 
-        [Test]
-        public void TestVariance()
-        {
-            Assert.AreEqual(1d, StandardNormalDistribution.Instance.Variance);
-        }
+    [Test]
+    public void TestVariance()
+    {
+        Assert.That(StandardNormalDistribution.Instance.Variance, Is.EqualTo(1d));
+    }
 
-        [Test]
-        public void TestStandardDeviation()
-        {
-            Assert.AreEqual(1d, StandardNormalDistribution.Instance.StandardDeviation);
-        }
+    [Test]
+    public void TestStandardDeviation()
+    {
+        Assert.That(StandardNormalDistribution.Instance.StandardDeviation, Is.EqualTo(1d));
+    }
 
-        [TestCase(1.0, 0.8413447460685429485852d)]
-        [TestCase(double.PositiveInfinity, 1.0)]
-        [TestCase(double.NegativeInfinity, 0.0)]
-        [TestCase(double.NaN, double.NaN)]
-        public void TestCumulativeDistributionFunction(double x, double expected)
-        {
-            Assert.AreEqual(expected, StandardNormalDistribution.Instance.CumulativeDistribution(x));
-            Assert.AreEqual(expected, StandardNormalDistribution.CumulativeDistributionFunction(x));
-        }
+    [TestCase(1.0, 0.8413447460685429485852d)]
+    [TestCase(double.PositiveInfinity, 1.0)]
+    [TestCase(double.NegativeInfinity, 0.0)]
+    [TestCase(double.NaN, double.NaN)]
+    public void TestCumulativeDistributionFunction(double x, double expected)
+    {
+        Assert.That(StandardNormalDistribution.Instance.CumulativeDistribution(x), Is.EqualTo(expected));
+        Assert.That(StandardNormalDistribution.CumulativeDistributionFunction(x), Is.EqualTo(expected));
+    }
 
-        [TestCase(1.0, double.PositiveInfinity)]
-        [TestCase(0.0, double.NegativeInfinity)]
-        [TestCase(0.5, 0.0)]
-        public void TestQuantileFunction(double probability, double expected)
-        {
-            Assert.AreEqual(expected, StandardNormalDistribution.Instance.Quantile(probability));
-        }
+    [TestCase(1.0, double.PositiveInfinity)]
+    [TestCase(0.0, double.NegativeInfinity)]
+    [TestCase(0.5, 0.0)]
+    public void TestQuantileFunction(double probability, double expected)
+    {
+        Assert.That(StandardNormalDistribution.Instance.Quantile(probability), Is.EqualTo(expected));
+    }
 
-        [TestCase(1.0, -1.41893853320467274178045451569708215806201947)]
-        [TestCase(double.PositiveInfinity, double.NegativeInfinity)]
-        [TestCase(double.NegativeInfinity, double.NegativeInfinity)]
-        [TestCase(double.NaN, double.NaN)]
-        public void TestDensityLn(double x, double expected)
-        {
-            Assert.AreEqual(expected, StandardNormalDistribution.Instance.DensityLn(x));
-        }
+    [TestCase(1.0, -1.41893853320467274178045451569708215806201947)]
+    [TestCase(double.PositiveInfinity, double.NegativeInfinity)]
+    [TestCase(double.NegativeInfinity, double.NegativeInfinity)]
+    [TestCase(double.NaN, double.NaN)]
+    public void TestDensityLn(double x, double expected)
+    {
+        Assert.That(StandardNormalDistribution.Instance.DensityLn(x), Is.EqualTo(expected));
+    }
 
-        [TestCase(1.0, 0.2419707245191433497978)]
-        [TestCase(double.PositiveInfinity, 0.0)]
-        [TestCase(double.NegativeInfinity, 0.0)]
-        [TestCase(double.NaN, double.NaN)]
-        public void TestDensity(double x, double expected)
-        {
-            Assert.AreEqual(expected, StandardNormalDistribution.Instance.Density(x));
-        }
+    [TestCase(1.0, 0.2419707245191433497978)]
+    [TestCase(double.PositiveInfinity, 0.0)]
+    [TestCase(double.NegativeInfinity, 0.0)]
+    [TestCase(double.NaN, double.NaN)]
+    public void TestDensity(double x, double expected)
+    {
+        Assert.That(StandardNormalDistribution.Instance.Density(x), Is.EqualTo(expected));
     }
 }

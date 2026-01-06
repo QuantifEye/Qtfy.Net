@@ -60,244 +60,237 @@ http://www.math.hiroshima-u.ac.jp/~m-mat/MT/emt.html
 email: m-mat @ math.sci.hiroshima-u.ac.jp (remove spaces)
 */
 
-namespace Qtfy.Net.Numerics.Random.RandomNumberEngines
+namespace Qtfy.Net.Numerics.Random.RandomNumberEngines;
+
+using System;
+
+/// <summary>
+/// The Mersenne Twister random number generator.
+/// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/emt19937ar.html" />.
+/// </summary>
+public sealed class MersenneTwister64Bit19937 : ULongRandomNumberEngine
 {
-    using System;
+    private const int N = 312;
+
+    private readonly ulong[] state;
+
+    private int index;
+
+    private MersenneTwister64Bit19937(ulong[] state, int index)
+    {
+        this.state = state;
+        this.index = index;
+    }
 
     /// <summary>
-    /// The Mersenne Twister random number generator.
-    /// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/emt19937ar.html" />.
+    /// Initializes a new instance of the <see cref="MersenneTwister64Bit19937"/> class.
     /// </summary>
-    public sealed class MersenneTwister64Bit19937 : ULongRandomNumberEngine
+    /// <param name="seedSequence">
+    /// The seed source.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="seedSequence"/> is null.
+    /// </exception>
+    public MersenneTwister64Bit19937(ISeedSequence seedSequence)
+        : this(MakeState(seedSequence), N)
     {
-        private const int N = 312;
+    }
 
-        private readonly ulong[] state;
+    private static ulong[] MakeState(ISeedSequence seedSequence)
+    {
+        ArgumentNullException.ThrowIfNull(seedSequence);
 
-        private int index;
+        var state = new ulong[N];
+        seedSequence.Generate(state);
+        return state;
+    }
 
-        private MersenneTwister64Bit19937(ulong[] state, int index)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MersenneTwister64Bit19937"/> class.
+    /// </summary>
+    /// <param name="seed">
+    /// The seed used to seed the initial state.
+    /// </param>
+    /// <returns>
+    /// A new instance of a Mersenne Twister PRNG.
+    /// </returns>
+    /// <remarks>
+    /// This method uses the initialization procedure called init_by_array in the original
+    /// c code.
+    /// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/CODES/mt19937ar.c" />.
+    /// </remarks>
+    public static MersenneTwister64Bit19937 InitGenRand(ulong seed)
+    {
+        unsafe
         {
-            this.state = state;
-            this.index = index;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MersenneTwister64Bit19937"/> class.
-        /// </summary>
-        /// <param name="seedSequence">
-        /// The seed source.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// If <paramref name="seedSequence"/> is null.
-        /// </exception>
-        public MersenneTwister64Bit19937(ISeedSequence seedSequence)
-            : this(MakeState(seedSequence), N)
-        {
-        }
-
-        private static ulong[] MakeState(ISeedSequence seedSequence)
-        {
-            if (seedSequence is null)
-            {
-                throw new ArgumentNullException(nameof(seedSequence));
-            }
-
             var state = new ulong[N];
-            seedSequence.Generate(state);
-            return state;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MersenneTwister64Bit19937"/> class.
-        /// </summary>
-        /// <param name="seed">
-        /// The seed used to seed the initial state.
-        /// </param>
-        /// <returns>
-        /// A new instance of a Mersenne Twister PRNG.
-        /// </returns>
-        /// <remarks>
-        /// This method uses the initialization procedure called init_by_array in the original
-        /// c code.
-        /// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/CODES/mt19937ar.c" />.
-        /// </remarks>
-        public static MersenneTwister64Bit19937 InitGenRand(ulong seed)
-        {
-            unsafe
+            fixed (ulong* mt = state)
             {
-                var state = new ulong[N];
-                fixed (ulong* mt = state)
-                {
-                    InitGenRandImpl(mt, seed);
-                }
-
-                return new MersenneTwister64Bit19937(state, N);
-            }
-        }
-
-        private static unsafe void InitGenRandImpl(ulong* mt, ulong seed)
-        {
-            unchecked
-            {
-                mt[0] = seed;
-                for (ulong mti = 1; mti < N; mti++)
-                {
-                    var temp = mt[mti - 1];
-                    mt[mti] = 6364136223846793005UL * (temp ^ (temp >> 62)) + mti;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MersenneTwister32Bit19937"/> class.
-        /// </summary>
-        /// <param name="seeds">
-        /// The seeds used to seed the initial state.
-        /// </param>
-        /// <returns>
-        /// A new instance of a Mersenne Twister PRNG.
-        /// </returns>
-        /// <remarks>
-        /// This method uses the initialization procedure called init_by_array in the original
-        /// c code.
-        /// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/CODES/mt19937ar.c" />.
-        /// </remarks>
-        public static MersenneTwister64Bit19937 InitByArray(ulong[] seeds)
-        {
-            if (seeds is null)
-            {
-                throw new ArgumentNullException(nameof(seeds));
+                InitGenRandImpl(mt, seed);
             }
 
-            unsafe
-            {
-                var state = new ulong[N];
-                fixed (ulong* mt = state, initKey = seeds)
-                {
-                    InitByArrayImpl(mt, initKey, (ulong)seeds.Length);
-                }
+            return new MersenneTwister64Bit19937(state, N);
+        }
+    }
 
-                return new MersenneTwister64Bit19937(state, N);
+    private static unsafe void InitGenRandImpl(ulong* mt, ulong seed)
+    {
+        unchecked
+        {
+            mt[0] = seed;
+            for (ulong mti = 1; mti < N; mti++)
+            {
+                var temp = mt[mti - 1];
+                mt[mti] = 6364136223846793005UL * (temp ^ (temp >> 62)) + mti;
             }
         }
+    }
 
-        private static unsafe void InitByArrayImpl(ulong* mt, ulong* initKey, ulong keyLength)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MersenneTwister32Bit19937"/> class.
+    /// </summary>
+    /// <param name="seeds">
+    /// The seeds used to seed the initial state.
+    /// </param>
+    /// <returns>
+    /// A new instance of a Mersenne Twister PRNG.
+    /// </returns>
+    /// <remarks>
+    /// This method uses the initialization procedure called init_by_array in the original
+    /// c code.
+    /// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/CODES/mt19937ar.c" />.
+    /// </remarks>
+    public static MersenneTwister64Bit19937 InitByArray(ulong[] seeds)
+    {
+        ArgumentNullException.ThrowIfNull(seeds);
+
+        unsafe
         {
-            unchecked
+            var state = new ulong[N];
+            fixed (ulong* mt = state, initKey = seeds)
             {
-                const ulong mostSignificantBit = 1UL << 63;
-                InitGenRandImpl(mt, 19650218UL);
-                var i = 1UL;
-                var j = 0UL;
-                var k = Math.Max(N, keyLength);
-                for (; k != 0UL; --k)
-                {
-                    mt[i] = (mt[i] ^ ((mt[i - 1] ^ (mt[i - 1] >> 62)) * 3935559000370003845UL)) + initKey[j] + j;
-                    if (++i >= N)
-                    {
-                        mt[0] = mt[N - 1];
-                        i = 1;
-                    }
-
-                    if (++j >= keyLength)
-                    {
-                        j = 0;
-                    }
-                }
-
-                for (k = N - 1UL; k != 0UL; --k)
-                {
-                    mt[i] = (mt[i] ^ ((mt[i - 1] ^ (mt[i - 1] >> 62)) * 2862933555777941757UL)) - i;
-                    if (++i >= N)
-                    {
-                        mt[0] = mt[N - 1];
-                        i = 1;
-                    }
-                }
-
-                mt[0] = mostSignificantBit;
+                InitByArrayImpl(mt, initKey, (ulong)seeds.Length);
             }
-        }
 
-        /// <inheritdoc />
-        public override ulong NextULong()
+            return new MersenneTwister64Bit19937(state, N);
+        }
+    }
+
+    private static unsafe void InitByArrayImpl(ulong* mt, ulong* initKey, ulong keyLength)
+    {
+        unchecked
         {
-            unchecked
+            const ulong mostSignificantBit = 1UL << 63;
+            InitGenRandImpl(mt, 19650218UL);
+            var i = 1UL;
+            var j = 0UL;
+            var k = Math.Max(N, keyLength);
+            for (; k != 0UL; --k)
             {
-                if (this.index == N)
+                mt[i] = (mt[i] ^ ((mt[i - 1] ^ (mt[i - 1] >> 62)) * 3935559000370003845UL)) + initKey[j] + j;
+                if (++i >= N)
                 {
-                    this.UpdateState();
+                    mt[0] = mt[N - 1];
+                    i = 1;
                 }
 
-                var y = this.state[this.index++];
-                y ^= (y >> 29) & 0x5555555555555555UL;
-                y ^= (y << 17) & 0x71D67FFFEDA60000UL;
-                y ^= (y << 37) & 0xFFF7EEE000000000UL;
-                return y ^ (y >> 43);
+                if (++j >= keyLength)
+                {
+                    j = 0;
+                }
             }
-        }
 
-        /// <summary>
-        /// The implementation of <see cref="UpdateState"/>.
-        /// </summary>
-        /// <param name="mt">
-        /// A pointer to the first element in the state. The name mt is retained from the original c code.
-        /// </param>
-        private static unsafe void UpdateStateImpl(ulong* mt)
-        {
-            const int m = 156;
-            const ulong matrixA = 0xB5026F5AA96619E9UL;
-            const ulong upperMask = 0xFFFFFFFF80000000UL;
-            const ulong lowerMask = 0x7FFFFFFFUL;
-            unchecked
+            for (k = N - 1UL; k != 0UL; --k)
             {
-                var p0 = mt;
-                var p1 = mt + 1;
-                var p2 = mt + m;
-                var end = mt + N;
-                ulong y;
-
-                do
+                mt[i] = (mt[i] ^ ((mt[i - 1] ^ (mt[i - 1] >> 62)) * 2862933555777941757UL)) - i;
+                if (++i >= N)
                 {
-                    y = (*p0 & upperMask) | (*p1 & lowerMask);
-                    *p0 = *p2 ^ (y >> 1) ^ ((y & 0x1UL) * matrixA);
-                    ++p0;
-                    ++p1;
-                    ++p2;
+                    mt[0] = mt[N - 1];
+                    i = 1;
                 }
-                while (p2 != end);
+            }
 
-                p2 = mt;
+            mt[0] = mostSignificantBit;
+        }
+    }
 
-                do
-                {
-                    y = (*p0 & upperMask) | (*p1 & lowerMask);
-                    *p0 = *p2 ^ (y >> 1) ^ ((y & 0x1UL) * matrixA);
-                    ++p0;
-                    ++p1;
-                    ++p2;
-                }
-                while (p1 != end);
+    /// <inheritdoc />
+    public override ulong NextULong()
+    {
+        unchecked
+        {
+            if (this.index == N)
+            {
+                this.UpdateState();
+            }
 
-                y = (*p0 & upperMask) | (*mt & lowerMask);
+            var y = this.state[this.index++];
+            y ^= (y >> 29) & 0x5555555555555555UL;
+            y ^= (y << 17) & 0x71D67FFFEDA60000UL;
+            y ^= (y << 37) & 0xFFF7EEE000000000UL;
+            return y ^ (y >> 43);
+        }
+    }
+
+    /// <summary>
+    /// The implementation of <see cref="UpdateState"/>.
+    /// </summary>
+    /// <param name="mt">
+    /// A pointer to the first element in the state. The name mt is retained from the original c code.
+    /// </param>
+    private static unsafe void UpdateStateImpl(ulong* mt)
+    {
+        const int m = 156;
+        const ulong matrixA = 0xB5026F5AA96619E9UL;
+        const ulong upperMask = 0xFFFFFFFF80000000UL;
+        const ulong lowerMask = 0x7FFFFFFFUL;
+        unchecked
+        {
+            var p0 = mt;
+            var p1 = mt + 1;
+            var p2 = mt + m;
+            var end = mt + N;
+            ulong y;
+
+            do
+            {
+                y = (*p0 & upperMask) | (*p1 & lowerMask);
                 *p0 = *p2 ^ (y >> 1) ^ ((y & 0x1UL) * matrixA);
+                ++p0;
+                ++p1;
+                ++p2;
             }
-        }
+            while (p2 != end);
 
-        /// <summary>
-        /// Advances the state by recalculating the state. This is used when the end of the state has been reached in
-        /// order to update state values.
-        /// </summary>
-        private void UpdateState()
-        {
-            unsafe
+            p2 = mt;
+
+            do
             {
-                fixed (ulong* mt = this.state)
-                {
-                    UpdateStateImpl(mt);
-                    this.index = 0;
-                }
+                y = (*p0 & upperMask) | (*p1 & lowerMask);
+                *p0 = *p2 ^ (y >> 1) ^ ((y & 0x1UL) * matrixA);
+                ++p0;
+                ++p1;
+                ++p2;
+            }
+            while (p1 != end);
+
+            y = (*p0 & upperMask) | (*mt & lowerMask);
+            *p0 = *p2 ^ (y >> 1) ^ ((y & 0x1UL) * matrixA);
+        }
+    }
+
+    /// <summary>
+    /// Advances the state by recalculating the state. This is used when the end of the state has been reached in
+    /// order to update state values.
+    /// </summary>
+    private void UpdateState()
+    {
+        unsafe
+        {
+            fixed (ulong* mt = this.state)
+            {
+                UpdateStateImpl(mt);
+                this.index = 0;
             }
         }
     }

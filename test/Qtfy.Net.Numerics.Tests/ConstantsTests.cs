@@ -4,35 +4,34 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests
+namespace Qtfy.Net.Numerics.Tests;
+
+using NUnit.Framework;
+using static System.Math;
+
+internal sealed class ConstantsTests
 {
-    using NUnit.Framework;
-    using static System.Math;
-
-    public class ConstantsTests
+    [Test]
+    public void TestSqrtTwoPi()
     {
-        [Test]
-        public void TestSqrtTwoPi()
-        {
-            Assert.AreEqual(Sqrt(2d * PI), Constants.SqrtTwoPi, ScaleB(4, -53));
-        }
+        Assert.That(Sqrt(2d * PI), Is.EqualTo(Constants.SqrtTwoPi).Within(ScaleB(4, -53)));
+    }
 
-        [Test]
-        public void LogSqrtTwoPi()
-        {
-            Assert.AreEqual(Log(Constants.SqrtTwoPi), Constants.LogSqrtTwoPi);
-        }
+    [Test]
+    public void LogSqrtTwoPi()
+    {
+        Assert.That(Log(Constants.SqrtTwoPi), Is.EqualTo(Constants.LogSqrtTwoPi));
+    }
 
-        [Test]
-        public void TestSqrtTwo()
-        {
-            Assert.AreEqual(Sqrt(2d), Constants.SqrtTwo);
-        }
+    [Test]
+    public void TestSqrtTwo()
+    {
+        Assert.That(Sqrt(2d), Is.EqualTo(Constants.SqrtTwo));
+    }
 
-        [Test]
-        public void TestTwoLnTwo()
-        {
-            Assert.AreEqual(2d * Log(2d), Constants.TwoLnTwo);
-        }
+    [Test]
+    public void TestTwoLnTwo()
+    {
+        Assert.That(2d * Log(2d), Is.EqualTo(Constants.TwoLnTwo));
     }
 }

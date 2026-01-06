@@ -4,88 +4,87 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Random.Samplers
+namespace Qtfy.Net.Numerics.Random.Samplers;
+
+using System;
+using static System.Math;
+
+/// <summary>
+/// The simple form box muller transform.
+/// </summary>
+public sealed class StandardNormalSampler : ISampler<double>
 {
-    using System;
-    using static System.Math;
+    private readonly IRandomNumberEngine engine;
+
+    private double spare;
+
+    private bool hasSpare;
 
     /// <summary>
-    /// The simple form box muller transform.
+    /// Initializes a new instance of the <see cref="StandardNormalSampler"/> class.
     /// </summary>
-    public sealed class StandardNormalSampler : ISampler<double>
+    /// <param name="engine">
+    /// The pseudo random engine used to generate random numbers.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="engine"/> is null.
+    /// </exception>
+    public StandardNormalSampler(IRandomNumberEngine engine)
     {
-        private readonly IRandomNumberEngine engine;
+        this.engine = engine ?? throw new ArgumentNullException(nameof(engine));
+    }
 
-        private double spare;
-
-        private bool hasSpare;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StandardNormalSampler"/> class.
-        /// </summary>
-        /// <param name="engine">
-        /// The pseudo random engine used to generate random numbers.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// If <paramref name="engine"/> is null.
-        /// </exception>
-        public StandardNormalSampler(IRandomNumberEngine engine)
+    /// <inheritdoc />
+    public double GetNext()
+    {
+        if (this.hasSpare)
         {
-            this.engine = engine ?? throw new ArgumentNullException(nameof(engine));
+            this.hasSpare = false;
+            return this.spare;
         }
-
-        /// <inheritdoc />
-        public double GetNext()
+        else
         {
-            if (this.hasSpare)
+            var engine = this.engine;
+            double s, u, v, logS;
+            do
             {
-                this.hasSpare = false;
-                return this.spare;
+                u = FusedMultiplyAdd(engine.NextStandardUniform(), 2d, -1d);
+                v = FusedMultiplyAdd(engine.NextStandardUniform(), 2d, -1d);
+                s = u * u + v * v;
+            }
+            while (s >= 1d || u == 0d || v == 0d);
+
+            if (s > 1e-4)
+            {
+                logS = Log(s);
             }
             else
             {
-                var engine = this.engine;
-                double s, u, v, logS;
-                do
-                {
-                    u = FusedMultiplyAdd(engine.NextStandardUniform(), 2d, -1d);
-                    v = FusedMultiplyAdd(engine.NextStandardUniform(), 2d, -1d);
-                    s = u * u + v * v;
-                }
-                while (s >= 1d || u == 0d || v == 0d);
-
-                if (s > 1e-4)
-                {
-                    logS = Log(s);
-                }
-                else
-                {
-                    var exp = -ILogB(Max(Abs(u), Abs(v)));
-                    u = ScaleB(u, exp);
-                    v = ScaleB(v, exp);
-                    s = u * u + v * v;
-                    logS = FusedMultiplyAdd(exp, -Constants.TwoLnTwo, Log(s));
-                }
-
-                var f = Sqrt(-2d * logS / s);
-                this.spare = f * v;
-                this.hasSpare = true;
-                return f * u;
+                var exp = -ILogB(Max(Abs(u), Abs(v)));
+                u = ScaleB(u, exp);
+                v = ScaleB(v, exp);
+                s = u * u + v * v;
+                logS = FusedMultiplyAdd(exp, -Constants.TwoLnTwo, Log(s));
             }
+
+            var f = Sqrt(-2d * logS / s);
+            this.spare = f * v;
+            this.hasSpare = true;
+            return f * u;
         }
+    }
 
-        /// <summary>
-        /// Fills the provided array with independent standard normal values.
-        /// </summary>
-        /// <param name="buffer">
-        /// Fills the buffer.
-        /// </param>
-        public void Fill(Span<double> buffer)
+    /// <summary>
+    /// Fills the provided array with independent standard normal values.
+    /// </summary>
+    /// <param name="buffer">
+    /// Fills the buffer.
+    /// </param>
+    public void Fill(Span<double> buffer)
+    {
+        for (var i = 0; i < buffer.Length; ++i)
         {
-            for (var i = 0; i < buffer.Length; ++i)
-            {
-                buffer[i] = this.GetNext();
-            }
+            buffer[i] = this.GetNext();
         }
     }
 }

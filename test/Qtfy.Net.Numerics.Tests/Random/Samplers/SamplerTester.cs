@@ -4,65 +4,65 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests.Random.Samplers
+namespace Qtfy.Net.Numerics.Tests.Random.Samplers;
+
+using NUnit.Framework;
+using Qtfy.Net.Numerics.Random;
+
+internal static class SamplerTester
 {
-    using NUnit.Framework;
-    using Qtfy.Net.Numerics.Random;
-
-    public static class SamplerTester
+    private static double IntegrateCdf(ISampler<double> sampler, double x, int trials)
     {
-        private static double IntegrateCdf(ISampler<double> sampler, double x, int trials)
+        var success = 0;
+        for (var i = 0; i < trials; i++)
         {
-            var success = 0;
-            for (var i = 0; i < trials; i++)
+            if (sampler.GetNext() <= x)
             {
-                if (sampler.GetNext() <= x)
-                {
-                    ++success;
-                }
+                ++success;
             }
-
-            return (double)success / trials;
         }
 
-        public static void TestIntegrateDistribution(
-            double x,
-            ISampler<double> sampler,
-            IDistribution referenceDistribution,
-            double error)
+        return (double)success / trials;
+    }
+
+    public static void TestIntegrateDistribution(
+        double x,
+        ISampler<double> sampler,
+        IDistribution referenceDistribution,
+        double error)
+    {
+        const int trials = 1000000;
+        var actual = IntegrateCdf(sampler, x, trials);
+        var expected = referenceDistribution.CumulativeDistribution(x);
+
+        Assert.That(actual, Is.EqualTo(expected).Within(error));
+    }
+
+    public static double IntegrateMultivariateCdf(ISampler<double[]> sampler, double[] x, int trials)
+    {
+        var success = 0;
+        for (var i = 0; i < trials; i++)
         {
-            const int trials = 1000000;
-            var actual = IntegrateCdf(sampler, x, trials);
-            var expected = referenceDistribution.CumulativeDistribution(x);
-            Assert.AreEqual(expected, actual, error);
+            var l = sampler.GetNext();
+            if (LessThan(l, x))
+            {
+                ++success;
+            }
         }
 
-        public static double IntegrateMultivariateCdf(ISampler<double[]> sampler, double[] x, int trials)
+        return (double)success / trials;
+
+        static bool LessThan(double[] l, double[] r)
         {
-            var success = 0;
-            for (var i = 0; i < trials; i++)
+            for (var i = 0; i < l.Length; ++i)
             {
-                var l = sampler.GetNext();
-                if (LessThan(l, x))
+                if (l[i] > r[i])
                 {
-                    ++success;
+                    return false;
                 }
             }
 
-            return (double)success / trials;
-
-            static bool LessThan(double[] l, double[] r)
-            {
-                for (var i = 0; i < l.Length; ++i)
-                {
-                    if (l[i] > r[i])
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
+            return true;
         }
     }
 }

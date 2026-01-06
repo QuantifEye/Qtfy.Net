@@ -26,3 +26,6 @@ dotnet_diagnostic.CA1062.severity = silent
 
 # test case classes are instantiated by unit test framefork
 dotnet_diagnostic.CA1812.severity = silent
+
+# readability over performance in tests
+dotnet_diagnostic.CA1861.severity = silent
