@@ -58,9 +58,13 @@ public class PiecewiseConstantDistribution : IDistribution<double>
     /// If the number of element in <paramref name="weights"/> is not one less than the number of elements in <paramref name="domain"/>.
     /// If <paramref name="domain"/> is not sorted and unique.
     /// If any of the values in <paramref name="weights"/> is less than zero.
+    /// If the sum of <paramref name="weights"/> is not a positive finite value.
     /// </exception>
     public static PiecewiseConstantDistribution Create(IEnumerable<double> domain, IEnumerable<double> weights)
     {
+        ArgumentNullException.ThrowIfNull(domain);
+        ArgumentNullException.ThrowIfNull(weights);
+
         var b = domain.ToArray();
         var cp = Zero.Concat(weights).ToArray();
 
@@ -85,6 +89,11 @@ public class PiecewiseConstantDistribution : IDistribution<double>
         }
 
         var total = cp[^1];
+        if (!double.IsFinite(total) || total <= 0d)
+        {
+            throw new ArgumentException("weights must sum to a positive finite value.", nameof(weights));
+        }
+
         for (var i = 0; i < cp.Length; ++i)
         {
             cp[i] /= total;

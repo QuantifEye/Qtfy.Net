@@ -13,10 +13,19 @@ using System;
 /// </summary>
 public class UniformIntDistribution : IDiscreteDistribution
 {
+    /// <summary>
+    /// The number of discrete values in the distribution (max - min + 1).
+    /// </summary>
     private readonly double n;
 
+    /// <summary>
+    /// Precomputed shift (1 - min) so that floor(x) + m yields the 1-based index of floor(x) within [min, max].
+    /// </summary>
     private readonly double m;
 
+    /// <summary>
+    /// The probability mass for any value in the range.
+    /// </summary>
     private readonly double pmf;
 
     /// <summary>
@@ -33,7 +42,7 @@ public class UniformIntDistribution : IDiscreteDistribution
     /// </exception>
     public UniformIntDistribution(int min, int max)
     {
-        if (min < max)
+        if (min <= max)
         {
             ulong range = (uint)max - (uint)min;
             var n = range + 1UL;
@@ -105,7 +114,12 @@ public class UniformIntDistribution : IDiscreteDistribution
     {
         if (probability >= 0 && probability <= 1d)
         {
-            return (int)Math.Ceiling(this.n * probability);
+            if (probability == 0d)
+            {
+                return this.Min;
+            }
+
+            return this.Min + ((int)Math.Ceiling(this.n * probability) - 1);
         }
 
         throw new ArgumentException("Invalid probability", nameof(probability));

@@ -89,6 +89,34 @@ internal partial class BigRationalTests
         Assert.That(actual, Is.EqualTo(expected));
     }
 
+    [Test]
+    public void FromDoubleNonFiniteThrows()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.Throws<ArgumentException>(() => _ = (BigRational)double.NaN);
+            Assert.Throws<ArgumentException>(() => _ = (BigRational)double.PositiveInfinity);
+            Assert.Throws<ArgumentException>(() => _ = (BigRational)double.NegativeInfinity);
+        });
+    }
+
+    [Test]
+    public void FromDoubleSubnormal()
+    {
+        var expected = new BigRational(BigInteger.One, BigInteger.One << 1074);
+        Assert.That((BigRational)double.Epsilon, Is.EqualTo(expected));
+        Assert.That((BigRational)(-double.Epsilon), Is.EqualTo(-expected));
+    }
+
+    [Test]
+    public void FromDoubleSmallestNormal()
+    {
+        var smallestNormal = BitConverter.Int64BitsToDouble(0x0010_0000_0000_0000);
+        var expected = new BigRational(BigInteger.One, BigInteger.One << 1022);
+        Assert.That((BigRational)smallestNormal, Is.EqualTo(expected));
+        Assert.That((BigRational)(-smallestNormal), Is.EqualTo(-expected));
+    }
+
     [TestCase(0.125f, 1, 8)]
     [TestCase(0.25f, 1, 4)]
     [TestCase(-0.125f, -1, 8)]

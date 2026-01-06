@@ -26,15 +26,6 @@ public partial struct BigRational
     private static readonly BigInteger DecimalMin = (BigInteger)decimal.MinValue;
 
     /// <summary>
-    /// An array of rationals such that array[i] == Pow(2, -i).
-    /// </summary>
-    /// <remarks>
-    /// A cache of the powers of two needed to convert a floating point number to a
-    /// <see cref="BigRational"/>.
-    /// </remarks>
-    private static readonly BigRational[] NegativePowerOfTwo = BuildNegativePowersOfTwo();
-
-    /// <summary>
     /// Converts a <see cref="BigRational"/> to a <see cref="double"/>.
     /// </summary>
     /// <param name="value">
@@ -132,24 +123,52 @@ public partial struct BigRational
     /// <param name="d">
     /// The <see cref="double"/> to convert.
     /// </param>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="d"/> is not finite.
+    /// </exception>
     public static implicit operator BigRational(double d)
     {
+        if (!double.IsFinite(d))
+        {
+            throw new ArgumentException("value must be finite", nameof(d));
+        }
+
+        if (d == 0d)
+        {
+            return Zero;
+        }
+
         ulong bits;
         unsafe
         {
             bits = *(ulong*)&d;
         }
 
-        var mantissa = new BigRational(BigInteger.One);
-        for (var i = 1; i != 53; ++i)
+        var sign = (bits >> 63) == 0 ? 1 : -1;
+        var exponent = (int)((bits >> 52) & 0x7FFUL);
+        var mantissa = bits & 0xFFFFFFFFFFFFFUL;
+
+        BigRational magnitude;
+        if (exponent == 0)
         {
-            if ((bits & (0x1UL << (52 - i))) != 0)
+            var denominator = BigInteger.One << 1074;
+            magnitude = new BigRational(new BigInteger(mantissa), denominator);
+        }
+        else
+        {
+            var significand = new BigInteger(mantissa | (1UL << 52));
+            var shift = exponent - 1075;
+            if (shift >= 0)
             {
-                mantissa += NegativePowerOfTwo[i];
+                magnitude = new BigRational(significand << shift, BigInteger.One);
+            }
+            else
+            {
+                magnitude = new BigRational(significand, BigInteger.One << -shift);
             }
         }
 
-        return d.CompareTo(0) * mantissa * Pow(2, (int)((bits >> 52) & 0b0000_0111_1111_1111UL) - 1023);
+        return sign == 1 ? magnitude : -magnitude;
     }
 
     /// <summary>
@@ -347,20 +366,4 @@ public partial struct BigRational
         return new BigRational(value);
     }
 
-    /// <summary>
-    /// Builds a cache of the negative powers of 2.
-    /// </summary>
-    /// <returns>
-    /// An array of rationals such that array[i] == Pow(2, -i).
-    /// </returns>
-    private static BigRational[] BuildNegativePowersOfTwo()
-    {
-        var array = new BigRational[53];
-        for (var i = 0; i < array.Length; i++)
-        {
-            array[i] = Pow(2, -i);
-        }
-
-        return array;
-    }
 }

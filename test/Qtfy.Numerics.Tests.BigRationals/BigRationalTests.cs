@@ -221,7 +221,8 @@ internal partial class BigRationalTests
     [TestCase(-1, 2, 2, 1, 4)]
     [TestCase(-1, 2, 3, -1, 8)]
     [TestCase(-1, 2, 0, 1, 1)]
-    [TestCase(0, 1, 1, 1, 1)]
+    [TestCase(0, 1, 0, 1, 1)]
+    [TestCase(0, 1, 1, 0, 1)]
     [TestCase(10, 1, 0, 1, 1)]
     public void Pow(int n, int d, int power, int expectedNumerator, int expectedDenominator)
     {
@@ -233,8 +234,8 @@ internal partial class BigRationalTests
     [Test]
     public void PowError()
     {
-        Assert.Throws<ArgumentException>(
-            () => BigRational.Pow(0, 0));
+        Assert.Throws<DivideByZeroException>(
+            () => BigRational.Pow(0, -1));
     }
 
     [TestCase(1, 2, "1/2")]
@@ -272,6 +273,7 @@ internal partial class BigRationalTests
 
     [TestCase("123", 123, 1, true)]
     [TestCase("123/456", 123, 456, true)]
+    [TestCase("123/0", 0, 0, false)]
     [TestCase("xyz", 0, 0, false)]
     public void TestTryParse(string input, int numerator, int denominator, bool expectedSuccess)
     {

@@ -242,31 +242,37 @@ public partial struct BigRational
     /// <returns>
     /// <paramref name="value"/> raised to the power <paramref name="exp"/>.
     /// </returns>
+    /// <exception cref="DivideByZeroException">
+    /// If <paramref name="value"/> is zero and <paramref name="exp"/> is less than zero.
+    /// </exception>
     public static BigRational Pow(BigRational value, int exp)
     {
+        if (exp == 0)
+        {
+            return One;
+        }
+
         if (value.IsZero)
         {
-            return exp == 0
-                ? throw new ArgumentException("Cannot calculate 0 to the power zero.")
-                : new BigRational(BigInteger.One);
+            if (exp < 0)
+            {
+                throw new DivideByZeroException("Cannot raise zero to a negative power.");
+            }
+
+            return Zero;
         }
-        else if (exp == 0)
-        {
-            return new BigRational(BigInteger.One);
-        }
-        else if (exp > 0)
+
+        if (exp > 0)
         {
             return new BigRational(
                 numerator: BigInteger.Pow(value.Numerator, exp),
                 denominator: BigInteger.Pow(value.Denominator, exp));
         }
-        else
-        {
-            exp = -exp;
-            return new BigRational(
-                numerator: BigInteger.Pow(value.Denominator, exp),
-                denominator: BigInteger.Pow(value.Numerator, exp));
-        }
+
+        exp = -exp;
+        return new BigRational(
+            numerator: BigInteger.Pow(value.Denominator, exp),
+            denominator: BigInteger.Pow(value.Numerator, exp));
     }
 
     /// <summary>
@@ -338,6 +344,12 @@ public partial struct BigRational
                 rational = new BigRational(bigint);
                 return true;
             case 2 when BigInteger.TryParse(s[0], out var num) && BigInteger.TryParse(s[1], out var den):
+                if (den.IsZero)
+                {
+                    rational = default;
+                    return false;
+                }
+
                 rational = new BigRational(num, den);
                 return true;
             default:

@@ -23,6 +23,19 @@ internal sealed class UniformIntDistributionTests
     }
 
     [Test]
+    public void TestConstructDegenerate()
+    {
+        var distribution = new UniformIntDistribution(2, 2);
+        Assert.That(distribution.Min, Is.EqualTo(2));
+        Assert.That(distribution.Max, Is.EqualTo(2));
+        IsClose(2d, distribution.Mean);
+        IsClose(0d, distribution.Variance);
+        IsClose(1d, distribution.Probability(2));
+        IsClose(1d, distribution.CumulativeDistribution(2));
+        IsClose(2d, distribution.Quantile(0.5d));
+    }
+
+    [Test]
     public void TestMin()
     {
         Assert.That(new UniformIntDistribution(Min, Max).Min, Is.EqualTo(Min));
@@ -56,6 +69,8 @@ internal sealed class UniformIntDistributionTests
     [TestCase(1, 3, 0.45, 2)]
     [TestCase(1, 3, 1d / 3d, 1)]
     [TestCase(1, 3, 0.25, 1)]
+    [TestCase(1, 3, 0d, 1)]
+    [TestCase(1, 3, 1d, 3)]
     public void TestQuantile(int min, int max, double probability, int expected)
     {
         IsClose(expected, new UniformIntDistribution(min, max).Quantile(probability));
