@@ -19,13 +19,13 @@
   <!-- packaging properties, if the repository becomes a suite of dlls, some or all
   of these properties need to move to the individual project files. -->
   <PropertyGroup>
-    <Description>The .Net core library for the QuantifEye project.</Description>
+    <Description>The numerics library for the Qtfy project.</Description>
     <!-- Avoid breaking the build if the file is missing -->
     <PackageReleaseNotes Condition="Exists('$(MSBuildThisFileDirectory)release_notes.txt')">
       $([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)release_notes.txt'))
     </PackageReleaseNotes>
     <PackageTags>arbitrary;extended;precision;arithmetic;bigrational;combinatorics;number;numerics;rational</PackageTags>
-    <AssemblyTitle>Qtfy.Net</AssemblyTitle>
+    <AssemblyTitle>$(AssemblyName)</AssemblyTitle>
     <Authors>Qtfy Authers</Authors>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/QuantifEye/Qtfy.Net</RepositoryUrl>

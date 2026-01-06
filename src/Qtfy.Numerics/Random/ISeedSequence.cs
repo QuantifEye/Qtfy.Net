@@ -4,7 +4,7 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Random;
+namespace Qtfy.Numerics.Random;
 
 /// <summary>
 /// A seed sequence is constructed with integer-valued data and produces a requested number of unsigned integer values i, [0, 2^32)

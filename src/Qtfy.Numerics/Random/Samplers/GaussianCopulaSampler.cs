@@ -4,9 +4,9 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Random.Samplers;
+namespace Qtfy.Numerics.Random.Samplers;
 
-using Qtfy.Net.Numerics.Distributions;
+using Qtfy.Numerics.Distributions;
 
 /// <summary>
 /// A gaussian copula sampler. That is a sampler that uses a correlation matrix

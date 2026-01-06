@@ -3,6 +3,6 @@
     <TargetFramework>$(QtfyTargetFramework)</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/Qtfy.Numerics.BigRational/Qtfy.Numerics.BigRational.csproj" />
+    <ProjectReference Include="../../src/Qtfy.Numerics.LinearAlgebra/Qtfy.Numerics.LinearAlgebra.csproj" />
   </ItemGroup>
 </Project>

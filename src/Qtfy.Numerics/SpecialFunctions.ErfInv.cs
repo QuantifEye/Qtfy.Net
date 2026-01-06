@@ -4,14 +4,23 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics;
+namespace Qtfy.Numerics;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using static System.Math;
 
 /// <summary>
 /// A collection of special mathematical functions.
 /// </summary>
+[SuppressMessage(
+    category: "StyleCop.CSharp.ReadabilityRules",
+    checkId: "SA1116:SplitParametersMustStartOnLineAfterDeclaration",
+    Justification = "High Performance Fused Multiply Add loop")]
+[SuppressMessage(
+    category: "StyleCop.CSharp.ReadabilityRules",
+    checkId: "SA1117:ParametersMustBeOnSameLineOrSeparateLines",
+    Justification = "Reviewed.")]
 public static partial class SpecialFunctions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]

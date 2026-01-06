@@ -4,11 +4,11 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests.Random.Samplers;
+namespace Qtfy.Numerics.Tests.Random.Samplers;
 
 using System;
 using NUnit.Framework;
-using static Qtfy.Net.Numerics.Random.Samplers.Impl;
+using static Qtfy.Numerics.Random.Samplers.Impl;
 
 internal sealed class ImplTests
 {

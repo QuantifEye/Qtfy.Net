@@ -1,10 +1,12 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/Qtfy.Net/Qtfy.Net.csproj" />
-    <Project Path="src/Qtfy.Net.BigRational/Qtfy.Net.BigRational.csproj" />
+    <Project Path="src/Qtfy.Numerics/Qtfy.Numerics.csproj" />
+    <Project Path="src/Qtfy.Numerics.BigRational/Qtfy.Numerics.BigRational.csproj" />
+    <Project Path="src/Qtfy.Numerics.LinearAlgebra/Qtfy.Numerics.LinearAlgebra.csproj" />
   </Folder>
   <Folder Name="/test/">
-    <Project Path="test/Qtfy.Net.Numerics.Tests/Qtfy.Net.Numerics.Tests.csproj" />
-    <Project Path="test/Qtfy.Net.BigRational.Tests/Qtfy.Net.BigRational.Tests.csproj" />
+    <Project Path="test/Qtfy.Numerics.Tests/Qtfy.Numerics.Tests.csproj" />
+    <Project Path="test/Qtfy.Numerics.Tests.BigRationals/Qtfy.Numerics.Tests.BigRationals.csproj" />
+    <Project Path="test/Qtfy.Numerics.Tests.LinearAlgebra/Qtfy.Numerics.Tests.LinearAlgebra.csproj" />
   </Folder>
 </Solution>

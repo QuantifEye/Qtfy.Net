@@ -4,12 +4,12 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests.Random.RandomNumberEngines;
+namespace Qtfy.Numerics.Tests.Random.RandomNumberEngines;
 
 using System;
 using System.Linq;
 using NUnit.Framework;
-using Qtfy.Net.Numerics.Random;
+using Qtfy.Numerics.Random;
 
 internal abstract class EngineTester<TEngine>
     where TEngine : IRandomNumberEngine

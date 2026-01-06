@@ -35,10 +35,12 @@ Run these commands from the repository root.
 2. Build and test:
    - `dotnet build`
    - `dotnet test`
+   - `dotnet test test/Qtfy.Numerics.Tests.BigRationals/Qtfy.Numerics.Tests.BigRationals.csproj`
 
 ### Coverage
 This requires three global tools `coverlet.console`, `dotnet-reportgenerator-globaltool`, and `dotnet-script`. The install script updates the coverage tools; `dotnet-script` is updated separately.
 
 To run tests and generate coverage report, run `dotnet script build/coverage.csx`. This will delete the contents of `./coverage`, recreate `./coverage` and populate it with the coverage output.
+Coverage runs for `Qtfy.Numerics.Tests` and `Qtfy.Numerics.Tests.BigRationals`.
 
 To view a human readable coverage report, open `./coverage/coverage.cobertura.xml.site.site/index.html` with a internet browser.

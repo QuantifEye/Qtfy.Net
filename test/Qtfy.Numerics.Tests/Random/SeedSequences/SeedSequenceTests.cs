@@ -4,7 +4,7 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests.Random.SeedSequences;
+namespace Qtfy.Numerics.Tests.Random.SeedSequences;
 
 using System;
 using System.Collections;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NUnit.Framework;
-using Qtfy.Net.Numerics.Random.SeedSequences;
+using Qtfy.Numerics.Random.SeedSequences;
 
 internal sealed class SeedSequenceTests
 {

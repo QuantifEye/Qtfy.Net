@@ -4,7 +4,7 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Random.SeedSequences;
+namespace Qtfy.Numerics.Random.SeedSequences;
 
 using System;
 using System.Collections.Generic;

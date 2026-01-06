@@ -4,7 +4,7 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests;
+namespace Qtfy.Numerics.Tests;
 
 using System;
 using NUnit.Framework;
@@ -41,7 +41,7 @@ internal sealed class SpecialFunctionsTests
                 0.01,
                 TestUtils.Error * 2,
                 &MathNet.Numerics.SpecialFunctions.Erf,
-                &Qtfy.Net.Numerics.SpecialFunctions.Erf);
+                &Qtfy.Numerics.SpecialFunctions.Erf);
         }
     }
 
@@ -56,7 +56,7 @@ internal sealed class SpecialFunctionsTests
                 0.00001,
                 TestUtils.Error * 4,
                 &MathNet.Numerics.SpecialFunctions.ErfInv,
-                &Qtfy.Net.Numerics.SpecialFunctions.ErfInv);
+                &Qtfy.Numerics.SpecialFunctions.ErfInv);
         }
     }
 
@@ -65,7 +65,7 @@ internal sealed class SpecialFunctionsTests
     {
         Assert.That(
             actual: MathNet.Numerics.SpecialFunctions.ErfInv(input),
-            expression: Is.EqualTo(Qtfy.Net.Numerics.SpecialFunctions.ErfInv(input)).Within(error));
+            expression: Is.EqualTo(Qtfy.Numerics.SpecialFunctions.ErfInv(input)).Within(error));
     }
 
     [Test]

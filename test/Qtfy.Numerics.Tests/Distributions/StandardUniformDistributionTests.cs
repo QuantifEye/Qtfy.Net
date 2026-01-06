@@ -4,11 +4,11 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests.Distributions;
+namespace Qtfy.Numerics.Tests.Distributions;
 
 using System;
 using NUnit.Framework;
-using Qtfy.Net.Numerics.Distributions;
+using Qtfy.Numerics.Distributions;
 
 internal sealed class StandardUniformDistributionTests
 {

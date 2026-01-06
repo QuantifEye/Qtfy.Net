@@ -4,7 +4,7 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Random;
+namespace Qtfy.Numerics.Random;
 
 /// <summary>
 /// The common interface that all bit generators that produce uniform values share.

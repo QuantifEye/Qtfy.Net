@@ -3,6 +3,6 @@
     <TargetFramework>$(QtfyTargetFramework)</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/Qtfy.Net/Qtfy.Net.csproj" />
+    <ProjectReference Include="../../src/Qtfy.Numerics/Qtfy.Numerics.csproj" />
   </ItemGroup>
 </Project>

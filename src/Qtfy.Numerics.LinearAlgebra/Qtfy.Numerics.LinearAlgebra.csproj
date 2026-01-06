@@ -1,8 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>$(QtfyTargetFramework)</TargetFramework>
-    <RootNamespace>Qtfy.Numerics</RootNamespace>
   </PropertyGroup>
-
 </Project>

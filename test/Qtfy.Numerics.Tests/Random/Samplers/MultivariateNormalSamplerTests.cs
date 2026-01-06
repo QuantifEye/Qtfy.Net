@@ -4,13 +4,13 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests.Random.Samplers;
+namespace Qtfy.Numerics.Tests.Random.Samplers;
 
 using System;
 using System.Collections;
 using NUnit.Framework;
-using Qtfy.Net.Numerics.Random.RandomNumberEngines;
-using Qtfy.Net.Numerics.Random.Samplers;
+using Qtfy.Numerics.Random.RandomNumberEngines;
+using Qtfy.Numerics.Random.Samplers;
 
 internal sealed class MultivariateNormalSamplerTests
 {

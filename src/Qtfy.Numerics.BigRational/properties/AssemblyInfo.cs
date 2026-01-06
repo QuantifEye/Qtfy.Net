@@ -8,4 +8,4 @@ using System;
 using System.Runtime.CompilerServices;
 
 [assembly: CLSCompliant(false)]
-[assembly: InternalsVisibleTo("Qtfy.Net.BigRational.Tests")]
+[assembly: InternalsVisibleTo("Qtfy.Numerics.Tests.BigRationals")]

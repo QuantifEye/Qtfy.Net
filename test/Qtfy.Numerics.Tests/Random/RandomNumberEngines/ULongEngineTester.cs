@@ -4,12 +4,12 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Tests.Random.RandomNumberEngines;
+namespace Qtfy.Numerics.Tests.Random.RandomNumberEngines;
 
 using System.Linq;
 using NUnit.Framework;
-using Qtfy.Net.Numerics.Random.RandomNumberEngines;
-using Qtfy.Net.Numerics.Random.SeedSequences;
+using Qtfy.Numerics.Random.RandomNumberEngines;
+using Qtfy.Numerics.Random.SeedSequences;
 
 internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937>
 {

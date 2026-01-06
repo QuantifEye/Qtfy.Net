@@ -1,6 +1,7 @@
 #r "System.Xml.Linq"
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,20 +9,14 @@ using System.Runtime.InteropServices;
 using System.Xml.Linq;
 
 const string Configuration = "Debug";
-const string ProjectName = "Qtfy.Net.Numerics.Tests";
+var projectNames = new[]
+{
+    "Qtfy.Numerics.Tests",
+    "Qtfy.Numerics.Tests.BigRationals"
+};
 
 var root = Directory.GetCurrentDirectory();
 var coverageDir = Path.Combine(root, "coverage");
-var projectDir = Path.Combine(root, "test", ProjectName);
-var projectFile = Path.Combine(projectDir, ProjectName + ".csproj");
-
-var targetFramework = GetTargetFramework(Path.Combine(root, "Directory.Build.props"), projectFile);
-if (string.IsNullOrWhiteSpace(targetFramework))
-{
-    throw new InvalidOperationException("Unable to determine TargetFramework for coverage run.");
-}
-
-var testDll = Path.Combine(projectDir, "bin", Configuration, targetFramework, ProjectName + ".dll");
 var coverageFile = Path.Combine(coverageDir, "coverage.cobertura.xml");
 var coverageSite = coverageFile + ".site";
 
@@ -30,17 +25,40 @@ ResetDirectory(coverageDir);
 Run("dotnet", "clean");
 Run("dotnet", "test", "-c", Configuration);
 
-Run(
-    ResolveGlobalTool("coverlet"),
-    testDll,
-    "--target",
-    "dotnet",
-    "--targetargs",
-    $"test {projectFile} --no-build -c {Configuration}",
-    "--output",
-    coverageFile,
-    "--format",
-    "cobertura");
+foreach (var projectName in projectNames)
+{
+    var projectDir = Path.Combine(root, "test", projectName);
+    var projectFile = Path.Combine(projectDir, projectName + ".csproj");
+
+    var targetFramework = GetTargetFramework(Path.Combine(root, "Directory.Build.props"), projectFile);
+    if (string.IsNullOrWhiteSpace(targetFramework))
+    {
+        throw new InvalidOperationException(
+            $"Unable to determine TargetFramework for coverage run ({projectName}).");
+    }
+
+    var testDll = Path.Combine(projectDir, "bin", Configuration, targetFramework, projectName + ".dll");
+    var coverletArgs = new List<string>
+    {
+        testDll,
+        "--target",
+        "dotnet",
+        "--targetargs",
+        $"test {projectFile} --no-build -c {Configuration}",
+        "--output",
+        coverageFile,
+        "--format",
+        "cobertura"
+    };
+
+    if (File.Exists(coverageFile))
+    {
+        coverletArgs.Add("--merge-with");
+        coverletArgs.Add(coverageFile);
+    }
+
+    Run(ResolveGlobalTool("coverlet"), coverletArgs.ToArray());
+}
 
 Run(
     ResolveGlobalTool("reportgenerator"),

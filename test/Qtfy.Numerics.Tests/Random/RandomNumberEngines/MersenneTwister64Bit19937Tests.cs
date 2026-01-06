@@ -63,11 +63,11 @@
  http://www.math.hiroshima-u.ac.jp/~m-mat/MT/emt.html
  email: m-mat @ math.sci.hiroshima-u.ac.jp (remove spaces) */
 
-namespace Qtfy.Net.Numerics.Tests.Random.RandomNumberEngines;
+namespace Qtfy.Numerics.Tests.Random.RandomNumberEngines;
 
 using System;
 using NUnit.Framework;
-using Qtfy.Net.Numerics.Random.RandomNumberEngines;
+using Qtfy.Numerics.Random.RandomNumberEngines;
 
 internal sealed class MersenneTwister64Bit19937Tests
 {

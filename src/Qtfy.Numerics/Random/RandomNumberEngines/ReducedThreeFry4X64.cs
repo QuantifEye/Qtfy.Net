@@ -4,7 +4,7 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Net.Numerics.Random.RandomNumberEngines;
+namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
 /// <summary>
 /// The ReducedThreeFry4X64 counter based random number generator that performs 20 rounds.
