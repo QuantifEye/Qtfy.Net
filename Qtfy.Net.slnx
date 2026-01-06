@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Qtfy.Net/Qtfy.Net.csproj" />
+    <Project Path="src/Qtfy.Net.BigRational/Qtfy.Net.BigRational.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Qtfy.Net.Numerics.Tests/Qtfy.Net.Numerics.Tests.csproj" />
+    <Project Path="test/Qtfy.Net.BigRational.Tests/Qtfy.Net.BigRational.Tests.csproj" />
   </Folder>
 </Solution>

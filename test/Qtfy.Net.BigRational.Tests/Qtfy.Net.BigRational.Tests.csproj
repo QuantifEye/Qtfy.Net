@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>$(QtfyTargetFramework)</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Qtfy.Net.BigRational/Qtfy.Net.BigRational.csproj" />
+  </ItemGroup>
+</Project>
