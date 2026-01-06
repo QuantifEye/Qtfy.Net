@@ -9,26 +9,33 @@ using System.Runtime.InteropServices;
 using System.Xml.Linq;
 
 const string Configuration = "Debug";
-var projectNames = new[]
-{
-    "Qtfy.Numerics.Tests",
-    "Qtfy.Numerics.Tests.BigRationals"
-};
 
 var root = Directory.GetCurrentDirectory();
 var coverageDir = Path.Combine(root, "coverage");
 var coverageFile = Path.Combine(coverageDir, "coverage.cobertura.xml");
 var coverageSite = coverageFile + ".site";
+var coverageSiteDir = coverageSite + ".site";
+var testRoot = Path.Combine(root, "test");
+var projectFiles = Directory
+    .EnumerateFiles(testRoot, "*.csproj", SearchOption.AllDirectories)
+    .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+    .ToArray();
+
+if (projectFiles.Length == 0)
+{
+    throw new InvalidOperationException($"No test projects found under {testRoot}.");
+}
 
 ResetDirectory(coverageDir);
 
 Run("dotnet", "clean");
 Run("dotnet", "test", "-c", Configuration);
 
-foreach (var projectName in projectNames)
+foreach (var projectFile in projectFiles)
 {
-    var projectDir = Path.Combine(root, "test", projectName);
-    var projectFile = Path.Combine(projectDir, projectName + ".csproj");
+    var projectDir = Path.GetDirectoryName(projectFile) ?? testRoot;
+    var projectName = Path.GetFileNameWithoutExtension(projectFile);
+    var projectCoverageFile = Path.Combine(coverageDir, projectName + ".cobertura.xml");
 
     var targetFramework = GetTargetFramework(Path.Combine(root, "Directory.Build.props"), projectFile);
     if (string.IsNullOrWhiteSpace(targetFramework))
@@ -46,25 +53,29 @@ foreach (var projectName in projectNames)
         "--targetargs",
         $"test {projectFile} --no-build -c {Configuration}",
         "--output",
-        coverageFile,
+        projectCoverageFile,
         "--format",
-        "cobertura"
+        "cobertura",
+        "--exclude",
+        "[*Tests*]*"
     };
-
-    if (File.Exists(coverageFile))
-    {
-        coverletArgs.Add("--merge-with");
-        coverletArgs.Add(coverageFile);
-    }
 
     Run(ResolveGlobalTool("coverlet"), coverletArgs.ToArray());
 }
 
 Run(
     ResolveGlobalTool("reportgenerator"),
-    $"-reports:{coverageFile}",
-    $"-targetdir:{coverageSite}.site",
-    "-reporttypes:html");
+    $"-reports:{Path.Combine(coverageDir, "*.cobertura.xml")}",
+    $"-targetdir:{coverageSiteDir}",
+    "-reporttypes:Html;Cobertura");
+
+var mergedCobertura = Path.Combine(coverageSiteDir, "Cobertura.xml");
+if (!File.Exists(mergedCobertura))
+{
+    throw new InvalidOperationException($"Expected merged report at {mergedCobertura}.");
+}
+
+File.Copy(mergedCobertura, coverageFile, true);
 
 static string GetTargetFramework(string propsPath, string projectPath)
 {
