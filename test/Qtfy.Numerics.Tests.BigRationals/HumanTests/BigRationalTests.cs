@@ -247,7 +247,7 @@ internal partial class BigRationalTests
     public void TestParseSuccessful(string from, int numerator, int denominator)
     {
         var expected = new BigRational(numerator, denominator);
-        var actual = BigRational.Parse(from);
+        var actual = BigRational.ParseInvariant(from);
         AssertEqual(expected, actual);
     }
 
@@ -255,7 +255,7 @@ internal partial class BigRationalTests
     public void TestParseNull()
     {
         Assert.Throws<ArgumentNullException>(
-            () => BigRational.Parse(null));
+            () => BigRational.ParseInvariant(null!));
     }
 
     [TestCase("xyz")]
@@ -263,7 +263,7 @@ internal partial class BigRationalTests
     public void TestParseUnsuccessful(string from)
     {
         Assert.Throws<FormatException>(
-            () => BigRational.Parse(from));
+            () => BigRational.ParseInvariant(from));
     }
 
     [TestCase("123", 123, 1, true)]
@@ -285,7 +285,7 @@ internal partial class BigRationalTests
     [Test]
     public void TryParseNull()
     {
-        if (BigRational.TryParse(null, out _))
+        if (BigRational.TryParse(null!, out _))
         {
             Assert.Fail();
         }

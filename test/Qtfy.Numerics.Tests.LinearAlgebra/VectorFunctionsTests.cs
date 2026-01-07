@@ -30,7 +30,7 @@ internal sealed class VectorFunctionsTests
     [Test]
     public void DotThrowsForNullVectors()
     {
-        Assert.Throws<ArgumentNullException>(() => VectorFunctions.Dot(null, [1d]));
-        Assert.Throws<ArgumentNullException>(() => VectorFunctions.Dot([1d], null));
+        Assert.Throws<ArgumentNullException>(() => VectorFunctions.Dot(null!, [1d]));
+        Assert.Throws<ArgumentNullException>(() => VectorFunctions.Dot([1d], null!));
     }
 }

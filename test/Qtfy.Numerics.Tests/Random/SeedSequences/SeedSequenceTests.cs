@@ -22,20 +22,20 @@ internal sealed class SeedSequenceTests
     public void TestConstructWithNull()
     {
         Assert.Throws<ArgumentNullException>(
-            () => _ = new SeedSequence((uint[])null));
+            () => _ = new SeedSequence((uint[])(null!)));
 
         Assert.Throws<ArgumentNullException>(
-            () => _ = new SeedSequence((IEnumerable<uint>)null));
+            () => _ = new SeedSequence((IEnumerable<uint>)(null!)));
     }
 
     [Test]
     public void TestGenerateWithNull()
     {
         Assert.Throws<ArgumentNullException>(
-            () => new SeedSequence(1).Generate((uint[])null));
+            () => new SeedSequence(1).Generate((uint[])(null!)));
 
         Assert.Throws<ArgumentNullException>(
-            () => new SeedSequence(1).Generate((ulong[])null));
+            () => new SeedSequence(1).Generate((ulong[])(null!)));
     }
 
     [Test]

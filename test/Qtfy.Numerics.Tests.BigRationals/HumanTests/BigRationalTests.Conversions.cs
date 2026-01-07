@@ -20,7 +20,7 @@ internal partial class BigRationalTests
     public void DecimalToRational(string dec, string expected)
     {
         AssertEqual(
-            BigRational.Parse(expected),
+            BigRational.ParseInvariant(expected),
             (BigRational)ParseDecimal(dec));
     }
 
@@ -35,7 +35,7 @@ internal partial class BigRationalTests
     [TestCase("2", "2")]
     public void RationalToDecimalExact(string rational, string expected)
     {
-        Assert.That((decimal)BigRational.Parse(rational), Is.EqualTo(ParseDecimal(expected)));
+        Assert.That((decimal)BigRational.ParseInvariant(rational), Is.EqualTo(ParseDecimal(expected)));
     }
 
     [TestCase("2/3", "0.6666666666666666666666666667")]
@@ -44,7 +44,7 @@ internal partial class BigRationalTests
     [TestCase("-1/3", "-0.3333333333333333333333333333")]
     public void RationalToDecimalWithRecurringDigit(string rational, string expected)
     {
-        Assert.That((decimal)BigRational.Parse(rational), Is.EqualTo(ParseDecimal(expected)));
+        Assert.That((decimal)BigRational.ParseInvariant(rational), Is.EqualTo(ParseDecimal(expected)));
     }
 
     [TestCase("0.0000000000000000000000000005", "0")]

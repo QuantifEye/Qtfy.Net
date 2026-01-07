@@ -99,7 +99,7 @@ internal sealed class MersenneTwister32Bit19937Tests
     public void InitByArrayNull()
     {
         Assert.Throws<ArgumentNullException>(
-            () => MersenneTwister32Bit19937.InitByArray(null));
+            () => MersenneTwister32Bit19937.InitByArray(null!));
     }
 
     [Test]
@@ -110,7 +110,7 @@ internal sealed class MersenneTwister32Bit19937Tests
     [Test]
     public void TestConstructWithNullSeedSequence()
     {
-        Assert.Throws<ArgumentNullException>(() => new MersenneTwister32Bit19937((ISeedSequence)null));
+        Assert.Throws<ArgumentNullException>(() => new MersenneTwister32Bit19937((ISeedSequence)null!));
     }
 
     private static uint[] GetRandomValues(MersenneTwister32Bit19937 generator, int size)

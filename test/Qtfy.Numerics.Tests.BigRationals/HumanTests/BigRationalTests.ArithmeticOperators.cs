@@ -12,9 +12,9 @@ internal sealed partial class BigRationalTests
     [TestCase("-1/2", "1/2")]
     public void UnaryMinus(string input, string expected)
     {
-        var rational = BigRational.Parse(input);
+        var rational = BigRational.ParseInvariant(input);
         AssertEqual(
-            BigRational.Parse(expected),
+            BigRational.ParseInvariant(expected),
             -rational);
     }
 
@@ -22,7 +22,7 @@ internal sealed partial class BigRationalTests
     [TestCase("-1/2")]
     public void UnaryPlus(string input)
     {
-        var rational = BigRational.Parse(input);
+        var rational = BigRational.ParseInvariant(input);
         AssertEqual(rational, +rational);
     }
 
@@ -32,9 +32,9 @@ internal sealed partial class BigRationalTests
     [TestCase("-5/2", "-3/2")]
     public void IncrementTest(string input, string expected)
     {
-        var rational = BigRational.Parse(input);
+        var rational = BigRational.ParseInvariant(input);
         AssertEqual(
-            BigRational.Parse(expected),
+            BigRational.ParseInvariant(expected),
             ++rational);
     }
 
@@ -44,9 +44,9 @@ internal sealed partial class BigRationalTests
     [TestCase("-5/2", "-7/2")]
     public void DecrementTest(string input, string expected)
     {
-        var rational = BigRational.Parse(input);
+        var rational = BigRational.ParseInvariant(input);
         AssertEqual(
-            BigRational.Parse(expected),
+            BigRational.ParseInvariant(expected),
             --rational);
     }
 
@@ -57,8 +57,8 @@ internal sealed partial class BigRationalTests
     public void TestAddition(string left, string right, string expected)
     {
         AssertEqual(
-            BigRational.Parse(expected),
-            BigRational.Parse(left) + BigRational.Parse(right));
+            BigRational.ParseInvariant(expected),
+            BigRational.ParseInvariant(left) + BigRational.ParseInvariant(right));
     }
 
     [TestCase("1/2", "1/2", "0")]
@@ -68,8 +68,8 @@ internal sealed partial class BigRationalTests
     public void TestSubtraction(string left, string right, string expected)
     {
         AssertEqual(
-            BigRational.Parse(expected),
-            BigRational.Parse(left) - BigRational.Parse(right));
+            BigRational.ParseInvariant(expected),
+            BigRational.ParseInvariant(left) - BigRational.ParseInvariant(right));
     }
 
     [TestCase("1/2", "1/2", "1/4")]
@@ -80,8 +80,8 @@ internal sealed partial class BigRationalTests
     public void TestMultiplication(string left, string right, string expected)
     {
         AssertEqual(
-            BigRational.Parse(expected),
-            BigRational.Parse(left) * BigRational.Parse(right));
+            BigRational.ParseInvariant(expected),
+            BigRational.ParseInvariant(left) * BigRational.ParseInvariant(right));
     }
 
     [TestCase("1/2", "1/2", "1")]
@@ -91,8 +91,8 @@ internal sealed partial class BigRationalTests
     public void TestDivision(string left, string right, string expected)
     {
         AssertEqual(
-            BigRational.Parse(expected),
-            BigRational.Parse(left) / BigRational.Parse(right));
+            BigRational.ParseInvariant(expected),
+            BigRational.ParseInvariant(left) / BigRational.ParseInvariant(right));
     }
 
     [Test]
@@ -109,8 +109,8 @@ internal sealed partial class BigRationalTests
     public void TestModulus(string left, string right, string expected)
     {
         AssertEqual(
-            BigRational.Parse(expected),
-            BigRational.Parse(left) % BigRational.Parse(right));
+            BigRational.ParseInvariant(expected),
+            BigRational.ParseInvariant(left) % BigRational.ParseInvariant(right));
     }
 
     /// <summary>

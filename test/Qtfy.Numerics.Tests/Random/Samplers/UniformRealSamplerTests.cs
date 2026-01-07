@@ -42,7 +42,7 @@ internal sealed class UniformRealSamplerTests
     public void TestConstructInvalidEngine()
     {
         Assert.Throws<ArgumentNullException>(
-            () => _ = new UniformRealSampler(null, 5d, 10d));
+            () => _ = new UniformRealSampler(null!, 5d, 10d));
     }
 
     private static void TestInvalidConstruction<TException>(double min, double max)

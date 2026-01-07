@@ -44,10 +44,10 @@ internal sealed class MultivariateNormalSamplerTests
             () => _ = new MultivariateNormalSampler.Builder([0d, double.NaN], inputCovariance));
 
         Assert.Throws<ArgumentNullException>(
-            () => _ = new MultivariateNormalSampler.Builder(null, inputCovariance));
+            () => _ = new MultivariateNormalSampler.Builder(null!, inputCovariance));
 
         Assert.Throws<ArgumentNullException>(
-            () => _ = new MultivariateNormalSampler.Builder([0d], null));
+            () => _ = new MultivariateNormalSampler.Builder([0d], null!));
     }
 
     [Test]

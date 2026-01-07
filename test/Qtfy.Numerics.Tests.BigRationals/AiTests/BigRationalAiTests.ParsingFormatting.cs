@@ -18,7 +18,7 @@ internal sealed partial class BigRationalAiTests
     [Test]
     public void ParseThrowsForNullOrInvalidInput()
     {
-        Assert.Throws<ArgumentNullException>(() => BigRational.Parse((string?)null, CultureInfo.InvariantCulture));
+        Assert.Throws<ArgumentNullException>(() => BigRational.Parse((string)null!, CultureInfo.InvariantCulture));
         Assert.Throws<FormatException>(() => BigRational.Parse("not a number", CultureInfo.InvariantCulture));
         Assert.Throws<FormatException>(() => BigRational.Parse("1/0", CultureInfo.InvariantCulture));
     }

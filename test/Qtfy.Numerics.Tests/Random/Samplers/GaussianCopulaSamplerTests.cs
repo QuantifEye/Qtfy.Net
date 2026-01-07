@@ -29,7 +29,7 @@ internal sealed class GaussianCopulaSamplerTests
     public void TestConstructWithNull()
     {
         Assert.Throws<ArgumentNullException>(
-            () => _ = new GaussianCopulaSampler.Builder(null));
+            () => _ = new GaussianCopulaSampler.Builder(null!));
     }
 
     [TestCaseSource(typeof(IntegrateDistributionCases))]

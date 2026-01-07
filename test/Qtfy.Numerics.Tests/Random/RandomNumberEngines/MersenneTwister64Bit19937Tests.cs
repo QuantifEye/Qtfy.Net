@@ -110,7 +110,7 @@ internal sealed class MersenneTwister64Bit19937Tests
     public void InitByArrayNull()
     {
         Assert.Throws<ArgumentNullException>(
-            () => MersenneTwister64Bit19937.InitByArray(null));
+            () => MersenneTwister64Bit19937.InitByArray(null!));
     }
 
     [Test]
@@ -122,7 +122,7 @@ internal sealed class MersenneTwister64Bit19937Tests
     public void TestConstructWithNullSeedSequence()
     {
         Assert.Throws<ArgumentNullException>(
-            () => _ = new MersenneTwister64Bit19937(null));
+            () => _ = new MersenneTwister64Bit19937(null!));
     }
 
     private static ulong[] GetRandomValues(MersenneTwister64Bit19937 generator, int size)

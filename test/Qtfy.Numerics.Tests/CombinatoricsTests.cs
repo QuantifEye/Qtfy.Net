@@ -56,26 +56,26 @@ internal sealed class CombinatoricsTests
     public void TestPowerSetNull()
     {
         Assert.Throws<ArgumentNullException>(
-            () => _ = Combinatorics.PowerSet<int>(null));
+            () => _ = Combinatorics.PowerSet<int>(null!));
 
         Assert.Throws<ArgumentNullException>(
-            () => _ = Combinatorics.PowerSet([1, 2], null));
+            () => _ = Combinatorics.PowerSet([1, 2], null!));
 
         Assert.Throws<ArgumentNullException>(
-            () => _ = Combinatorics.PowerSet(null, EqualityComparer<int>.Default));
+            () => _ = Combinatorics.PowerSet(null!, EqualityComparer<int>.Default));
     }
 
     [Test]
     public void TestPowerSetWithComplimentNull()
     {
         Assert.Throws<ArgumentNullException>(
-            () => _ = Combinatorics.PowerSetWithCompliment<int>(null));
+            () => _ = Combinatorics.PowerSetWithCompliment<int>(null!));
 
         Assert.Throws<ArgumentNullException>(
-            () => _ = Combinatorics.PowerSetWithCompliment([1, 2], null));
+            () => _ = Combinatorics.PowerSetWithCompliment([1, 2], null!));
 
         Assert.Throws<ArgumentNullException>(
-            () => _ = Combinatorics.PowerSetWithCompliment(null, EqualityComparer<int>.Default));
+            () => _ = Combinatorics.PowerSetWithCompliment(null!, EqualityComparer<int>.Default));
     }
 
     [Test]

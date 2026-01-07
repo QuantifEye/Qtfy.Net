@@ -53,6 +53,6 @@ internal sealed class NormalSamplerTests
     [Test]
     public void TestConstructInvalidGenerator()
     {
-        TestInvalidThrows<ArgumentNullException>(null, 1d, 1d);
+        TestInvalidThrows<ArgumentNullException>(null!, 1d, 1d);
     }
 }

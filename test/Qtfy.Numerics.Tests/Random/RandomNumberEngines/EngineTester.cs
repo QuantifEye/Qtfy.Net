@@ -23,7 +23,7 @@ internal abstract class EngineTester<TEngine>
     private static uint Cast(ulong value)
     {
         return value > uint.MaxValue
-            ? throw new AssertionException(null)
+            ? throw new AssertionException(string.Empty)
             : (uint)value;
     }
 

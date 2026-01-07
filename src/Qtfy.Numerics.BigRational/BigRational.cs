@@ -2691,6 +2691,27 @@ public partial struct BigRational :
     /// </exception>
     public static BigRational Parse(string value)
     {
+        return Parse(value, NumberStyles.Integer, CultureInfo.CurrentCulture);
+    }
+
+    /// <summary>
+    /// Converts the string representation of a number to its <see cref="BigRational"/> equivalent
+    /// using the invariant culture.
+    /// </summary>
+    /// <param name="value">
+    /// A string that contains the number to convert.
+    /// </param>
+    /// <returns>
+    /// A value that is equivalent to the number specified in the <paramref name="value"/> parameter.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="value"/> is null.
+    /// </exception>
+    /// <exception cref="FormatException">
+    /// If <paramref name="value"/> cannot be interpreted as a <see cref="BigRational"/>.
+    /// </exception>
+    public static BigRational ParseInvariant(string value)
+    {
         return Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
     }
 

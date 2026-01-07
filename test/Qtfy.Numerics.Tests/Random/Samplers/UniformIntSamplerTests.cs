@@ -27,7 +27,7 @@ internal sealed class UniformIntSamplerTests
             () => _ = GetSampler(12, 7));
 
         Assert.Throws<ArgumentNullException>(
-            () => _ = new UniformIntSampler(null, 1, 2));
+            () => _ = new UniformIntSampler(null!, 1, 2));
     }
 
     [Test]

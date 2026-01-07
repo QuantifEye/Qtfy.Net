@@ -15,7 +15,7 @@ internal sealed class StandardNormalSamplerTests
     public void TestConstructInvalid()
     {
         Assert.Throws<ArgumentNullException>(
-            () => _ = new StandardNormalSampler(null));
+            () => _ = new StandardNormalSampler(null!));
     }
 
     [Test]

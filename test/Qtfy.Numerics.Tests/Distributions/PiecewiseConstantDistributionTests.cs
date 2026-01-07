@@ -37,9 +37,9 @@ internal sealed class PiecewiseConstantDistributionTests
     public void TestConstructNull()
     {
         Assert.Throws<ArgumentNullException>(
-            () => _ = PiecewiseConstantDistribution.Create(null, [1d]));
+            () => _ = PiecewiseConstantDistribution.Create(null!, [1d]));
         Assert.Throws<ArgumentNullException>(
-            () => _ = PiecewiseConstantDistribution.Create([1d, 2d], null));
+            () => _ = PiecewiseConstantDistribution.Create([1d, 2d], null!));
     }
 
     [TestCase(0, -1d)]

@@ -18,9 +18,9 @@ internal sealed class InverseTransformSamplerTests
         var engine = new MockEngine();
         var distribution = new NormalDistribution(1, 1);
         Assert.Throws<ArgumentNullException>(
-            () => _ = new InverseTransformSampler<double>(engine, null));
+            () => _ = new InverseTransformSampler<double>(engine, null!));
         Assert.Throws<ArgumentNullException>(
-            () => _ = new InverseTransformSampler<double>(null, distribution));
+            () => _ = new InverseTransformSampler<double>(null!, distribution));
     }
 
     [Test]

@@ -15,8 +15,8 @@ internal partial class BigRationalTests
     public void Ceiling(string input, string expected)
     {
         AssertEqual(
-            BigRational.Ceiling(BigRational.Parse(input)),
-            BigRational.Parse(expected));
+            BigRational.Ceiling(BigRational.ParseInvariant(input)),
+            BigRational.ParseInvariant(expected));
     }
 
     [TestCase("1/6", "1/3", "1/3")]
@@ -25,8 +25,8 @@ internal partial class BigRationalTests
     public void CeilingWithTick(string input, string tick, string expected)
     {
         AssertEqual(
-            BigRational.Ceiling(BigRational.Parse(input), BigRational.Parse(tick)),
-            BigRational.Parse(expected));
+            BigRational.Ceiling(BigRational.ParseInvariant(input), BigRational.ParseInvariant(tick)),
+            BigRational.ParseInvariant(expected));
     }
 
     [TestCase("3/2", 1)]
@@ -36,7 +36,7 @@ internal partial class BigRationalTests
     public void Floor(string rational, int rounded)
     {
         AssertEqual(
-            BigRational.Floor(BigRational.Parse(rational)),
+            BigRational.Floor(BigRational.ParseInvariant(rational)),
             new BigInteger(rounded));
     }
 
@@ -51,8 +51,8 @@ internal partial class BigRationalTests
     public void FloorWithTick(string input, string tick, string expected)
     {
         AssertEqual(
-            BigRational.Floor(BigRational.Parse(input), BigRational.Parse(tick)),
-            BigRational.Parse(expected));
+            BigRational.Floor(BigRational.ParseInvariant(input), BigRational.ParseInvariant(tick)),
+            BigRational.ParseInvariant(expected));
     }
 
     [TestCase("1/6", "1/3", MidpointRoundingMode.Down, "0/3")]
@@ -78,8 +78,8 @@ internal partial class BigRationalTests
     public void TestRoundToTickAtMidPoint(string unrounded, string tick, MidpointRoundingMode mode, string expected)
     {
         AssertEqual(
-            BigRational.RoundToTick(BigRational.Parse(unrounded), BigRational.Parse(tick), mode),
-            BigRational.Parse(expected));
+            BigRational.RoundToTick(BigRational.ParseInvariant(unrounded), BigRational.ParseInvariant(tick), mode),
+            BigRational.ParseInvariant(expected));
     }
 
     [TestCase(MidpointRoundingMode.Down)]
@@ -127,7 +127,7 @@ internal partial class BigRationalTests
     [TestCase("-1/2", MidpointRoundingMode.ToEven, 0)]
     public void RoundToIntAtMidPoint(string rational, MidpointRoundingMode mode, int rounded)
     {
-        Assert.That(BigRational.RoundToInt(BigRational.Parse(rational), mode), Is.EqualTo(new BigInteger(rounded)));
+        Assert.That(BigRational.RoundToInt(BigRational.ParseInvariant(rational), mode), Is.EqualTo(new BigInteger(rounded)));
     }
 
     [TestCase(MidpointRoundingMode.Down)]
