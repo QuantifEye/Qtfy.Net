@@ -47,9 +47,9 @@ internal sealed partial class BigRationalAiTests
     [Test]
     public void RoundToTickRejectsInvalidInputs()
     {
-        Assert.Throws<ArgumentException>(() => BigRational.RoundToTick(R(1, 2), R(0, 1), MidpointRoundingMode.ToEven));
-        Assert.Throws<ArgumentException>(() => BigRational.RoundToTick(R(1, 2), R(-1, 2), MidpointRoundingMode.ToEven));
-        Assert.Throws<ArgumentException>(() => BigRational.RoundToTick(R(1, 2), R(1, 2), (MidpointRoundingMode)42));
+        Assert.Throws<ArgumentOutOfRangeException>(() => BigRational.RoundToTick(R(1, 2), R(0, 1), MidpointRoundingMode.ToEven));
+        Assert.Throws<ArgumentOutOfRangeException>(() => BigRational.RoundToTick(R(1, 2), R(-1, 2), MidpointRoundingMode.ToEven));
+        Assert.Throws<ArgumentOutOfRangeException>(() => BigRational.RoundToTick(R(1, 2), R(1, 2), (MidpointRoundingMode)42));
     }
 
     [Test]
@@ -73,6 +73,6 @@ internal sealed partial class BigRationalAiTests
     [Test]
     public void RoundToIntRejectsInvalidMode()
     {
-        Assert.Throws<ArgumentException>(() => BigRational.RoundToInt(R(1, 2), (MidpointRoundingMode)99));
+        Assert.Throws<ArgumentOutOfRangeException>(() => BigRational.RoundToInt(R(1, 2), (MidpointRoundingMode)99));
     }
 }

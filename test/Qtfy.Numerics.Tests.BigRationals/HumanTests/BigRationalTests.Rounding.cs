@@ -105,14 +105,14 @@ internal partial class BigRationalTests
     [Test]
     public void RoundToTickWithModeError()
     {
-        Assert.Throws<ArgumentException>(() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
             BigRational.RoundToTick(1, new BigRational(1, 2), (MidpointRoundingMode)100));
     }
 
     [Test]
     public void RoundToTickWithTickError()
     {
-        Assert.Throws<ArgumentException>(() => BigRational.RoundToTick(1, new BigRational(-1, 2), default));
+        Assert.Throws<ArgumentOutOfRangeException>(() => BigRational.RoundToTick(1, new BigRational(-1, 2), default));
     }
 
     [TestCase("1/2", MidpointRoundingMode.Down, 0)]
@@ -149,7 +149,7 @@ internal partial class BigRationalTests
     [Test]
     public void RoundToIntModeError()
     {
-        Assert.Throws<ArgumentException>(() => BigRational.RoundToInt(1, (MidpointRoundingMode)100));
+        Assert.Throws<ArgumentOutOfRangeException>(() => BigRational.RoundToInt(1, (MidpointRoundingMode)100));
     }
 
     [Test]
@@ -171,6 +171,6 @@ internal partial class BigRationalTests
             }
         }
 
-        Assert.Throws<ArgumentException>(Helper);
+        Assert.Throws<ArgumentOutOfRangeException>(Helper);
     }
 }
