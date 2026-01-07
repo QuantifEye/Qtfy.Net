@@ -75,7 +75,7 @@ internal sealed partial class BigRationalAiTests
         Assert.That(value.ToString("X", CultureInfo.InvariantCulture), Is.EqualTo("3/4"));
 
         var hexValue = new BigRational(255, 16);
-        Assert.That(hexValue.ToString("X", CultureInfo.InvariantCulture), Is.EqualTo("FF/10"));
+        Assert.That(hexValue.ToString("X", CultureInfo.InvariantCulture), Is.EqualTo("0FF/10"));
     }
 
     [Test]

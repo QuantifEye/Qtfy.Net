@@ -120,6 +120,26 @@ internal partial class BigRationalTests
         Assert.That(new BigRational(n, d).IsNegative, Is.EqualTo(expected));
     }
 
+    [TestCase(1, 2, true)]
+    [TestCase(-1, 2, false)]
+    [TestCase(0, 1, true)]
+    [TestCase(1, 1, true)]
+    [TestCase(-1, 1, false)]
+    public void IsPositiveOrZero(int n, int d, bool expected)
+    {
+        Assert.That(new BigRational(n, d).IsPositiveOrZero, Is.EqualTo(expected));
+    }
+
+    [TestCase(1, 2, false)]
+    [TestCase(-1, 2, true)]
+    [TestCase(0, 1, true)]
+    [TestCase(1, 1, false)]
+    [TestCase(-1, 1, true)]
+    public void IsNegativeOrZero(int n, int d, bool expected)
+    {
+        Assert.That(new BigRational(n, d).IsNegativeOrZero, Is.EqualTo(expected));
+    }
+
     [TestCase(1, 2, false)]
     [TestCase(-1, 2, false)]
     [TestCase(0, 1, true)]

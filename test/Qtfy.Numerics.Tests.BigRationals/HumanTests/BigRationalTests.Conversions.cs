@@ -24,6 +24,19 @@ internal partial class BigRationalTests
             (BigRational)ParseDecimal(dec));
     }
 
+    [TestCase("4294967296", "4294967296")]
+    [TestCase("-4294967296", "-4294967296")]
+    [TestCase("4294967297", "4294967297")]
+    [TestCase("-4294967297", "-4294967297")]
+    [TestCase("4294967296.5", "8589934593/2")]
+    [TestCase("-4294967296.5", "-8589934593/2")]
+    public void DecimalToRationalLargeMagnitude(string dec, string expected)
+    {
+        AssertEqual(
+            BigRational.ParseInvariant(expected),
+            (BigRational)ParseDecimal(dec));
+    }
+
     [TestCase("1005/10", "100.5")]
     [TestCase("80", "80")]
     [TestCase("1/8", "0.125")]

@@ -11,9 +11,9 @@ internal sealed partial class BigRationalAiTests
     [Test]
     public void ExpHandlesEdgeTerms()
     {
-        Assert.That(BigRational.Exp(R(1, 2), 0), Is.EqualTo(BigRational.Zero));
         Assert.That(BigRational.Exp(R(1, 2), 1), Is.EqualTo(BigRational.One));
-        Assert.Throws<ArgumentException>(() => _ = BigRational.Exp(R(1, 2), -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = BigRational.Exp(R(1, 2), 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = BigRational.Exp(R(1, 2), -1));
     }
 
     [Test]
@@ -27,8 +27,9 @@ internal sealed partial class BigRationalAiTests
     [Test]
     public void LogHandlesTermsAndKnownValues()
     {
-        Assert.Throws<ArgumentException>(() => _ = BigRational.Log(R(2, 1), -1));
-        Assert.Throws<DivideByZeroException>(() => _ = BigRational.Log(R(1, 1), 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = BigRational.Log(R(2, 1), 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = BigRational.Log(R(2, 1), -1));
+        Assert.That(BigRational.Log(R(1, 1), 1), Is.EqualTo(BigRational.Zero));
 
         var expectedTerms1 = R(2, 3);
         Assert.That(BigRational.Log(R(2, 1), 1), Is.EqualTo(expectedTerms1));

@@ -12,7 +12,6 @@ internal partial class BigRationalTests
     public void ExpTaylorExpansion(int numerator, int denominator)
     {
         var power = new BigRational(numerator, denominator);
-        Assert.That(BigRational.Exp(power, 0), Is.EqualTo(BigRational.Zero));
         Assert.That(BigRational.Exp(power, 1), Is.EqualTo(BigRational.One));
         Assert.That(BigRational.Exp(power, 2), Is.EqualTo(1 + power));
         Assert.That(BigRational.Exp(power, 3), Is.EqualTo(1 + power + ((power * power) / 2)));
@@ -31,18 +30,35 @@ internal partial class BigRationalTests
         Assert.That(actual > lower, Is.True);
     }
 
-    [Test]
-    public void NegativeTermsExp()
+    [TestCase(0)]
+    [TestCase(-1)]
+    public void NonPositiveTermsExpThrows(int terms)
     {
-        Assert.Throws<ArgumentException>(
-            () => BigRational.Exp(1, -1));
+        Assert.Throws<ArgumentOutOfRangeException>(
+            () => BigRational.Exp(1, terms));
+    }
+
+    [TestCase(0)]
+    [TestCase(-1)]
+    public void NonPositiveTermsLogThrows(int terms)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(
+            () => BigRational.Log(1, terms));
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(0, 5)]
+    [TestCase(-1, 0)]
+    [TestCase(-1, 5)]
+    public void LogRejectsNonPositiveInput(int value, int terms)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => BigRational.Log(value, terms));
     }
 
     [Test]
-    public void NegativeTermsLog()
+    public void LogOfOneReturnsZero()
     {
-        Assert.Throws<ArgumentException>(
-            () => BigRational.Log(1, -1));
+        Assert.That(BigRational.Log(BigRational.One, 10), Is.EqualTo(BigRational.Zero));
     }
 
     [TestCase(2)]
