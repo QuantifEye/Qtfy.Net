@@ -4,7 +4,7 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Numerics.Tests.BigRationals;
+namespace Qtfy.Numerics.Tests.BigRationals.AiTests;
 
 using System;
 using System.Numerics;
@@ -15,20 +15,35 @@ internal sealed partial class BigRationalAiTests
     [Test]
     public void ImplicitIntegralConversionsAreExact()
     {
-        Assert.That((BigRational)(sbyte)(-5), Is.EqualTo(new BigRational(-5)));
-        Assert.That((BigRational)(byte)5, Is.EqualTo(new BigRational(5)));
-        Assert.That((BigRational)(short)(-6), Is.EqualTo(new BigRational(-6)));
-        Assert.That((BigRational)(ushort)6, Is.EqualTo(new BigRational(6)));
-        Assert.That((BigRational)-7, Is.EqualTo(new BigRational(-7)));
-        Assert.That((BigRational)7U, Is.EqualTo(new BigRational(7)));
-        Assert.That((BigRational)-8L, Is.EqualTo(new BigRational(-8)));
-        Assert.That((BigRational)8UL, Is.EqualTo(new BigRational(8)));
-        Assert.That((BigRational)(nint)(-9), Is.EqualTo(new BigRational(-9)));
-        Assert.That((BigRational)(nuint)9, Is.EqualTo(new BigRational(9)));
-        Assert.That((BigRational)(Int128)(-10), Is.EqualTo(new BigRational(-10)));
-        Assert.That((BigRational)(UInt128)10, Is.EqualTo(new BigRational(10)));
-        Assert.That((BigRational)(char)65, Is.EqualTo(new BigRational(65)));
-        Assert.That((BigRational)new BigInteger(11), Is.EqualTo(new BigRational(11)));
+        sbyte sbyteValue = -5;
+        byte byteValue = 5;
+        short shortValue = -6;
+        ushort ushortValue = 6;
+        int intValue = -7;
+        uint uintValue = 7U;
+        long longValue = -8L;
+        ulong ulongValue = 8UL;
+        nint nintValue = -9;
+        nuint nuintValue = 9;
+        Int128 int128Value = -10;
+        UInt128 uint128Value = 10;
+        char charValue = (char)65;
+        var bigIntegerValue = new BigInteger(11);
+
+        Assert.That((BigRational)sbyteValue, Is.EqualTo(new BigRational(-5)));
+        Assert.That((BigRational)byteValue, Is.EqualTo(new BigRational(5)));
+        Assert.That((BigRational)shortValue, Is.EqualTo(new BigRational(-6)));
+        Assert.That((BigRational)ushortValue, Is.EqualTo(new BigRational(6)));
+        Assert.That((BigRational)intValue, Is.EqualTo(new BigRational(-7)));
+        Assert.That((BigRational)uintValue, Is.EqualTo(new BigRational(7)));
+        Assert.That((BigRational)longValue, Is.EqualTo(new BigRational(-8)));
+        Assert.That((BigRational)ulongValue, Is.EqualTo(new BigRational(8)));
+        Assert.That((BigRational)nintValue, Is.EqualTo(new BigRational(-9)));
+        Assert.That((BigRational)nuintValue, Is.EqualTo(new BigRational(9)));
+        Assert.That((BigRational)int128Value, Is.EqualTo(new BigRational(-10)));
+        Assert.That((BigRational)uint128Value, Is.EqualTo(new BigRational(10)));
+        Assert.That((BigRational)charValue, Is.EqualTo(new BigRational(65)));
+        Assert.That((BigRational)bigIntegerValue, Is.EqualTo(new BigRational(11)));
     }
 
     [Test]

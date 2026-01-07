@@ -2,7 +2,6 @@
   <Import Project="../Directory.Build.props" />
   <PropertyGroup>
     <IsPackable>false</IsPackable>
-    <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

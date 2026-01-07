@@ -4,8 +4,5 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-using System;
-using System.Runtime.CompilerServices;
-
-[assembly: CLSCompliant(false)]
-[assembly: InternalsVisibleTo("Qtfy.Numerics.Tests")]
+[assembly: System.CLSCompliant(false)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Qtfy.Numerics.Tests")]

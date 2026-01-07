@@ -10,7 +10,6 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 /// <summary>
@@ -546,7 +545,6 @@ public partial struct BigRational :
     /// <returns>
     /// The truncated <see cref="UInt128"/> value.
     /// </returns>
-    [CLSCompliant(false)]
     public static explicit operator UInt128(BigRational value)
     {
         var integer = TruncateToBigInteger(value);
@@ -599,7 +597,6 @@ public partial struct BigRational :
     /// <returns>
     /// The truncated <see cref="nuint"/> value.
     /// </returns>
-    [CLSCompliant(false)]
     public static explicit operator nuint(BigRational value)
     {
         var integer = TruncateToBigInteger(value);
@@ -651,7 +648,6 @@ public partial struct BigRational :
     /// <returns>
     /// The truncated <see cref="ulong"/> value.
     /// </returns>
-    [CLSCompliant(false)]
     public static explicit operator ulong(BigRational value)
     {
         var integer = TruncateToBigInteger(value);
@@ -702,7 +698,6 @@ public partial struct BigRational :
     /// <returns>
     /// The truncated <see cref="uint"/> value.
     /// </returns>
-    [CLSCompliant(false)]
     public static explicit operator uint(BigRational value)
     {
         var integer = TruncateToBigInteger(value);
@@ -753,7 +748,6 @@ public partial struct BigRational :
     /// <returns>
     /// The truncated <see cref="ushort"/> value.
     /// </returns>
-    [CLSCompliant(false)]
     public static explicit operator ushort(BigRational value)
     {
         var integer = TruncateToBigInteger(value);
@@ -804,7 +798,6 @@ public partial struct BigRational :
     /// <returns>
     /// The truncated <see cref="sbyte"/> value.
     /// </returns>
-    [CLSCompliant(false)]
     public static explicit operator sbyte(BigRational value)
     {
         var integer = TruncateToBigInteger(value);
@@ -874,7 +867,6 @@ public partial struct BigRational :
     /// <param name="value">
     /// The <see cref="UInt128"/> to convert.
     /// </param>
-    [CLSCompliant(false)]
     public static implicit operator BigRational(UInt128 value)
     {
         return new BigRational((BigInteger)value);
@@ -897,7 +889,6 @@ public partial struct BigRational :
     /// <param name="value">
     /// The <see cref="nuint"/> to convert.
     /// </param>
-    [CLSCompliant(false)]
     public static implicit operator BigRational(nuint value)
     {
         return new BigRational((ulong)value);
@@ -909,7 +900,6 @@ public partial struct BigRational :
     /// <param name="value">
     /// The <see cref="ulong"/> to convert.
     /// </param>
-    [CLSCompliant(false)]
     public static implicit operator BigRational(ulong value)
     {
         return new BigRational(value);
@@ -932,7 +922,6 @@ public partial struct BigRational :
     /// <param name="value">
     /// The <see cref="uint"/> to convert.
     /// </param>
-    [CLSCompliant(false)]
     public static implicit operator BigRational(uint value)
     {
         return new BigRational(value);
@@ -955,7 +944,6 @@ public partial struct BigRational :
     /// <param name="value">
     /// The <see cref="ushort"/> to convert.
     /// </param>
-    [CLSCompliant(false)]
     public static implicit operator BigRational(ushort value)
     {
         return new BigRational(value);
@@ -1000,7 +988,6 @@ public partial struct BigRational :
     /// <param name="value">
     /// The <see cref="sbyte"/> to convert.
     /// </param>
-    [CLSCompliant(false)]
     public static implicit operator BigRational(sbyte value)
     {
         return new BigRational(value);
@@ -1069,7 +1056,6 @@ public partial struct BigRational :
     /// <returns>
     /// true if <paramref name="left"/> and <paramref name="right"/> are equal; otherwise, false.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator ==(BigRational left, ulong right)
     {
         return left.IsInteger && left.Numerator == right;
@@ -1087,7 +1073,6 @@ public partial struct BigRational :
     /// <returns>
     /// true if <paramref name="left"/> and <paramref name="right"/> are equal; otherwise, false.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator ==(ulong left, BigRational right)
     {
         return right.IsInteger && left == right.Numerator;
@@ -1190,7 +1175,6 @@ public partial struct BigRational :
     /// <returns>
     /// false if <paramref name="left"/> and <paramref name="right"/> are equal; otherwise, true.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator !=(BigRational left, ulong right)
     {
         return left.Denominator != BigInteger.One || left.Numerator != right;
@@ -1208,7 +1192,6 @@ public partial struct BigRational :
     /// <returns>
     /// false if <paramref name="left"/> and <paramref name="right"/> are equal; otherwise, true.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator !=(ulong left, BigRational right)
     {
         return right.Denominator != BigInteger.One || left != right.Numerator;
@@ -1311,7 +1294,6 @@ public partial struct BigRational :
     /// <returns>
     /// true if <paramref name="left"/> is greater than <paramref name="right"/>; otherwise, false.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator >(BigRational left, ulong right)
     {
         return left.Numerator > right * left.Denominator;
@@ -1329,7 +1311,6 @@ public partial struct BigRational :
     /// <returns>
     /// true if <paramref name="left"/> is greater than <paramref name="right"/>; otherwise, false.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator >(ulong left, BigRational right)
     {
         return left * right.Denominator > right.Numerator;
@@ -1432,7 +1413,6 @@ public partial struct BigRational :
     /// <returns>
     /// true if <paramref name="left"/> is less than or equal to <paramref name="right"/>; otherwise, false.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator <=(BigRational left, ulong right)
     {
         return left.Numerator <= right * left.Denominator;
@@ -1450,7 +1430,6 @@ public partial struct BigRational :
     /// <returns>
     /// true if <paramref name="left"/> is less than or equal to <paramref name="right"/>; otherwise, false.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator <=(ulong left, BigRational right)
     {
         return left * right.Denominator <= right.Numerator;
@@ -1536,7 +1515,6 @@ public partial struct BigRational :
     /// <returns>
     /// true if <paramref name="left"/> is less than <paramref name="right"/>; otherwise, false.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator <(ulong left, BigRational right)
     {
         return left * right.Denominator < right.Numerator;
@@ -1554,7 +1532,6 @@ public partial struct BigRational :
     /// <returns>
     /// true if <paramref name="left"/> is less than <paramref name="right"/>; otherwise, false.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator <(BigRational left, ulong right)
     {
         return left.Numerator < right * left.Denominator;
@@ -1674,7 +1651,6 @@ public partial struct BigRational :
     /// <returns>
     /// true if <paramref name="left"/> is greater than or equal to <paramref name="right"/>; otherwise, false.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator >=(BigRational left, ulong right)
     {
         return left.Numerator >= right * left.Denominator;
@@ -1692,7 +1668,6 @@ public partial struct BigRational :
     /// <returns>
     /// true if <paramref name="left"/> is greater than or equal to <paramref name="right"/>; otherwise, false.
     /// </returns>
-    [CLSCompliant(false)]
     public static bool operator >=(ulong left, BigRational right)
     {
         return left * right.Denominator >= right.Numerator;
@@ -1857,7 +1832,6 @@ public partial struct BigRational :
     /// <returns>
     /// The sum of <paramref name="augend"/> and <paramref name="addend"/>.
     /// </returns>
-    [CLSCompliant(false)]
     public static BigRational operator +(BigRational augend, ulong addend)
     {
         var leftDen = augend.Denominator;
@@ -1876,7 +1850,6 @@ public partial struct BigRational :
     /// <returns>
     /// The sum of <paramref name="augend"/> and <paramref name="addend"/>.
     /// </returns>
-    [CLSCompliant(false)]
     public static BigRational operator +(ulong augend, BigRational addend)
     {
         var rightDen = addend.Denominator;
@@ -1986,7 +1959,6 @@ public partial struct BigRational :
     /// <returns>
     /// The result of subtracting <paramref name="subtrahend"/> from <paramref name="minuend"/>.
     /// </returns>
-    [CLSCompliant(false)]
     public static BigRational operator -(BigRational minuend, ulong subtrahend)
     {
         var leftDen = minuend.Denominator;
@@ -2005,7 +1977,6 @@ public partial struct BigRational :
     /// <returns>
     /// The result of subtracting <paramref name="subtrahend"/> from <paramref name="minuend"/>.
     /// </returns>
-    [CLSCompliant(false)]
     public static BigRational operator -(ulong minuend, BigRational subtrahend)
     {
         var rightDen = subtrahend.Denominator;
@@ -2042,7 +2013,6 @@ public partial struct BigRational :
     /// <returns>
     /// The result of subtracting <paramref name="subtrahend"/> from <paramref name="minuend"/>.
     /// </returns>
-    [CLSCompliant(false)]
     public static BigRational operator -(long minuend, BigRational subtrahend)
     {
         var rightDen = subtrahend.Denominator;
@@ -2061,7 +2031,6 @@ public partial struct BigRational :
     /// <returns>
     /// The product of <paramref name="multiplicand"/> and <paramref name="multiplier"/>.
     /// </returns>
-    [CLSCompliant(false)]
     public static BigRational operator *(BigRational multiplicand, BigRational multiplier)
     {
         return new BigRational(
@@ -2115,7 +2084,6 @@ public partial struct BigRational :
     /// <returns>
     /// The product of <paramref name="multiplicand"/> and <paramref name="multiplier"/>.
     /// </returns>
-    [CLSCompliant(false)]
     public static BigRational operator *(BigRational multiplicand, ulong multiplier)
     {
         return new BigRational(multiplicand.Numerator * multiplier, multiplicand.Denominator);
@@ -2133,7 +2101,6 @@ public partial struct BigRational :
     /// <returns>
     /// The product of <paramref name="multiplicand"/> and <paramref name="multiplier"/>.
     /// </returns>
-    [CLSCompliant(false)]
     public static BigRational operator *(ulong multiplicand, BigRational multiplier)
     {
         return new BigRational(multiplicand * multiplier.Numerator, multiplier.Denominator);
@@ -2248,7 +2215,6 @@ public partial struct BigRational :
     /// <exception cref="DivideByZeroException">
     /// If <paramref name="divisor"/> is equal to zero (0/1).
     /// </exception>
-    [CLSCompliant(false)]
     public static BigRational operator /(BigRational dividend, ulong divisor)
     {
         return new BigRational(dividend.Numerator, dividend.Denominator * divisor);
@@ -2269,7 +2235,6 @@ public partial struct BigRational :
     /// <exception cref="DivideByZeroException">
     /// If <paramref name="divisor"/> is equal to zero (0/1).
     /// </exception>
-    [CLSCompliant(false)]
     public static BigRational operator /(ulong dividend, BigRational divisor)
     {
         return new BigRational(dividend * divisor.Denominator, divisor.Numerator);
@@ -2393,7 +2358,6 @@ public partial struct BigRational :
     /// <exception cref="DivideByZeroException">
     /// If <paramref name="divisor"/> is zero (1/0).
     /// </exception>
-    [CLSCompliant(false)]
     public static BigRational operator %(BigRational dividend, ulong divisor)
     {
         var temp = dividend / divisor;
@@ -2415,7 +2379,6 @@ public partial struct BigRational :
     /// <exception cref="DivideByZeroException">
     /// If <paramref name="divisor"/> is zero (1/0).
     /// </exception>
-    [CLSCompliant(false)]
     public static BigRational operator %(ulong dividend, BigRational divisor)
     {
         var temp = dividend / divisor;
@@ -2437,7 +2400,6 @@ public partial struct BigRational :
     /// <exception cref="DivideByZeroException">
     /// If <paramref name="divisor"/> is zero (1/0).
     /// </exception>
-    [CLSCompliant(false)]
     public static BigRational operator %(BigRational dividend, long divisor)
     {
         var temp = dividend / divisor;
@@ -3992,7 +3954,6 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public bool Equals(UInt128 other)
     {
         return this.Numerator.Equals((BigInteger)other * this.Denominator);
@@ -4005,14 +3966,12 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public bool Equals(nuint other)
     {
         return this.Equals((ulong)other);
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public bool Equals(ulong other)
     {
         return this.Numerator.Equals(other * this.Denominator);
@@ -4025,7 +3984,6 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public bool Equals(uint other)
     {
         return this.Numerator.Equals(other * this.Denominator);
@@ -4038,7 +3996,6 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public bool Equals(ushort other)
     {
         return this.Numerator.Equals(other * this.Denominator);
@@ -4063,7 +4020,6 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public bool Equals(sbyte other)
     {
         return this.Numerator.Equals(other * this.Denominator);
@@ -4145,7 +4101,6 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public int CompareTo(UInt128 other)
     {
         return this.CompareTo((BigInteger)other);
@@ -4158,14 +4113,12 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public int CompareTo(nuint other)
     {
         return this.CompareTo((ulong)other);
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public int CompareTo(ulong other)
     {
         return this.Numerator.CompareTo(other * this.Denominator);
@@ -4178,7 +4131,6 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public int CompareTo(uint other)
     {
         return this.Numerator.CompareTo(other * this.Denominator);
@@ -4191,7 +4143,6 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public int CompareTo(ushort other)
     {
         return this.Numerator.CompareTo(other * this.Denominator);
@@ -4216,7 +4167,6 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    [CLSCompliant(false)]
     public int CompareTo(sbyte other)
     {
         return this.Numerator.CompareTo(other * this.Denominator);
