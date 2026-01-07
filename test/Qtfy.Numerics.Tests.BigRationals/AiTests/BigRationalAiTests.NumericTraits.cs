@@ -6,9 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.BigRationals.AiTests;
 
-using System;
-using NUnit.Framework;
-
 internal sealed partial class BigRationalAiTests
 {
     [Test]

@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.Random.Samplers;
 
-using System;
-using NUnit.Framework;
 using Qtfy.Numerics.Distributions;
 using Qtfy.Numerics.Random;
 using Qtfy.Numerics.Random.RandomNumberEngines;

@@ -6,11 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.BigRationals;
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-
 internal partial class BigRationalTests
 {
     private static readonly IEnumerable<object[]> LessThanCaseValues =

@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Distributions;
 
-using System;
-
 /// <summary>
 /// A standard normal distribution object.
 /// </summary>

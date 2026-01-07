@@ -6,14 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.BigRationals;
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
-using NUnit.Framework;
-
 internal partial class BigRationalTests
 {
     [TestCase("op_Equality")]

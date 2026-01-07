@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Random.Samplers;
 
-using System;
-
 public sealed partial class GaussianCopulaSampler
 {
     /// <summary>

@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.LinearAlgebra;
 
-using System;
-using NUnit.Framework;
 using Qtfy.Numerics.LinearAlgebra;
 
 internal sealed class VectorFunctionsTests

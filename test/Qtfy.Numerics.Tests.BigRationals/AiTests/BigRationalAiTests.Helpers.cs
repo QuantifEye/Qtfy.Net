@@ -6,9 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.BigRationals.AiTests;
 
-using System.Numerics;
-using NUnit.Framework;
-
 internal sealed partial class BigRationalAiTests
 {
     private static BigRational R(long numerator, long denominator)

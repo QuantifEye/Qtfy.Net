@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
-using System.Runtime.CompilerServices;
-
 /// <summary>
 /// The Philox4x32 counter based random number generator that performs 10 rounds.
 /// See the paper <see href="http://www.thesalmons.org/john/random123/papers/random123sc11.pdf"/>.

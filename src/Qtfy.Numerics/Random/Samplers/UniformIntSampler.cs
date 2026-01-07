@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Random.Samplers;
 
-using System;
-
 /// <summary>
 /// A base class for uniform discrete distributions.
 /// </summary>

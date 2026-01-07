@@ -6,7 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.Random.RandomNumberEngines;
 
-using NUnit.Framework;
 using Qtfy.Numerics.Random.RandomNumberEngines;
 
 internal sealed class Philox4X32Tests

@@ -46,7 +46,6 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 Any feedback is very welcome.
 http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
 email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
@@ -54,9 +53,6 @@ email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 
 namespace Qtfy.Numerics.Tests.Random.RandomNumberEngines;
 
-using System;
-using System.Linq;
-using NUnit.Framework;
 using Qtfy.Numerics.Random;
 using Qtfy.Numerics.Random.RandomNumberEngines;
 
@@ -197,7 +193,6 @@ internal sealed class MersenneTwister32Bit19937Tests
            LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
            NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
            SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 
            Any feedback is very welcome.
            http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html

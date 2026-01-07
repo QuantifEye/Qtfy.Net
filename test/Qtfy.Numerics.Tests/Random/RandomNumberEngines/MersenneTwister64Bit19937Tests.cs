@@ -65,8 +65,6 @@
 
 namespace Qtfy.Numerics.Tests.Random.RandomNumberEngines;
 
-using System;
-using NUnit.Framework;
 using Qtfy.Numerics.Random.RandomNumberEngines;
 
 internal sealed class MersenneTwister64Bit19937Tests
@@ -328,7 +326,6 @@ internal sealed class MersenneTwister64Bit19937Tests
 
             return x;
         }
-
 
         switch (method)
         {

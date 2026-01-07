@@ -6,7 +6,6 @@
 
 namespace Qtfy.Numerics.Random.Samplers;
 
-using System;
 using static System.Math;
 
 /// <summary>

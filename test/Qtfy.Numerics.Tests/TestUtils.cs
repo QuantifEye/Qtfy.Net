@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Tests;
 
-using NUnit.Framework;
-
 internal static class TestUtils
 {
     /// <summary>

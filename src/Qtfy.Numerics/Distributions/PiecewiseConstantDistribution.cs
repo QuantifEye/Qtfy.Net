@@ -6,10 +6,6 @@
 
 namespace Qtfy.Numerics.Distributions;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 /// <summary>
 /// A piecewise constant distribution is described distribution which is uniformly distributed within sub intervals.
 /// This can be thought of as being analogous to the distribution implied by a histogram.

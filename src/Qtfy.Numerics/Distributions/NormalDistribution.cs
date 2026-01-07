@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Distributions;
 
-using System;
-
 /// <summary>
 /// A Normal(Gaussian) distribution object.
 /// </summary>

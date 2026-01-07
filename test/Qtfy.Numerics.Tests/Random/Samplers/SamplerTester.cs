@@ -6,7 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.Random.Samplers;
 
-using NUnit.Framework;
 using Qtfy.Numerics.Random;
 
 internal static class SamplerTester

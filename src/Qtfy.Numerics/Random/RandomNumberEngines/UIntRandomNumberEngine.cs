@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
-using System;
-
 /// <summary>
 /// A base class for all random bit generators that generate uniformly distributed values.
 /// </summary>

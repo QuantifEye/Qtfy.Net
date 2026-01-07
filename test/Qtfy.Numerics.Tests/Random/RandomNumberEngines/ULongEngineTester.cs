@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.Random.RandomNumberEngines;
 
-using System.Linq;
-using NUnit.Framework;
 using Qtfy.Numerics.Random.RandomNumberEngines;
 using Qtfy.Numerics.Random.SeedSequences;
 

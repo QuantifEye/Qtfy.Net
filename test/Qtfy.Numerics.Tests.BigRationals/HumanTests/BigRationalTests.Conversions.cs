@@ -6,11 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.BigRationals;
 
-using System;
-using System.Globalization;
-using System.Numerics;
-using NUnit.Framework;
-
 internal partial class BigRationalTests
 {
     private static decimal ParseDecimal(string str)

@@ -6,7 +6,6 @@
 
 namespace Qtfy.Numerics.Tests;
 
-using NUnit.Framework;
 using static System.Math;
 
 internal sealed class ConstantsTests

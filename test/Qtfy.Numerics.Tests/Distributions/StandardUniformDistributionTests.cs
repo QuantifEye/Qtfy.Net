@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.Distributions;
 
-using System;
-using NUnit.Framework;
 using Qtfy.Numerics.Distributions;
 
 internal sealed class StandardUniformDistributionTests

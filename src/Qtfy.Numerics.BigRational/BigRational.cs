@@ -6,12 +6,6 @@
 
 namespace Qtfy.Numerics;
 
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Numerics;
-using System.Text;
-
 /// <summary>
 /// A structure that represents a rational number with an arbitrarily large numerator and denominator.
 /// </summary>

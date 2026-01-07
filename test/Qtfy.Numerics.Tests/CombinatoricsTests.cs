@@ -6,11 +6,6 @@
 
 namespace Qtfy.Numerics.Tests;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-
 internal sealed class CombinatoricsTests
 {
     private static readonly (int[] left, int[] right)[] ExpectedPowerSetAndCompliment =

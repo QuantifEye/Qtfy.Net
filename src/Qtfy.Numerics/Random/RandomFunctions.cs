@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Random;
 
-using System;
-
 /// <summary>
 /// Utility functions used for random number generation.
 /// </summary>

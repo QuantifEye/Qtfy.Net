@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Distributions;
 
-using System;
-
 /// <summary>
 /// A standard uniform distribution. That is a continuous uniform distribution on [0, 1].
 /// </summary>

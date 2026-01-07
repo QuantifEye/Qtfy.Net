@@ -37,8 +37,6 @@ email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 
 namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
-using System;
-
 /// <summary>
 /// The Mersenne Twister random number generator.
 /// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/emt19937ar.html" />.

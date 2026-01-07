@@ -6,11 +6,6 @@
 
 namespace Qtfy.Numerics;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-
 /// <summary>
 /// A collection of methods that provide combinatorial tools.
 /// </summary>

@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics;
 
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using static System.Math;
 
 /// <summary>

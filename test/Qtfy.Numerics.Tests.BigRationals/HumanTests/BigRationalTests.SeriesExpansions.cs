@@ -6,9 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.BigRationals;
 
-using System;
-using NUnit.Framework;
-
 internal partial class BigRationalTests
 {
     [TestCase(7, 14)]

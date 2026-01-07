@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.Random;
 
-using System;
-using NUnit.Framework;
 using Qtfy.Numerics.Random;
 
 internal sealed class SamplerExtensionsTests

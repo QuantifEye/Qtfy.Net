@@ -6,9 +6,6 @@
 
 namespace Qtfy.Numerics.Tests;
 
-using System;
-using NUnit.Framework;
-
 internal sealed class SpecialFunctionsTests
 {
     private static unsafe void TestHelper(

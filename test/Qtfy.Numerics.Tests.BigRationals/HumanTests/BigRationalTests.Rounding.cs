@@ -6,11 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.BigRationals;
 
-using System;
-using System.Numerics;
-using System.Reflection;
-using NUnit.Framework;
-
 internal partial class BigRationalTests
 {
     [TestCase("1/2", "1")]
@@ -165,11 +160,13 @@ internal partial class BigRationalTests
             try
             {
                 typeof(BigRational)
-                    .GetMethod("RoundImpl", BindingFlags.NonPublic | BindingFlags.Static)
+                    .GetMethod("RoundImpl", BindingFlags.NonPublic | BindingFlags.Static) !
                     .Invoke(null, [default(BigRational), (MidpointRoundingMode)int.MaxValue]);
             }
             catch (TargetInvocationException ex)
             {
+                ArgumentNullException.ThrowIfNull(ex);
+                ArgumentNullException.ThrowIfNull(ex.InnerException);
                 throw ex.InnerException;
             }
         }

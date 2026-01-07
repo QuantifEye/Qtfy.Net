@@ -4,12 +4,7 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-
 namespace Qtfy.Numerics.Tests.BigRationals.AiTests;
-
-using System;
-using System.Numerics;
-using NUnit.Framework;
 
 internal sealed partial class BigRationalAiTests
 {

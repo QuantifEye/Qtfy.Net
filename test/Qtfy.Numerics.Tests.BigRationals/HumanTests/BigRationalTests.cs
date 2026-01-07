@@ -6,11 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.BigRationals;
 
-using System;
-using System.Numerics;
-using System.Collections.Generic;
-using NUnit.Framework;
-
 internal partial class BigRationalTests
 {
     public static IEnumerable<object[]> ConstantTests()

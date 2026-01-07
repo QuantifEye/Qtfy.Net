@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Random.Samplers;
 
-using System;
-
 /// <summary>
 /// An inverse transform random number generator.
 /// </summary>

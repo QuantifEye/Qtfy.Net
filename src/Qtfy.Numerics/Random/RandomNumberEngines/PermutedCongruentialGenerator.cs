@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
-using System;
-
 /// <summary>
 /// The Permuted Congruential Generator.
 /// <see href="https://www.pcg-random.org/index.html" />.

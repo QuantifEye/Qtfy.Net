@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Random;
 
-using System;
-
 /// <summary>
 /// A collection of extension methods for samplers.
 /// </summary>

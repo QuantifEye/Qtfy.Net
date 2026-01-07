@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.LinearAlgebra;
 
-using System;
-
 /// <summary>
 /// A collection of vector operations.
 /// </summary>

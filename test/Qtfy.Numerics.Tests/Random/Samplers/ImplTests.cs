@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.Random.Samplers;
 
-using System;
-using NUnit.Framework;
 using static Qtfy.Numerics.Random.Samplers.Impl;
 
 internal sealed class ImplTests

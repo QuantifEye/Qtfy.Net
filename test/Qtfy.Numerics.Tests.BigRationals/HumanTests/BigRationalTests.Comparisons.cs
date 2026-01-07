@@ -6,9 +6,6 @@
 
 namespace Qtfy.Numerics.Tests.BigRationals;
 
-using System.Numerics;
-using NUnit.Framework;
-
 internal partial class BigRationalTests
 {
     [TestCaseSource(typeof(EqualCases))]
