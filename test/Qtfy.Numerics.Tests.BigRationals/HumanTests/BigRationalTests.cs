@@ -16,7 +16,7 @@ internal partial class BigRationalTests
     public static IEnumerable<object[]> ConstantTests()
     {
         yield return [BigRational.One, BigInteger.One, BigInteger.One];
-        yield return [BigRational.MinusOne, BigInteger.MinusOne, BigInteger.One];
+        yield return [BigRational.NegativeOne, BigInteger.MinusOne, BigInteger.One];
         yield return [BigRational.Zero, BigInteger.Zero, BigInteger.One];
     }
 

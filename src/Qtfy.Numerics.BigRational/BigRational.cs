@@ -325,6 +325,24 @@ public partial struct BigRational :
     }
 
     /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="Half"/>.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The value of the provided <see cref="BigRational"/> converted to a <see cref="Half"/>.
+    /// </returns>
+    /// <remarks>
+    /// The implementation relies on the implementation of the conversion operator that converts
+    /// a <see cref="BigRational"/> to a double.
+    /// </remarks>
+    public static explicit operator Half(BigRational value)
+    {
+        return (Half)(double)value;
+    }
+
+    /// <summary>
     /// Converts a <see cref="double"/> to a <see cref="BigRational"/>.
     /// </summary>
     /// <param name="d">
@@ -386,6 +404,17 @@ public partial struct BigRational :
     public static implicit operator BigRational(float d)
     {
         return (double)d;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="Half"/> to a <see cref="BigRational"/>.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="Half"/> to convert.
+    /// </param>
+    public static implicit operator BigRational(Half value)
+    {
+        return (double)value;
     }
 
     /// <summary>
@@ -470,6 +499,354 @@ public partial struct BigRational :
     }
 
     /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="BigInteger"/> by truncating toward zero.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="BigInteger"/> value.
+    /// </returns>
+    public static explicit operator BigInteger(BigRational value)
+    {
+        return TruncateToBigInteger(value);
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="Int128"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="Int128"/> value.
+    /// </returns>
+    public static explicit operator Int128(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        if (integer < (BigInteger)Int128.MinValue)
+        {
+            return Int128.MinValue;
+        }
+
+        if (integer > (BigInteger)Int128.MaxValue)
+        {
+            return Int128.MaxValue;
+        }
+
+        return (Int128)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="UInt128"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="UInt128"/> value.
+    /// </returns>
+    [CLSCompliant(false)]
+    public static explicit operator UInt128(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        if (integer.Sign < 0)
+        {
+            return 0;
+        }
+
+        if (integer > (BigInteger)UInt128.MaxValue)
+        {
+            return UInt128.MaxValue;
+        }
+
+        return (UInt128)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="nint"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="nint"/> value.
+    /// </returns>
+    public static explicit operator nint(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        var min = (long)nint.MinValue;
+        var max = (long)nint.MaxValue;
+        if (integer < min)
+        {
+            return (nint)min;
+        }
+
+        if (integer > max)
+        {
+            return (nint)max;
+        }
+
+        return (nint)(long)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="nuint"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="nuint"/> value.
+    /// </returns>
+    [CLSCompliant(false)]
+    public static explicit operator nuint(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        var max = (ulong)nuint.MaxValue;
+        if (integer.Sign < 0)
+        {
+            return 0;
+        }
+
+        if (integer > (BigInteger)max)
+        {
+            return (nuint)max;
+        }
+
+        return (nuint)(ulong)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="long"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="long"/> value.
+    /// </returns>
+    public static explicit operator long(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        if (integer < (BigInteger)long.MinValue)
+        {
+            return long.MinValue;
+        }
+
+        if (integer > (BigInteger)long.MaxValue)
+        {
+            return long.MaxValue;
+        }
+
+        return (long)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="ulong"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="ulong"/> value.
+    /// </returns>
+    [CLSCompliant(false)]
+    public static explicit operator ulong(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        if (integer.Sign < 0)
+        {
+            return 0;
+        }
+
+        if (integer > (BigInteger)ulong.MaxValue)
+        {
+            return ulong.MaxValue;
+        }
+
+        return (ulong)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="int"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="int"/> value.
+    /// </returns>
+    public static explicit operator int(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        if (integer < (BigInteger)int.MinValue)
+        {
+            return int.MinValue;
+        }
+
+        if (integer > (BigInteger)int.MaxValue)
+        {
+            return int.MaxValue;
+        }
+
+        return (int)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="uint"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="uint"/> value.
+    /// </returns>
+    [CLSCompliant(false)]
+    public static explicit operator uint(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        if (integer.Sign < 0)
+        {
+            return 0;
+        }
+
+        if (integer > (BigInteger)uint.MaxValue)
+        {
+            return uint.MaxValue;
+        }
+
+        return (uint)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="short"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="short"/> value.
+    /// </returns>
+    public static explicit operator short(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        if (integer < (BigInteger)short.MinValue)
+        {
+            return short.MinValue;
+        }
+
+        if (integer > (BigInteger)short.MaxValue)
+        {
+            return short.MaxValue;
+        }
+
+        return (short)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="ushort"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="ushort"/> value.
+    /// </returns>
+    [CLSCompliant(false)]
+    public static explicit operator ushort(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        if (integer.Sign < 0)
+        {
+            return 0;
+        }
+
+        if (integer > (BigInteger)ushort.MaxValue)
+        {
+            return ushort.MaxValue;
+        }
+
+        return (ushort)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="byte"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="byte"/> value.
+    /// </returns>
+    public static explicit operator byte(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        if (integer.Sign < 0)
+        {
+            return 0;
+        }
+
+        if (integer > (BigInteger)byte.MaxValue)
+        {
+            return byte.MaxValue;
+        }
+
+        return (byte)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="sbyte"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="sbyte"/> value.
+    /// </returns>
+    [CLSCompliant(false)]
+    public static explicit operator sbyte(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        if (integer < (BigInteger)sbyte.MinValue)
+        {
+            return sbyte.MinValue;
+        }
+
+        if (integer > (BigInteger)sbyte.MaxValue)
+        {
+            return sbyte.MaxValue;
+        }
+
+        return (sbyte)integer;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="BigRational"/> to a <see cref="char"/> by truncating toward zero and clamping to the destination range.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="BigRational"/> to convert.
+    /// </param>
+    /// <returns>
+    /// The truncated <see cref="char"/> value.
+    /// </returns>
+    public static explicit operator char(BigRational value)
+    {
+        var integer = TruncateToBigInteger(value);
+        if (integer.Sign < 0)
+        {
+            return '\0';
+        }
+
+        if (integer > (BigInteger)(int)char.MaxValue)
+        {
+            return char.MaxValue;
+        }
+
+        return (char)(ushort)integer;
+    }
+
+    /// <summary>
     /// Converts a <see cref="BigInteger"/> to a <see cref="BigRational"/>.
     /// </summary>
     /// <param name="value">
@@ -478,6 +855,52 @@ public partial struct BigRational :
     public static implicit operator BigRational(BigInteger value)
     {
         return new BigRational(value);
+    }
+
+    /// <summary>
+    /// Converts a <see cref="Int128"/> to a <see cref="BigRational"/>.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="Int128"/> to convert.
+    /// </param>
+    public static implicit operator BigRational(Int128 value)
+    {
+        return new BigRational((BigInteger)value);
+    }
+
+    /// <summary>
+    /// Converts a <see cref="UInt128"/> to a <see cref="BigRational"/>.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="UInt128"/> to convert.
+    /// </param>
+    [CLSCompliant(false)]
+    public static implicit operator BigRational(UInt128 value)
+    {
+        return new BigRational((BigInteger)value);
+    }
+
+    /// <summary>
+    /// Converts a <see cref="nint"/> to a <see cref="BigRational"/>.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="nint"/> to convert.
+    /// </param>
+    public static implicit operator BigRational(nint value)
+    {
+        return new BigRational((long)value);
+    }
+
+    /// <summary>
+    /// Converts a <see cref="nuint"/> to a <see cref="BigRational"/>.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="nuint"/> to convert.
+    /// </param>
+    [CLSCompliant(false)]
+    public static implicit operator BigRational(nuint value)
+    {
+        return new BigRational((ulong)value);
     }
 
     /// <summary>
@@ -536,6 +959,17 @@ public partial struct BigRational :
     public static implicit operator BigRational(ushort value)
     {
         return new BigRational(value);
+    }
+
+    /// <summary>
+    /// Converts a <see cref="char"/> to a <see cref="BigRational"/>.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="char"/> to convert.
+    /// </param>
+    public static implicit operator BigRational(char value)
+    {
+        return new BigRational((int)value);
     }
 
     /// <summary>
