@@ -11,47 +11,54 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 /// <summary>
 /// A structure that represents a rational number with an arbitrarily large numerator and denominator.
 /// </summary>
 public partial struct BigRational :
+    INumber<BigRational>,
+    ISignedNumber<BigRational>,
     IEquatable<BigRational>,
     IEquatable<BigInteger>,
+    IEquatable<decimal>,
+    IEquatable<double>,
+    IEquatable<float>,
+    IEquatable<Half>,
+    IEquatable<Int128>,
+    IEquatable<UInt128>,
+    IEquatable<nint>,
+    IEquatable<nuint>,
     IEquatable<ulong>,
     IEquatable<long>,
     IEquatable<uint>,
     IEquatable<int>,
     IEquatable<ushort>,
+    IEquatable<char>,
     IEquatable<short>,
     IEquatable<byte>,
     IEquatable<sbyte>,
+    IComparable,
     IComparable<BigRational>,
     IComparable<BigInteger>,
+    IComparable<decimal>,
+    IComparable<double>,
+    IComparable<float>,
+    IComparable<Half>,
+    IComparable<Int128>,
+    IComparable<UInt128>,
+    IComparable<nint>,
+    IComparable<nuint>,
     IComparable<ulong>,
     IComparable<long>,
     IComparable<uint>,
     IComparable<int>,
     IComparable<ushort>,
+    IComparable<char>,
     IComparable<short>,
     IComparable<byte>,
     IComparable<sbyte>
 {
-    /// <summary>
-    /// A value representing 1/1.
-    /// </summary>
-    public static readonly BigRational One = new BigRational(1);
-
-    /// <summary>
-    /// A value representing 0/1.
-    /// </summary>
-    public static readonly BigRational Zero = new BigRational(0);
-
-    /// <summary>
-    /// A value representing -1/1.
-    /// </summary>
-    public static readonly BigRational MinusOne = new BigRational(-1);
-
     /// <summary>
     /// The greatest value a <see cref="decimal"/> value can have as a <see cref="BigInteger"/>.
     /// </summary>
@@ -124,6 +131,24 @@ public partial struct BigRational :
         }
     }
 
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational One { get; } = new BigRational(1);
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational Zero { get; } = new BigRational(0);
+
+    /// <inheritdoc cref="IAdditiveIdentity{BigRational, BigRational}" />
+    public static BigRational AdditiveIdentity => Zero;
+
+    /// <inheritdoc cref="IMultiplicativeIdentity{BigRational, BigRational}" />
+    public static BigRational MultiplicativeIdentity => One;
+
+    /// <inheritdoc cref="ISignedNumber{BigRational}" />
+    public static BigRational NegativeOne { get; } = new BigRational(-1);
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static int Radix => 2;
+
     /// <summary>
     /// Gets the denominator of this <see cref="BigRational" />.
     /// </summary>
@@ -143,7 +168,6 @@ public partial struct BigRational :
     /// </summary>
     public BigInteger Numerator
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => this.numerator;
     }
 
@@ -157,7 +181,6 @@ public partial struct BigRational :
     /// </returns>
     public int Sign
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => this.Numerator.Sign;
     }
 
@@ -166,7 +189,6 @@ public partial struct BigRational :
     /// </summary>
     public bool IsPositive
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => this.Numerator.Sign == 1;
     }
 
@@ -175,7 +197,6 @@ public partial struct BigRational :
     /// </summary>
     public bool IsNegative
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => this.Numerator.Sign == -1;
     }
 
@@ -184,7 +205,6 @@ public partial struct BigRational :
     /// </summary>
     public bool IsZero
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => this.Numerator.IsZero;
     }
 
@@ -193,7 +213,6 @@ public partial struct BigRational :
     /// </summary>
     public bool IsOne
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => this.Numerator.IsOne && this.Denominator.IsOne;
     }
 
@@ -202,7 +221,6 @@ public partial struct BigRational :
     /// </summary>
     public bool IsMinusOne
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => this.Numerator == BigInteger.MinusOne && this.Denominator.IsOne;
     }
 
@@ -211,7 +229,6 @@ public partial struct BigRational :
     /// </summary>
     public bool IsInteger
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => this.Denominator.IsOne;
     }
 
@@ -2014,52 +2031,212 @@ public partial struct BigRational :
         return dividend - ((temp.Numerator / temp.Denominator) * divisor);
     }
 
-    /// <summary>
-    /// Calculates the absolute value of a <see cref="BigRational"/>.
-    /// </summary>
-    /// <param name="value">
-    /// A <see cref="BigRational"/> value.
-    /// </param>
-    /// <returns>
-    /// The absolute value of <paramref name="value"/>.
-    /// </returns>
+    /// <inheritdoc cref="INumberBase{BigRational}" />
     public static BigRational Abs(BigRational value)
     {
         return value.IsNegative ? -value : value;
     }
 
-    /// <summary>
-    /// Returns the greater of two <see cref="BigRational"/> values.
-    /// </summary>
-    /// <param name="left">
-    /// The first value to compare.
-    /// </param>
-    /// <param name="right">
-    /// The second value to compare.
-    /// </param>
-    /// <returns>
-    /// The greater of <paramref name="left"/> and <paramref name="right"/>.
-    /// </returns>
+    /// <inheritdoc cref="INumber{BigRational}" />
+    static int INumber<BigRational>.Sign(BigRational value)
+    {
+        return value.Sign;
+    }
+
+    /// <inheritdoc cref="INumber{BigRational}" />
+    public static BigRational CopySign(BigRational value, BigRational sign)
+    {
+        return sign.IsNegative ? -Abs(value) : Abs(value);
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsCanonical(BigRational value)
+    {
+        return true;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsComplexNumber(BigRational value)
+    {
+        return false;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsEvenInteger(BigRational value)
+    {
+        return value.IsInteger && value.Numerator.IsEven;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsFinite(BigRational value)
+    {
+        return true;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsImaginaryNumber(BigRational value)
+    {
+        return false;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsInfinity(BigRational value)
+    {
+        return false;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsNaN(BigRational value)
+    {
+        return false;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    static bool INumberBase<BigRational>.IsInteger(BigRational value)
+    {
+        return value.IsInteger;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    static bool INumberBase<BigRational>.IsNegative(BigRational value)
+    {
+        return value.IsNegative;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsNegativeInfinity(BigRational value)
+    {
+        return false;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsNormal(BigRational value)
+    {
+        return !value.IsZero;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsOddInteger(BigRational value)
+    {
+        return value.IsInteger && !value.Numerator.IsEven;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    static bool INumberBase<BigRational>.IsPositive(BigRational value)
+    {
+        return value.Sign >= 0;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsPositiveInfinity(BigRational value)
+    {
+        return false;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsRealNumber(BigRational value)
+    {
+        return true;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsSubnormal(BigRational value)
+    {
+        return false;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    static bool INumberBase<BigRational>.IsZero(BigRational value)
+    {
+        return value.IsZero;
+    }
+
+    /// <inheritdoc cref="INumber{BigRational}" />
     public static BigRational Max(BigRational left, BigRational right)
     {
         return left < right ? right : left;
     }
 
-    /// <summary>
-    /// Returns the lesser of two <see cref="BigRational"/> values.
-    /// </summary>
-    /// <param name="left">
-    /// The first value to compare.
-    /// </param>
-    /// <param name="right">
-    /// The second value to compare.
-    /// </param>
-    /// <returns>
-    /// The greater of <paramref name="left"/> and <paramref name="right"/>.
-    /// </returns>
+    /// <inheritdoc cref="INumber{BigRational}" />
+    public static BigRational MaxNumber(BigRational left, BigRational right)
+    {
+        return Max(left, right);
+    }
+
+    /// <inheritdoc cref="INumber{BigRational}" />
+    public static BigRational MaxNative(BigRational left, BigRational right)
+    {
+        return Max(left, right);
+    }
+
+    /// <inheritdoc cref="INumber{BigRational}" />
     public static BigRational Min(BigRational left, BigRational right)
     {
         return left > right ? right : left;
+    }
+
+    /// <inheritdoc cref="INumber{BigRational}" />
+    public static BigRational MinNumber(BigRational left, BigRational right)
+    {
+        return Min(left, right);
+    }
+
+    /// <inheritdoc cref="INumber{BigRational}" />
+    public static BigRational MinNative(BigRational left, BigRational right)
+    {
+        return Min(left, right);
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational MaxMagnitude(BigRational x, BigRational y)
+    {
+        return Abs(x) >= Abs(y) ? x : y;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational MaxMagnitudeNumber(BigRational x, BigRational y)
+    {
+        return MaxMagnitude(x, y);
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational MinMagnitude(BigRational x, BigRational y)
+    {
+        return Abs(x) <= Abs(y) ? x : y;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational MinMagnitudeNumber(BigRational x, BigRational y)
+    {
+        return MinMagnitude(x, y);
+    }
+
+    /// <inheritdoc cref="INumber{BigRational}" />
+    public static BigRational Clamp(BigRational value, BigRational min, BigRational max)
+    {
+        if (min > max)
+        {
+            throw new ArgumentException("min must be less than or equal to max.", nameof(min));
+        }
+
+        if (value < min)
+        {
+            return min;
+        }
+
+        return value > max ? max : value;
+    }
+
+    /// <inheritdoc cref="INumber{BigRational}" />
+    public static BigRational ClampNative(BigRational value, BigRational min, BigRational max)
+    {
+        return Clamp(value, min, max);
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational MultiplyAddEstimate(BigRational left, BigRational right, BigRational addend)
+    {
+        return (left * right) + addend;
     }
 
     /// <summary>
@@ -2124,25 +2301,56 @@ public partial struct BigRational :
     /// </exception>
     public static BigRational Parse(string value)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        return Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
+    }
 
-        var s = value.Split('/');
-        switch (s.Length)
+    /// <inheritdoc cref="IParsable{BigRational}" />
+    public static BigRational Parse(string s, IFormatProvider? provider)
+    {
+        return Parse(s, NumberStyles.Integer, provider);
+    }
+
+    /// <inheritdoc cref="ISpanParsable{BigRational}" />
+    public static BigRational Parse(ReadOnlySpan<char> s, IFormatProvider? provider)
+    {
+        return Parse(s, NumberStyles.Integer, provider);
+    }
+
+    /// <inheritdoc cref="IUtf8SpanParsable{BigRational}" />
+    public static BigRational Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
+    {
+        return Parse(utf8Text, NumberStyles.Integer, provider);
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational Parse(string s, NumberStyles style, IFormatProvider? provider)
+    {
+        ArgumentNullException.ThrowIfNull(s);
+
+        if (TryParseCore(s.AsSpan(), style, provider, out var result))
         {
-            case 1:
-                return new BigRational(BigInteger.Parse(value, CultureInfo.InvariantCulture));
-            case 2:
-                var n = BigInteger.Parse(s[0], CultureInfo.InvariantCulture);
-                var d = BigInteger.Parse(s[1], CultureInfo.InvariantCulture);
-                if (d.IsZero)
-                {
-                    break;
-                }
-
-                return new BigRational(n, d);
+            return result;
         }
 
-        throw new FormatException($"Could not parse \"{value}\" as a BigRational.");
+        throw new FormatException($"Could not parse \"{s}\" as a BigRational.");
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider)
+    {
+        if (TryParseCore(s, style, provider, out var result))
+        {
+            return result;
+        }
+
+        throw new FormatException("Could not parse value as a BigRational.");
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider)
+    {
+        var text = Encoding.UTF8.GetString(utf8Text);
+        return Parse(text, style, provider);
     }
 
     /// <summary>
@@ -2163,31 +2371,1044 @@ public partial struct BigRational :
     /// </returns>
     public static bool TryParse(string value, out BigRational rational)
     {
-        if (value is null)
+        return TryParse(value, NumberStyles.Integer, null, out rational);
+    }
+
+    /// <inheritdoc cref="IParsable{BigRational}" />
+    public static bool TryParse(string? s, IFormatProvider? provider, out BigRational result)
+    {
+        return TryParse(s, NumberStyles.Integer, provider, out result);
+    }
+
+    /// <inheritdoc cref="ISpanParsable{BigRational}" />
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out BigRational result)
+    {
+        return TryParse(s, NumberStyles.Integer, provider, out result);
+    }
+
+    /// <inheritdoc cref="IUtf8SpanParsable{BigRational}" />
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out BigRational result)
+    {
+        return TryParse(utf8Text, NumberStyles.Integer, provider, out result);
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool TryParse(string? s, NumberStyles style, IFormatProvider? provider, out BigRational result)
+    {
+        if (s is null)
         {
-            rational = default;
+            result = default;
             return false;
         }
 
-        var s = value.Split('/');
-        switch (s.Length)
-        {
-            case 1 when BigInteger.TryParse(value, out var bigint):
-                rational = new BigRational(bigint);
-                return true;
-            case 2 when BigInteger.TryParse(s[0], out var num) && BigInteger.TryParse(s[1], out var den):
-                if (den.IsZero)
-                {
-                    rational = default;
-                    return false;
-                }
+        return TryParseCore(s.AsSpan(), style, provider, out result);
+    }
 
-                rational = new BigRational(num, den);
-                return true;
-            default:
-                rational = default;
-                return false;
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out BigRational result)
+    {
+        return TryParseCore(s, style, provider, out result);
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out BigRational result)
+    {
+        if (utf8Text.IsEmpty)
+        {
+            result = default;
+            return false;
         }
+
+        var text = Encoding.UTF8.GetString(utf8Text);
+        return TryParse(text, style, provider, out result);
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational CreateChecked<TOther>(TOther value)
+        where TOther : INumberBase<TOther>
+    {
+        if (TryConvertFromChecked(value, out var result))
+        {
+            return result;
+        }
+
+        throw new NotSupportedException($"Cannot convert from {typeof(TOther)}.");
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational CreateSaturating<TOther>(TOther value)
+        where TOther : INumberBase<TOther>
+    {
+        if (TryConvertFromSaturating(value, out var result))
+        {
+            return result;
+        }
+
+        throw new NotSupportedException($"Cannot convert from {typeof(TOther)}.");
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static BigRational CreateTruncating<TOther>(TOther value)
+        where TOther : INumberBase<TOther>
+    {
+        if (TryConvertFromTruncating(value, out var result))
+        {
+            return result;
+        }
+
+        throw new NotSupportedException($"Cannot convert from {typeof(TOther)}.");
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool TryConvertFromChecked<TOther>(TOther value, out BigRational result)
+        where TOther : INumberBase<TOther>
+    {
+        if (value is BigRational rational)
+        {
+            result = rational;
+            return true;
+        }
+
+        if (value is BigInteger bigInteger)
+        {
+            result = new BigRational(bigInteger);
+            return true;
+        }
+
+        if (value is sbyte sbyteValue)
+        {
+            result = sbyteValue;
+            return true;
+        }
+
+        if (value is byte byteValue)
+        {
+            result = byteValue;
+            return true;
+        }
+
+        if (value is short shortValue)
+        {
+            result = shortValue;
+            return true;
+        }
+
+        if (value is ushort ushortValue)
+        {
+            result = ushortValue;
+            return true;
+        }
+
+        if (value is int intValue)
+        {
+            result = intValue;
+            return true;
+        }
+
+        if (value is uint uintValue)
+        {
+            result = uintValue;
+            return true;
+        }
+
+        if (value is long longValue)
+        {
+            result = longValue;
+            return true;
+        }
+
+        if (value is ulong ulongValue)
+        {
+            result = ulongValue;
+            return true;
+        }
+
+        if (value is Int128 int128Value)
+        {
+            result = new BigRational((BigInteger)int128Value);
+            return true;
+        }
+
+        if (value is UInt128 uint128Value)
+        {
+            result = new BigRational((BigInteger)uint128Value);
+            return true;
+        }
+
+        if (value is nint nintValue)
+        {
+            result = (long)nintValue;
+            return true;
+        }
+
+        if (value is nuint nuintValue)
+        {
+            result = (ulong)nuintValue;
+            return true;
+        }
+
+        if (value is char charValue)
+        {
+            result = charValue;
+            return true;
+        }
+
+        if (value is float floatValue)
+        {
+            if (!float.IsFinite(floatValue))
+            {
+                throw new OverflowException("Value is not representable by BigRational.");
+            }
+
+            result = floatValue;
+            return true;
+        }
+
+        if (value is double doubleValue)
+        {
+            if (!double.IsFinite(doubleValue))
+            {
+                throw new OverflowException("Value is not representable by BigRational.");
+            }
+
+            result = doubleValue;
+            return true;
+        }
+
+        if (value is Half halfValue)
+        {
+            if (!Half.IsFinite(halfValue))
+            {
+                throw new OverflowException("Value is not representable by BigRational.");
+            }
+
+            result = (double)halfValue;
+            return true;
+        }
+
+        if (value is decimal decimalValue)
+        {
+            result = decimalValue;
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool TryConvertFromSaturating<TOther>(TOther value, out BigRational result)
+        where TOther : INumberBase<TOther>
+    {
+        if (value is float floatValue && !float.IsFinite(floatValue))
+        {
+            result = default;
+            return false;
+        }
+
+        if (value is double doubleValue && !double.IsFinite(doubleValue))
+        {
+            result = default;
+            return false;
+        }
+
+        if (value is Half halfValue && !Half.IsFinite(halfValue))
+        {
+            result = default;
+            return false;
+        }
+
+        return TryConvertFromChecked(value, out result);
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool TryConvertFromTruncating<TOther>(TOther value, out BigRational result)
+        where TOther : INumberBase<TOther>
+    {
+        return TryConvertFromSaturating(value, out result);
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool TryConvertToChecked<TOther>(BigRational value, out TOther result)
+        where TOther : INumberBase<TOther>
+    {
+        result = default!;
+
+        if (typeof(TOther) == typeof(BigRational))
+        {
+            result = (TOther)(object)value;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(BigInteger))
+        {
+            if (!value.IsInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            result = (TOther)(object)value.Numerator;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(float))
+        {
+            var floatValue = (float)value;
+            if (!float.IsFinite(floatValue))
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)floatValue;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(double))
+        {
+            var doubleValue = (double)value;
+            if (!double.IsFinite(doubleValue))
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)doubleValue;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(Half))
+        {
+            var halfValue = (Half)(double)value;
+            if (!Half.IsFinite(halfValue))
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)halfValue;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(decimal))
+        {
+            result = (TOther)(object)(decimal)value;
+            return true;
+        }
+
+        var integer = value.Numerator;
+        var isInteger = value.IsInteger;
+
+        if (typeof(TOther) == typeof(sbyte))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < sbyte.MinValue || integer > sbyte.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(sbyte)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(byte))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < byte.MinValue || integer > byte.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(byte)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(short))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < short.MinValue || integer > short.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(short)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(ushort))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < ushort.MinValue || integer > ushort.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(ushort)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(int))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < int.MinValue || integer > int.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(int)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(uint))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < uint.MinValue || integer > uint.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(uint)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(long))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < long.MinValue || integer > long.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(long)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(ulong))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < ulong.MinValue || integer > ulong.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(ulong)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(Int128))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < Int128.MinValue || integer > Int128.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(Int128)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(UInt128))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < UInt128.MinValue || integer > UInt128.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(UInt128)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(nint))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < nint.MinValue || integer > nint.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(nint)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(nuint))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < nuint.MinValue || integer > nuint.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(nuint)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(char))
+        {
+            if (!isInteger)
+            {
+                throw new OverflowException("Value is not an integer.");
+            }
+
+            if (integer < char.MinValue || integer > char.MaxValue)
+            {
+                throw new OverflowException("Value is outside the range of the destination type.");
+            }
+
+            result = (TOther)(object)(char)integer;
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool TryConvertToSaturating<TOther>(BigRational value, out TOther result)
+        where TOther : INumberBase<TOther>
+    {
+        result = default!;
+
+        if (typeof(TOther) == typeof(BigRational))
+        {
+            result = (TOther)(object)value;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(BigInteger))
+        {
+            result = (TOther)(object)TruncateToBigInteger(value);
+            return true;
+        }
+
+        var integer = TruncateToBigInteger(value);
+
+        if (typeof(TOther) == typeof(sbyte))
+        {
+            if (integer < sbyte.MinValue)
+            {
+                result = (TOther)(object)sbyte.MinValue;
+                return true;
+            }
+
+            if (integer > sbyte.MaxValue)
+            {
+                result = (TOther)(object)sbyte.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(sbyte)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(byte))
+        {
+            if (integer < byte.MinValue)
+            {
+                result = (TOther)(object)byte.MinValue;
+                return true;
+            }
+
+            if (integer > byte.MaxValue)
+            {
+                result = (TOther)(object)byte.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(byte)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(short))
+        {
+            if (integer < short.MinValue)
+            {
+                result = (TOther)(object)short.MinValue;
+                return true;
+            }
+
+            if (integer > short.MaxValue)
+            {
+                result = (TOther)(object)short.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(short)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(ushort))
+        {
+            if (integer < ushort.MinValue)
+            {
+                result = (TOther)(object)ushort.MinValue;
+                return true;
+            }
+
+            if (integer > ushort.MaxValue)
+            {
+                result = (TOther)(object)ushort.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(ushort)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(int))
+        {
+            if (integer < int.MinValue)
+            {
+                result = (TOther)(object)int.MinValue;
+                return true;
+            }
+
+            if (integer > int.MaxValue)
+            {
+                result = (TOther)(object)int.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(int)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(uint))
+        {
+            if (integer < uint.MinValue)
+            {
+                result = (TOther)(object)uint.MinValue;
+                return true;
+            }
+
+            if (integer > uint.MaxValue)
+            {
+                result = (TOther)(object)uint.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(uint)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(long))
+        {
+            if (integer < long.MinValue)
+            {
+                result = (TOther)(object)long.MinValue;
+                return true;
+            }
+
+            if (integer > long.MaxValue)
+            {
+                result = (TOther)(object)long.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(long)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(ulong))
+        {
+            if (integer < ulong.MinValue)
+            {
+                result = (TOther)(object)ulong.MinValue;
+                return true;
+            }
+
+            if (integer > ulong.MaxValue)
+            {
+                result = (TOther)(object)ulong.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(ulong)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(Int128))
+        {
+            if (integer < Int128.MinValue)
+            {
+                result = (TOther)(object)Int128.MinValue;
+                return true;
+            }
+
+            if (integer > Int128.MaxValue)
+            {
+                result = (TOther)(object)Int128.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(Int128)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(UInt128))
+        {
+            if (integer < UInt128.MinValue)
+            {
+                result = (TOther)(object)UInt128.MinValue;
+                return true;
+            }
+
+            if (integer > UInt128.MaxValue)
+            {
+                result = (TOther)(object)UInt128.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(UInt128)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(nint))
+        {
+            if (integer < nint.MinValue)
+            {
+                result = (TOther)(object)nint.MinValue;
+                return true;
+            }
+
+            if (integer > nint.MaxValue)
+            {
+                result = (TOther)(object)nint.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(nint)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(nuint))
+        {
+            if (integer < nuint.MinValue)
+            {
+                result = (TOther)(object)nuint.MinValue;
+                return true;
+            }
+
+            if (integer > nuint.MaxValue)
+            {
+                result = (TOther)(object)nuint.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(nuint)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(char))
+        {
+            if (integer < char.MinValue)
+            {
+                result = (TOther)(object)char.MinValue;
+                return true;
+            }
+
+            if (integer > char.MaxValue)
+            {
+                result = (TOther)(object)char.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(char)integer;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(float))
+        {
+            result = (TOther)(object)(float)value;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(double))
+        {
+            result = (TOther)(object)(double)value;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(Half))
+        {
+            result = (TOther)(object)(Half)(double)value;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(decimal))
+        {
+            if (value < DecimalMin)
+            {
+                result = (TOther)(object)decimal.MinValue;
+                return true;
+            }
+
+            if (value > DecimalMax)
+            {
+                result = (TOther)(object)decimal.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(decimal)value;
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool TryConvertToTruncating<TOther>(BigRational value, out TOther result)
+        where TOther : INumberBase<TOther>
+    {
+        result = default!;
+
+        if (typeof(TOther) == typeof(BigRational))
+        {
+            result = (TOther)(object)value;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(BigInteger))
+        {
+            result = (TOther)(object)TruncateToBigInteger(value);
+            return true;
+        }
+
+        var integer = TruncateToBigInteger(value);
+
+        if (typeof(TOther) == typeof(sbyte))
+        {
+            result = (TOther)(object)(sbyte)WrapToSigned(integer, 8);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(byte))
+        {
+            result = (TOther)(object)(byte)WrapToUnsigned(integer, 8);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(short))
+        {
+            result = (TOther)(object)(short)WrapToSigned(integer, 16);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(ushort))
+        {
+            result = (TOther)(object)(ushort)WrapToUnsigned(integer, 16);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(int))
+        {
+            result = (TOther)(object)(int)WrapToSigned(integer, 32);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(uint))
+        {
+            result = (TOther)(object)(uint)WrapToUnsigned(integer, 32);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(long))
+        {
+            result = (TOther)(object)(long)WrapToSigned(integer, 64);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(ulong))
+        {
+            result = (TOther)(object)(ulong)WrapToUnsigned(integer, 64);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(Int128))
+        {
+            result = (TOther)(object)(Int128)WrapToSigned(integer, 128);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(UInt128))
+        {
+            result = (TOther)(object)(UInt128)WrapToUnsigned(integer, 128);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(nint))
+        {
+            var bits = IntPtr.Size * 8;
+            result = (TOther)(object)(nint)WrapToSigned(integer, bits);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(nuint))
+        {
+            var bits = IntPtr.Size * 8;
+            result = (TOther)(object)(nuint)WrapToUnsigned(integer, bits);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(char))
+        {
+            result = (TOther)(object)(char)WrapToUnsigned(integer, 16);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(float))
+        {
+            result = (TOther)(object)(float)value;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(double))
+        {
+            result = (TOther)(object)(double)value;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(Half))
+        {
+            result = (TOther)(object)(Half)(double)value;
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(decimal))
+        {
+            if (value < DecimalMin)
+            {
+                result = (TOther)(object)decimal.MinValue;
+                return true;
+            }
+
+            if (value > DecimalMax)
+            {
+                result = (TOther)(object)decimal.MaxValue;
+                return true;
+            }
+
+            result = (TOther)(object)(decimal)value;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TryParseCore(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out BigRational result)
+    {
+        if (s.IsEmpty)
+        {
+            result = default;
+            return false;
+        }
+
+        var separatorIndex = s.IndexOf('/');
+        if (separatorIndex < 0)
+        {
+            if (BigInteger.TryParse(s, style, provider, out var integer))
+            {
+                result = new BigRational(integer);
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
+        var numeratorSpan = s[..separatorIndex];
+        var denominatorStart = separatorIndex + 1;
+        var denominatorSpan = s[denominatorStart..];
+
+        if (!BigInteger.TryParse(numeratorSpan, style, provider, out var numerator)
+            || !BigInteger.TryParse(denominatorSpan, style, provider, out var denominator)
+            || denominator.IsZero)
+        {
+            result = default;
+            return false;
+        }
+
+        result = new BigRational(numerator, denominator);
+        return true;
+    }
+
+    private static BigInteger TruncateToBigInteger(BigRational value)
+    {
+        return value.Numerator / value.Denominator;
+    }
+
+    private static BigInteger WrapToUnsigned(BigInteger value, int bits)
+    {
+        var modulus = BigInteger.One << bits;
+        var result = value % modulus;
+        if (result.Sign < 0)
+        {
+            result += modulus;
+        }
+
+        return result;
+    }
+
+    private static BigInteger WrapToSigned(BigInteger value, int bits)
+    {
+        var modulus = BigInteger.One << bits;
+        var result = value % modulus;
+        if (result.Sign < 0)
+        {
+            result += modulus;
+        }
+
+        var signBit = modulus >> 1;
+        if (result >= signBit)
+        {
+            result -= modulus;
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -2220,10 +3441,48 @@ public partial struct BigRational :
         return new BigRational(this.denominator, this.numerator);
     }
 
+    /// <inheritdoc />
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        var numeratorText = this.Numerator.ToString(format, formatProvider);
+        var denominatorText = this.Denominator.ToString(format, formatProvider);
+        return string.Concat(numeratorText, "/", denominatorText);
+    }
+
+    /// <inheritdoc />
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        var text = this.ToString(format.IsEmpty ? null : format.ToString(), provider);
+        if (text.Length > destination.Length)
+        {
+            charsWritten = 0;
+            return false;
+        }
+
+        text.AsSpan().CopyTo(destination);
+        charsWritten = text.Length;
+        return true;
+    }
+
+    /// <inheritdoc />
+    public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        var text = this.ToString(format.IsEmpty ? null : format.ToString(), provider);
+        var byteCount = Encoding.UTF8.GetByteCount(text);
+        if (byteCount > utf8Destination.Length)
+        {
+            bytesWritten = 0;
+            return false;
+        }
+
+        bytesWritten = Encoding.UTF8.GetBytes(text.AsSpan(), utf8Destination);
+        return true;
+    }
+
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{this.Numerator}/{this.Denominator}";
+        return this.ToString(null, CultureInfo.CurrentCulture);
     }
 
     /// <inheritdoc />
@@ -2251,6 +3510,71 @@ public partial struct BigRational :
     public bool Equals(BigInteger other)
     {
         return this.Numerator.Equals(other * this.Denominator);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(decimal other)
+    {
+        return this.Equals((BigRational)other);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(double other)
+    {
+        if (!double.IsFinite(other))
+        {
+            return false;
+        }
+
+        return this.Equals((BigRational)other);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(float other)
+    {
+        if (!float.IsFinite(other))
+        {
+            return false;
+        }
+
+        return this.Equals((BigRational)other);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(Half other)
+    {
+        if (!Half.IsFinite(other))
+        {
+            return false;
+        }
+
+        return this.Equals((BigRational)(double)other);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(Int128 other)
+    {
+        return this.Numerator.Equals((BigInteger)other * this.Denominator);
+    }
+
+    /// <inheritdoc />
+    [CLSCompliant(false)]
+    public bool Equals(UInt128 other)
+    {
+        return this.Numerator.Equals((BigInteger)other * this.Denominator);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(nint other)
+    {
+        return this.Equals((long)other);
+    }
+
+    /// <inheritdoc />
+    [CLSCompliant(false)]
+    public bool Equals(nuint other)
+    {
+        return this.Equals((ulong)other);
     }
 
     /// <inheritdoc />
@@ -2287,6 +3611,12 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
+    public bool Equals(char other)
+    {
+        return this.Numerator.Equals((BigInteger)(int)other * this.Denominator);
+    }
+
+    /// <inheritdoc />
     public bool Equals(short other)
     {
         return this.Numerator.Equals(other * this.Denominator);
@@ -2306,6 +3636,39 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
+    public int CompareTo(object? obj)
+    {
+        if (obj is null)
+        {
+            return 1;
+        }
+
+        return obj switch
+        {
+            BigRational other => this.CompareTo(other),
+            BigInteger other => this.CompareTo(other),
+            decimal other => this.CompareTo(other),
+            double other => this.CompareTo(other),
+            float other => this.CompareTo(other),
+            Half other => this.CompareTo(other),
+            Int128 other => this.CompareTo(other),
+            UInt128 other => this.CompareTo(other),
+            nint other => this.CompareTo(other),
+            nuint other => this.CompareTo(other),
+            ulong other => this.CompareTo(other),
+            long other => this.CompareTo(other),
+            uint other => this.CompareTo(other),
+            int other => this.CompareTo(other),
+            ushort other => this.CompareTo(other),
+            char other => this.CompareTo(other),
+            short other => this.CompareTo(other),
+            byte other => this.CompareTo(other),
+            sbyte other => this.CompareTo(other),
+            _ => throw new ArgumentException("Object must be a BigRational or numeric value.", nameof(obj)),
+        };
+    }
+
+    /// <inheritdoc />
     public int CompareTo(BigRational other)
     {
         return (this.Numerator * other.Denominator).CompareTo(other.Numerator * this.Denominator);
@@ -2315,6 +3678,56 @@ public partial struct BigRational :
     public int CompareTo(BigInteger other)
     {
         return this.Numerator.CompareTo(other * this.Denominator);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(decimal other)
+    {
+        return this.CompareTo((BigRational)other);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(double other)
+    {
+        return this.CompareTo((BigRational)other);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(float other)
+    {
+        return this.CompareTo((BigRational)other);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(Half other)
+    {
+        return this.CompareTo((BigRational)(double)other);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(Int128 other)
+    {
+        return this.CompareTo((BigInteger)other);
+    }
+
+    /// <inheritdoc />
+    [CLSCompliant(false)]
+    public int CompareTo(UInt128 other)
+    {
+        return this.CompareTo((BigInteger)other);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(nint other)
+    {
+        return this.CompareTo((long)other);
+    }
+
+    /// <inheritdoc />
+    [CLSCompliant(false)]
+    public int CompareTo(nuint other)
+    {
+        return this.CompareTo((ulong)other);
     }
 
     /// <inheritdoc />
@@ -2348,6 +3761,12 @@ public partial struct BigRational :
     public int CompareTo(ushort other)
     {
         return this.Numerator.CompareTo(other * this.Denominator);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(char other)
+    {
+        return this.Numerator.CompareTo((BigInteger)(int)other * this.Denominator);
     }
 
     /// <inheritdoc />
