@@ -70,6 +70,15 @@ internal sealed partial class BigRationalAiTests
     }
 
     [Test]
+    public void CompareToObjectRejectsNonBigRational()
+    {
+        var value = R(1, 2);
+        Assert.Throws<ArgumentException>(() => ((IComparable)value).CompareTo(1));
+        Assert.Throws<ArgumentException>(() => ((IComparable)value).CompareTo(1.0));
+        Assert.Throws<ArgumentException>(() => ((IComparable)value).CompareTo("not a number"));
+    }
+
+    [Test]
     public void CompareToHandlesNumericTypes()
     {
         var value = R(3, 2);
@@ -108,12 +117,20 @@ internal sealed partial class BigRationalAiTests
     }
 
     [Test]
-    public void CompareToWithNonFiniteDoubleThrows()
+    public void CompareToWithNonFiniteFloatingPointThrows()
     {
         var value = R(1, 2);
         Assert.Throws<ArgumentException>(() => value.CompareTo(double.NaN));
         Assert.Throws<ArgumentException>(() => value.CompareTo(double.PositiveInfinity));
         Assert.Throws<ArgumentException>(() => value.CompareTo(double.NegativeInfinity));
+
+        Assert.Throws<ArgumentException>(() => value.CompareTo(float.NaN));
+        Assert.Throws<ArgumentException>(() => value.CompareTo(float.PositiveInfinity));
+        Assert.Throws<ArgumentException>(() => value.CompareTo(float.NegativeInfinity));
+
+        Assert.Throws<ArgumentException>(() => value.CompareTo(Half.NaN));
+        Assert.Throws<ArgumentException>(() => value.CompareTo(Half.PositiveInfinity));
+        Assert.Throws<ArgumentException>(() => value.CompareTo(Half.NegativeInfinity));
     }
 
     [Test]

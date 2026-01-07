@@ -369,7 +369,7 @@ public partial struct BigRational :
     {
         if (!double.IsFinite(value))
         {
-            throw new ArgumentException("value must be finite", nameof(value));
+            throw new ArgumentException("Value must be finite.", nameof(value));
         }
 
         if (value == 0d)
@@ -398,7 +398,7 @@ public partial struct BigRational :
             var shift = exponent - 1075;
             if (shift >= 0)
             {
-                magnitude = new BigRational(significand << shift, BigInteger.One);
+                magnitude = new BigRational(significand << shift);
             }
             else
             {
@@ -2167,7 +2167,7 @@ public partial struct BigRational :
     /// The quotient of <paramref name="dividend"/> and <paramref name="divisor"/>.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is equal to zero (0/1).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator /(BigRational dividend, BigRational divisor)
     {
@@ -2187,7 +2187,7 @@ public partial struct BigRational :
     /// The quotient of <paramref name="dividend"/> and <paramref name="divisor"/>.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is equal to zero (0/1).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator /(BigRational dividend, BigInteger divisor)
     {
@@ -2207,7 +2207,7 @@ public partial struct BigRational :
     /// The quotient of <paramref name="dividend"/> and <paramref name="divisor"/>.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is equal to zero (0/1).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator /(BigInteger dividend, BigRational divisor)
     {
@@ -2227,7 +2227,7 @@ public partial struct BigRational :
     /// The quotient of <paramref name="dividend"/> and <paramref name="divisor"/>.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is equal to zero (0/1).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator /(BigRational dividend, ulong divisor)
     {
@@ -2247,7 +2247,7 @@ public partial struct BigRational :
     /// The quotient of <paramref name="dividend"/> and <paramref name="divisor"/>.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is equal to zero (0/1).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator /(ulong dividend, BigRational divisor)
     {
@@ -2267,7 +2267,7 @@ public partial struct BigRational :
     /// The quotient of <paramref name="dividend"/> and <paramref name="divisor"/>.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is equal to zero (0/1).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator /(BigRational dividend, long divisor)
     {
@@ -2287,7 +2287,7 @@ public partial struct BigRational :
     /// The quotient of <paramref name="dividend"/> and <paramref name="divisor"/>.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is equal to zero (0/1).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator /(long dividend, BigRational divisor)
     {
@@ -2307,7 +2307,7 @@ public partial struct BigRational :
     /// The remainder that results from the division.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is zero (1/0).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator %(BigRational dividend, BigRational divisor)
     {
@@ -2328,7 +2328,7 @@ public partial struct BigRational :
     /// The remainder that results from the division.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is zero (1/0).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator %(BigRational dividend, BigInteger divisor)
     {
@@ -2349,7 +2349,7 @@ public partial struct BigRational :
     /// The remainder that results from the division.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is zero (1/0).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator %(BigInteger dividend, BigRational divisor)
     {
@@ -2370,7 +2370,7 @@ public partial struct BigRational :
     /// The remainder that results from the division.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is zero (1/0).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator %(BigRational dividend, ulong divisor)
     {
@@ -2391,7 +2391,7 @@ public partial struct BigRational :
     /// The remainder that results from the division.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is zero (1/0).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator %(ulong dividend, BigRational divisor)
     {
@@ -2412,7 +2412,7 @@ public partial struct BigRational :
     /// The remainder that results from the division.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is zero (1/0).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator %(BigRational dividend, long divisor)
     {
@@ -2433,7 +2433,7 @@ public partial struct BigRational :
     /// The remainder that results from the division.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If <paramref name="divisor"/> is zero (1/0).
+    /// If <paramref name="divisor"/> is zero.
     /// </exception>
     public static BigRational operator %(long dividend, BigRational divisor)
     {
@@ -2711,6 +2711,7 @@ public partial struct BigRational :
     /// </exception>
     public static BigRational Parse(string value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         return Parse(value, NumberStyles.Integer, CultureInfo.CurrentCulture);
     }
 
@@ -2732,6 +2733,7 @@ public partial struct BigRational :
     /// </exception>
     public static BigRational ParseInvariant(string value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         return Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
     }
 
@@ -3865,7 +3867,7 @@ public partial struct BigRational :
     /// The reciprocal value.
     /// </returns>
     /// <exception cref="DivideByZeroException">
-    /// If this <see cref="BigRational"/> is zero (0/1).
+    /// If this <see cref="BigRational"/> is zero.
     /// </exception>
     public BigRational Reciprocal()
     {
@@ -4068,29 +4070,12 @@ public partial struct BigRational :
             return 1;
         }
 
-        return obj switch
+        if (obj is BigRational other)
         {
-            BigRational other => this.CompareTo(other),
-            BigInteger other => this.CompareTo(other),
-            decimal other => this.CompareTo(other),
-            double other => this.CompareTo(other),
-            float other => this.CompareTo(other),
-            Half other => this.CompareTo(other),
-            Int128 other => this.CompareTo(other),
-            UInt128 other => this.CompareTo(other),
-            nint other => this.CompareTo(other),
-            nuint other => this.CompareTo(other),
-            ulong other => this.CompareTo(other),
-            long other => this.CompareTo(other),
-            uint other => this.CompareTo(other),
-            int other => this.CompareTo(other),
-            ushort other => this.CompareTo(other),
-            char other => this.CompareTo(other),
-            short other => this.CompareTo(other),
-            byte other => this.CompareTo(other),
-            sbyte other => this.CompareTo(other),
-            _ => throw new ArgumentException("Object must be a BigRational or numeric value.", nameof(obj)),
-        };
+            return this.CompareTo(other);
+        }
+
+        throw new ArgumentException("Object must be of type BigRational.", nameof(obj));
     }
 
     /// <inheritdoc />
@@ -4112,20 +4097,44 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="other"/> is not finite.
+    /// </exception>
     public int CompareTo(double other)
     {
+        if (!double.IsFinite(other))
+        {
+            throw new ArgumentException("Value must be finite.", nameof(other));
+        }
+
         return this.CompareTo((BigRational)other);
     }
 
     /// <inheritdoc />
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="other"/> is not finite.
+    /// </exception>
     public int CompareTo(float other)
     {
+        if (!float.IsFinite(other))
+        {
+            throw new ArgumentException("Value must be finite.", nameof(other));
+        }
+
         return this.CompareTo((BigRational)other);
     }
 
     /// <inheritdoc />
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="other"/> is not finite.
+    /// </exception>
     public int CompareTo(Half other)
     {
+        if (!Half.IsFinite(other))
+        {
+            throw new ArgumentException("Value must be finite.", nameof(other));
+        }
+
         return this.CompareTo((BigRational)(double)other);
     }
 
@@ -4381,7 +4390,7 @@ public partial struct BigRational :
             case MidpointRoundingMode.TowardZero:
                 return RoundTowardZeroImpl(value);
             default:
-                throw new ArgumentOutOfRangeException(nameof(mode), "Invalid RationalRounding.");
+                throw new ArgumentOutOfRangeException(nameof(mode), "Invalid rounding mode.");
         }
     }
 
@@ -4592,7 +4601,7 @@ public partial struct BigRational :
     {
         if (!Enum.IsDefined(mode))
         {
-            throw new ArgumentOutOfRangeException(nameof(mode), "Invalid RationalRounding.");
+            throw new ArgumentOutOfRangeException(nameof(mode), "Invalid rounding mode.");
         }
     }
 

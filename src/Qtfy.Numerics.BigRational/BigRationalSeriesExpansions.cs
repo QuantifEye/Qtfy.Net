@@ -29,7 +29,7 @@ public partial struct BigRational
     {
         if (terms <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(terms), "terms must be positive.");
+            throw new ArgumentOutOfRangeException(nameof(terms), "Terms must be positive.");
         }
 
         if (terms == 1)
@@ -51,7 +51,7 @@ public partial struct BigRational
     }
 
     /// <summary>
-    /// Approximates the natural (base e) logarithm of a specified number using a series expansion of a specified (default = 1000) number of terms.
+    /// Approximates the natural (base e) logarithm of a specified number using a series expansion with the specified number of terms.
     /// </summary>
     /// <param name="x">
     /// The number whose logarithm is to be approximated.
@@ -72,12 +72,12 @@ public partial struct BigRational
     {
         if (terms <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(terms), "terms must be positive.");
+            throw new ArgumentOutOfRangeException(nameof(terms), "Terms must be positive.");
         }
 
         if (x.IsNegativeOrZero)
         {
-            throw new ArgumentOutOfRangeException(nameof(x), "x must be positive.");
+            throw new ArgumentOutOfRangeException(nameof(x), "Value must be positive.");
         }
 
         if (x.IsOne)
