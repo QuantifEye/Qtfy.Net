@@ -359,20 +359,20 @@ public partial struct BigRational :
     /// <summary>
     /// Converts a <see cref="double"/> to a <see cref="BigRational"/>.
     /// </summary>
-    /// <param name="d">
+    /// <param name="value">
     /// The <see cref="double"/> to convert.
     /// </param>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="d"/> is not finite.
+    /// If <paramref name="value"/> is not finite.
     /// </exception>
-    public static implicit operator BigRational(double d)
+    public static implicit operator BigRational(double value)
     {
-        if (!double.IsFinite(d))
+        if (!double.IsFinite(value))
         {
-            throw new ArgumentException("value must be finite", nameof(d));
+            throw new ArgumentException("value must be finite", nameof(value));
         }
 
-        if (d == 0d)
+        if (value == 0d)
         {
             return Zero;
         }
@@ -380,7 +380,7 @@ public partial struct BigRational :
         ulong bits;
         unsafe
         {
-            bits = *(ulong*)&d;
+            bits = *(ulong*)&value;
         }
 
         var exponent = (int)((bits >> 52) & 0x7FFUL);
@@ -406,18 +406,21 @@ public partial struct BigRational :
             }
         }
 
-        return d < 0d ? -magnitude : magnitude;
+        return value < 0d ? -magnitude : magnitude;
     }
 
     /// <summary>
     /// Converts a <see cref="float"/> to a <see cref="BigRational"/>.
     /// </summary>
-    /// <param name="d">
+    /// <param name="value">
     /// The <see cref="float"/> to convert.
     /// </param>
-    public static implicit operator BigRational(float d)
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="value"/> is not finite.
+    /// </exception>
+    public static implicit operator BigRational(float value)
     {
-        return (double)d;
+        return (double)value;
     }
 
     /// <summary>
@@ -426,6 +429,9 @@ public partial struct BigRational :
     /// <param name="value">
     /// The <see cref="Half"/> to convert.
     /// </param>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="value"/> is not finite.
+    /// </exception>
     public static implicit operator BigRational(Half value)
     {
         return (double)value;
@@ -4245,7 +4251,7 @@ public partial struct BigRational :
     /// The smallest number greater than or equal to <paramref name="value"/> that is
     /// a whole number of ticks away from zero.
     /// </returns>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="ArgumentOutOfRangeException">
     /// If <paramref name="tick"/> is less than or equal to zero.
     /// </exception>
     public static BigRational Ceiling(BigRational value, BigRational tick)
@@ -4270,7 +4276,7 @@ public partial struct BigRational :
     /// The largest number less than or equal to <paramref name="value"/> that is a
     /// multiple of <paramref name="tick"/>.
     /// </returns>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="ArgumentOutOfRangeException">
     /// If <paramref name="tick"/> is less than or equal to zero.
     /// </exception>
     public static BigRational Floor(BigRational value, BigRational tick)
@@ -4301,11 +4307,11 @@ public partial struct BigRational :
     /// If <paramref name= "value" /> is exactly half way between two such numbers, <paramref name="mode"/>
     /// specifies the rounding method to use.
     /// </returns>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="ArgumentOutOfRangeException">
     /// If <paramref name="tick"/> is less than or equal to zero.
     /// </exception>
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="mode"/> is mode is not valid <see cref="MidpointRoundingMode"/> value.
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="mode"/> is not a valid <see cref="MidpointRoundingMode"/> value.
     /// </exception>
     public static BigRational RoundToTick(BigRational value, BigRational tick, MidpointRoundingMode mode)
     {
@@ -4331,8 +4337,8 @@ public partial struct BigRational :
     /// If <paramref name="value"/> is exactly half way between two such numbers, <paramref name="mode"/>
     /// specifies the rounding method to use <see cref="MidpointRoundingMode"/>.
     /// </returns>
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="mode"/> is mode is not valid <see cref="MidpointRoundingMode"/> value.
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="mode"/> is not a valid <see cref="MidpointRoundingMode"/> value.
     /// </exception>
     public static BigInteger RoundToInt(BigRational value, MidpointRoundingMode mode)
     {
@@ -4357,8 +4363,8 @@ public partial struct BigRational :
     /// <remarks>
     /// This method assumes that <paramref name="value"/> is not an integral number.
     /// </remarks>
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="mode"/> is mode is not valid <see cref="MidpointRoundingMode"/> value.
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="mode"/> is not a valid <see cref="MidpointRoundingMode"/> value.
     /// </exception>
     private static BigInteger RoundImpl(BigRational value, MidpointRoundingMode mode)
     {
@@ -4375,7 +4381,7 @@ public partial struct BigRational :
             case MidpointRoundingMode.TowardZero:
                 return RoundTowardZeroImpl(value);
             default:
-                throw new ArgumentException("Invalid RationalRounding.");
+                throw new ArgumentOutOfRangeException(nameof(mode), "Invalid RationalRounding.");
         }
     }
 

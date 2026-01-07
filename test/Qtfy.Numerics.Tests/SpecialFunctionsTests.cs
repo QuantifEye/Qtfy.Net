@@ -8,13 +8,13 @@ namespace Qtfy.Numerics.Tests;
 
 internal sealed class SpecialFunctionsTests
 {
-    private static unsafe void TestHelper(
+    private static void TestHelper(
         double min,
         double max,
         double inc,
         double error,
-        delegate*<double, double> expectedFunction,
-        delegate*<double, double> actualFunction)
+        Func<double, double> expectedFunction,
+        Func<double, double> actualFunction)
     {
         for (var x = min; x < max; x += inc)
         {
@@ -30,31 +30,25 @@ internal sealed class SpecialFunctionsTests
     [Test]
     public void TestErrorFunction()
     {
-        unsafe
-        {
-            TestHelper(
-                -120d,
-                120d,
-                0.01,
-                TestUtils.Error * 2,
-                &MathNet.Numerics.SpecialFunctions.Erf,
-                &Qtfy.Numerics.SpecialFunctions.Erf);
-        }
+        TestHelper(
+            -120d,
+            120d,
+            0.01,
+            TestUtils.Error * 2,
+            MathNet.Numerics.SpecialFunctions.Erf,
+            Qtfy.Numerics.SpecialFunctions.Erf);
     }
 
     [Test]
     public void TestInverseErrorFunctionRange()
     {
-        unsafe
-        {
-            TestHelper(
-                -1d,
-                1d,
-                0.00001,
-                TestUtils.Error * 4,
-                &MathNet.Numerics.SpecialFunctions.ErfInv,
-                &Qtfy.Numerics.SpecialFunctions.ErfInv);
-        }
+        TestHelper(
+            -1d,
+            1d,
+            0.00001,
+            TestUtils.Error * 4,
+            MathNet.Numerics.SpecialFunctions.ErfInv,
+            Qtfy.Numerics.SpecialFunctions.ErfInv);
     }
 
     [TestCase(1d - TestUtils.Error, TestUtils.Error)]
