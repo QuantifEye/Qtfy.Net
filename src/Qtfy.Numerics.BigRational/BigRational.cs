@@ -506,6 +506,28 @@ public readonly struct BigRational :
     }
 
     /// <summary>
+    /// Explicitly converts a <see cref="Complex"/> value to a <see cref="BigRational"/>.
+    /// </summary>
+    /// <param name="value">
+    /// The value to convert.
+    /// </param>
+    /// <returns>
+    /// A <see cref="BigRational"/> that represents the real component of <paramref name="value"/>.
+    /// </returns>
+    /// <exception cref="OverflowException">
+    /// If <paramref name="value"/> has a non-zero imaginary component.
+    /// </exception>
+    public static explicit operator BigRational(Complex value)
+    {
+        if (value.Imaginary != 0)
+        {
+            ThrowValueNotRepresentableByBigRational();
+        }
+
+        return (BigRational)value.Real;
+    }
+
+    /// <summary>
     /// Converts a <see cref="BigRational"/> to a <see cref="decimal"/>.
     /// </summary>
     /// <param name="value">
@@ -3316,6 +3338,13 @@ public readonly struct BigRational :
             return true;
         }
 
+        if (typeof(TOther) == typeof(Complex))
+        {
+            var complexValue = new Complex((double)value, 0d);
+            result = Unsafe.As<Complex, TOther>(ref complexValue);
+            return true;
+        }
+
         if (typeof(TOther) == typeof(decimal))
         {
             var decimalValue = (decimal)value;
@@ -3984,6 +4013,13 @@ public readonly struct BigRational :
             return true;
         }
 
+        if (typeof(TOther) == typeof(Complex))
+        {
+            var complexValue = new Complex((double)value, 0d);
+            result = Unsafe.As<Complex, TOther>(ref complexValue);
+            return true;
+        }
+
         return false;
     }
 
@@ -4139,6 +4175,13 @@ public readonly struct BigRational :
             }
 
             result = Unsafe.As<decimal, TOther>(ref decimalValue);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(Complex))
+        {
+            var complexValue = new Complex((double)value, 0d);
+            result = Unsafe.As<Complex, TOther>(ref complexValue);
             return true;
         }
 
