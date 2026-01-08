@@ -107,7 +107,7 @@ internal partial class BigRationalTests
     [TestCase(-1, 1, false)]
     public void IsPositive(int n, int d, bool expected)
     {
-        Assert.That(new BigRational(n, d).IsPositive, Is.EqualTo(expected));
+        Assert.That(new BigRational(n, d).IsGreaterThanZero, Is.EqualTo(expected));
     }
 
     [TestCase(1, 2, false)]
@@ -117,7 +117,7 @@ internal partial class BigRationalTests
     [TestCase(-1, 1, true)]
     public void IsNegative(int n, int d, bool expected)
     {
-        Assert.That(new BigRational(n, d).IsNegative, Is.EqualTo(expected));
+        Assert.That(new BigRational(n, d).IsLessThanZero, Is.EqualTo(expected));
     }
 
     [TestCase(1, 2, true)]
@@ -178,6 +178,19 @@ internal partial class BigRationalTests
     public void IsInteger(int n, int d, bool expected)
     {
         Assert.That(new BigRational(n, d).IsInteger, Is.EqualTo(expected));
+    }
+
+    [TestCase(1, 1, true)]
+    [TestCase(2, 1, true)]
+    [TestCase(4, 1, true)]
+    [TestCase(8, 1, true)]
+    [TestCase(0, 1, false)]
+    [TestCase(-2, 1, false)]
+    [TestCase(3, 1, false)]
+    [TestCase(1, 2, false)]
+    public void IsPowerOfTwo(int n, int d, bool expected)
+    {
+        Assert.That(new BigRational(n, d).IsPowerOfTwo, Is.EqualTo(expected));
     }
 
     [Test]
@@ -251,6 +264,25 @@ internal partial class BigRationalTests
     {
         Assert.Throws<DivideByZeroException>(
             () => BigRational.Pow(0, -1));
+    }
+
+    [Test]
+    public void PowIntMinValueOne()
+    {
+        AssertEqual(BigRational.One, BigRational.Pow(BigRational.One, int.MinValue));
+    }
+
+    [Test]
+    public void PowIntMinValueMinusOne()
+    {
+        AssertEqual(BigRational.One, BigRational.Pow(BigRational.MinusOne, int.MinValue));
+    }
+
+    [Test]
+    public void PowIntMinValueZeroThrows()
+    {
+        Assert.Throws<DivideByZeroException>(
+            () => BigRational.Pow(BigRational.Zero, int.MinValue));
     }
 
     [TestCase(1, 2, "1/2")]

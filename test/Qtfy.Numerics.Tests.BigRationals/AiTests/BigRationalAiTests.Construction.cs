@@ -16,8 +16,8 @@ internal sealed partial class BigRationalAiTests
         Assert.That(value.IsZero, Is.True);
         Assert.That(value.IsInteger, Is.True);
         Assert.That(value.Sign, Is.EqualTo(0));
-        Assert.That(value.IsPositive, Is.False);
-        Assert.That(value.IsNegative, Is.False);
+        Assert.That(value.IsGreaterThanZero, Is.False);
+        Assert.That(value.IsLessThanZero, Is.False);
         Assert.That(value.IsOne, Is.False);
         Assert.That(value.IsMinusOne, Is.False);
     }
@@ -65,12 +65,12 @@ internal sealed partial class BigRationalAiTests
         var negative = R(-3, 2);
         var integer = new BigRational(5);
 
-        Assert.That(positive.IsPositive, Is.True);
-        Assert.That(positive.IsNegative, Is.False);
+        Assert.That(positive.IsGreaterThanZero, Is.True);
+        Assert.That(positive.IsLessThanZero, Is.False);
         Assert.That(positive.IsInteger, Is.False);
 
-        Assert.That(negative.IsPositive, Is.False);
-        Assert.That(negative.IsNegative, Is.True);
+        Assert.That(negative.IsGreaterThanZero, Is.False);
+        Assert.That(negative.IsLessThanZero, Is.True);
         Assert.That(negative.IsInteger, Is.False);
 
         Assert.That(integer.IsInteger, Is.True);

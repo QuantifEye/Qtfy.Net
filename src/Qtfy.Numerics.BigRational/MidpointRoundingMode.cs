@@ -13,29 +13,28 @@ public enum MidpointRoundingMode
 {
     /// <summary>
     /// Indicates that if a number is not a whole number of ticks away from zero, it should be rounded
-    /// to the nearest multiple of the specified tick size. If the number is exactly half way
-    /// between two such numbers, it is rounded down to the nearest even-multiple of the specified tick
-    /// size.
+    /// to the nearest multiple of the specified tick size. If the number is exactly halfway
+    /// between two such numbers, it is rounded to the nearest even multiple of the specified tick size.
     /// </summary>
     ToEven,
 
     /// <summary>
     /// Indicates that if a number is not a whole number of ticks away from zero, it should be rounded
-    /// to the nearest multiple of the specified tick size. If the number is exactly half way
+    /// to the nearest multiple of the specified tick size. If the number is exactly halfway
     /// between two such numbers, it is rounded up to the nearest multiple of the specified tick size.
     /// </summary>
     Up,
 
     /// <summary>
     /// Indicates that if a number is not a whole number of ticks away from zero, it should be rounded
-    /// to the nearest multiple of the specified tick size. If the number is exactly half way
+    /// to the nearest multiple of the specified tick size. If the number is exactly halfway
     /// between two such numbers, it is rounded down to the nearest multiple of the specified tick size.
     /// </summary>
     Down,
 
     /// <summary>
     /// Indicates that if a number is not a whole number of ticks away from zero, it should be rounded
-    /// to the nearest multiple of the specified tick size. If the number is exactly half way
+    /// to the nearest multiple of the specified tick size. If the number is exactly halfway
     /// between two such numbers, it is rounded away from zero to the nearest multiple of the specified
     /// tick size.
     /// </summary>
@@ -43,7 +42,7 @@ public enum MidpointRoundingMode
 
     /// <summary>
     /// Indicates that if a number is not a whole number of ticks away from zero, it should be rounded
-    /// to the nearest multiple of the specified tick size. If the number is exactly half way
+    /// to the nearest multiple of the specified tick size. If the number is exactly halfway
     /// between two such numbers, it is rounded towards zero to the nearest multiple of the specified
     /// tick size.
     /// </summary>

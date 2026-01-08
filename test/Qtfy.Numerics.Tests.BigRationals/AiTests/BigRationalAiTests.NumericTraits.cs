@@ -36,7 +36,7 @@ internal sealed partial class BigRationalAiTests
         var positive = R(1, 2);
         var negative = R(-1, 2);
 
-        Assert.That(StaticIsPositive(zero), Is.True);
+        Assert.That(StaticIsPositive(zero), Is.False);
         Assert.That(StaticIsNegative(zero), Is.False);
         Assert.That(StaticIsZero(zero), Is.True);
         Assert.That(StaticIsInteger(zero), Is.True);
@@ -61,6 +61,17 @@ internal sealed partial class BigRationalAiTests
         Assert.That(BigRational.IsOddInteger(new BigRational(3)), Is.True);
         Assert.That(BigRational.IsEvenInteger(R(1, 2)), Is.False);
         Assert.That(BigRational.IsOddInteger(R(1, 2)), Is.False);
+    }
+
+    [Test]
+    public void PowerOfTwoPredicateMatchesIntegerPowers()
+    {
+        Assert.That(BigRational.IsPow2(new BigRational(1)), Is.True);
+        Assert.That(BigRational.IsPow2(new BigRational(2)), Is.True);
+        Assert.That(BigRational.IsPow2(new BigRational(4)), Is.True);
+        Assert.That(BigRational.IsPow2(new BigRational(0)), Is.False);
+        Assert.That(BigRational.IsPow2(new BigRational(-2)), Is.False);
+        Assert.That(BigRational.IsPow2(R(1, 2)), Is.False);
     }
 
     [Test]

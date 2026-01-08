@@ -9,7 +9,10 @@ namespace Qtfy.Numerics;
 /// <summary>
 /// A structure that represents a rational number with an arbitrarily large numerator and denominator.
 /// </summary>
-public partial struct BigRational :
+/// <remarks>
+/// Values are normalized to lowest terms with a positive denominator.
+/// </remarks>
+public readonly struct BigRational :
     INumber<BigRational>,
     ISignedNumber<BigRational>,
     IEquatable<BigRational>,
@@ -31,8 +34,6 @@ public partial struct BigRational :
     IEquatable<short>,
     IEquatable<byte>,
     IEquatable<sbyte>,
-    IComparable,
-    IComparable<BigRational>,
     IComparable<BigInteger>,
     IComparable<decimal>,
     IComparable<double>,
@@ -50,7 +51,9 @@ public partial struct BigRational :
     IComparable<char>,
     IComparable<short>,
     IComparable<byte>,
-    IComparable<sbyte>
+    IComparable<sbyte>,
+    IComparable,
+    IComparable<BigRational>
 {
     /// <summary>
     /// The greatest value a <see cref="decimal"/> value can have as a <see cref="BigInteger"/>.
@@ -105,7 +108,7 @@ public partial struct BigRational :
     {
         if (denominator.IsZero)
         {
-            throw new DivideByZeroException("The denominator of a BigRational cannot be zero.");
+            ThrowDenominatorZero();
         }
 
         if (numerator.IsZero)
@@ -151,8 +154,8 @@ public partial struct BigRational :
     /// Gets the denominator of this <see cref="BigRational" />.
     /// </summary>
     /// <remarks>
-    /// This is currently a computed property because c# does not provide a default constructor.
-    /// This ensures that a default constructed <see cref="BigRational"/> is equal to (0 / 1).
+    /// This is a computed property because default struct initialization leaves the denominator as zero.
+    /// This ensures that a default-initialized <see cref="BigRational"/> is treated as zero with a denominator of one.
     /// </remarks>
     public BigInteger Denominator
     {
@@ -170,12 +173,12 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Gets a number that indicates if <see cref="Numerator"/> is negative, positive, or zero.
+    /// Gets a number that indicates the sign of this <see cref="BigRational"/>.
     /// </summary>
     /// <returns>
-    /// -1 if the value of the numerator is negative,
-    /// 0 if the value of the numerator is zero,
-    /// 1 if the value of the numerator is positive.
+    /// -1 if the value is negative,
+    /// 0 if the value is zero,
+    /// 1 if the value is positive.
     /// </returns>
     public int Sign
     {
@@ -183,39 +186,55 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Gets a value indicating whether the numerator is positive.
+    /// Gets a value indicating whether this <see cref="BigRational"/> is greater than zero.
     /// </summary>
-    public bool IsPositive
+    public bool IsGreaterThanZero
     {
         get => this.Numerator.Sign == 1;
     }
 
     /// <summary>
-    /// Gets a value indicating whether the numerator is negative.
+    /// Gets a value indicating whether this <see cref="BigRational"/> is less than zero.
     /// </summary>
-    public bool IsNegative
+    public bool IsLessThanZero
     {
         get => this.Numerator.Sign == -1;
     }
 
     /// <summary>
-    /// Gets a value indicating whether the numerator is positive or zero.
+    /// Gets a value indicating whether this <see cref="BigRational"/> is less than or equal to zero.
     /// </summary>
-    public bool IsPositiveOrZero
-    {
-        get => this.Numerator.Sign >= 0;
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether the numerator is negative or zero.
-    /// </summary>
-    public bool IsNegativeOrZero
+    public bool IsLessThanOrEqualZero
     {
         get => this.Numerator.Sign <= 0;
     }
 
     /// <summary>
-    /// Gets a value indicating whether this <see cref="BigRational"/> is equal to zero (0 / 1).
+    /// Gets a value indicating whether this <see cref="BigRational"/> is greater than or equal to zero.
+    /// </summary>
+    public bool IsGreaterThanOrEqualZero
+    {
+        get => this.Numerator.Sign >= 0;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether this <see cref="BigRational"/> is positive or zero.
+    /// </summary>
+    public bool IsPositiveOrZero
+    {
+        get => this.IsGreaterThanOrEqualZero;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether this <see cref="BigRational"/> is negative or zero.
+    /// </summary>
+    public bool IsNegativeOrZero
+    {
+        get => this.IsLessThanOrEqualZero;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether this <see cref="BigRational"/> is equal to zero.
     /// </summary>
     public bool IsZero
     {
@@ -223,7 +242,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Gets a value indicating whether this <see cref="BigRational"/> is equal to one (1/1).
+    /// Gets a value indicating whether this <see cref="BigRational"/> is equal to one.
     /// </summary>
     public bool IsOne
     {
@@ -231,7 +250,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Gets a value indicating whether this <see cref="BigRational"/> is equal to minus one (-1/1).
+    /// Gets a value indicating whether this <see cref="BigRational"/> is equal to minus one.
     /// </summary>
     public bool IsMinusOne
     {
@@ -239,11 +258,19 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Gets a value indicating whether this <see cref="BigRational"/> can be represented as an integer (x/1).
+    /// Gets a value indicating whether this <see cref="BigRational"/> can be represented as an integer.
     /// </summary>
     public bool IsInteger
     {
         get => this.Denominator.IsOne;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether this <see cref="BigRational"/> is a positive integer power of two.
+    /// </summary>
+    public bool IsPowerOfTwo
+    {
+        get => this.IsInteger && this.Numerator.IsPowerOfTwo;
     }
 
     /// <summary>
@@ -256,8 +283,10 @@ public partial struct BigRational :
     /// The value of the provided <see cref="BigRational"/> converted to a <see cref="double"/>.
     /// </returns>
     /// <remarks>
-    /// Converts a <see cref="BigRational"/> to a <see cref="double"/>. If the value is half way between two
-    /// prospective double values, the value is rounded to the even value (Bankers Rounding).
+    /// Converts a <see cref="BigRational"/> to a <see cref="double"/>. If the value is halfway between two
+    /// representable double values, it is rounded to the nearest even value. Values that exceed the range
+    /// of <see cref="double"/> are converted to <see cref="double.PositiveInfinity"/> or
+    /// <see cref="double.NegativeInfinity"/>, and values too small to represent round to signed zero.
     /// </remarks>
     public static explicit operator double(BigRational value)
     {
@@ -331,7 +360,8 @@ public partial struct BigRational :
     /// </returns>
     /// <remarks>
     /// The implementation relies on the implementation of the conversion operator that converts
-    /// a <see cref="BigRational"/> to a double.
+    /// a <see cref="BigRational"/> to a double. Values that exceed the range of <see cref="float"/> are
+    /// converted to infinity, and values too small to represent round to signed zero.
     /// </remarks>
     public static explicit operator float(BigRational value)
     {
@@ -349,7 +379,8 @@ public partial struct BigRational :
     /// </returns>
     /// <remarks>
     /// The implementation relies on the implementation of the conversion operator that converts
-    /// a <see cref="BigRational"/> to a double.
+    /// a <see cref="BigRational"/> to a double. Values that exceed the range of <see cref="Half"/> are
+    /// converted to infinity, and values too small to represent round to signed zero.
     /// </remarks>
     public static explicit operator Half(BigRational value)
     {
@@ -362,6 +393,9 @@ public partial struct BigRational :
     /// <param name="value">
     /// The <see cref="double"/> to convert.
     /// </param>
+    /// <remarks>
+    /// The resulting <see cref="BigRational"/> represents the exact value of <paramref name="value"/>.
+    /// </remarks>
     /// <exception cref="ArgumentException">
     /// If <paramref name="value"/> is not finite.
     /// </exception>
@@ -369,7 +403,7 @@ public partial struct BigRational :
     {
         if (!double.IsFinite(value))
         {
-            throw new ArgumentException("Value must be finite.", nameof(value));
+            ThrowValueMustBeFinite();
         }
 
         if (value == 0d)
@@ -415,6 +449,9 @@ public partial struct BigRational :
     /// <param name="value">
     /// The <see cref="float"/> to convert.
     /// </param>
+    /// <remarks>
+    /// The resulting <see cref="BigRational"/> represents the exact value of <paramref name="value"/>.
+    /// </remarks>
     /// <exception cref="ArgumentException">
     /// If <paramref name="value"/> is not finite.
     /// </exception>
@@ -429,6 +466,9 @@ public partial struct BigRational :
     /// <param name="value">
     /// The <see cref="Half"/> to convert.
     /// </param>
+    /// <remarks>
+    /// The resulting <see cref="BigRational"/> represents the exact value of <paramref name="value"/>.
+    /// </remarks>
     /// <exception cref="ArgumentException">
     /// If <paramref name="value"/> is not finite.
     /// </exception>
@@ -443,6 +483,9 @@ public partial struct BigRational :
     /// <param name="value">
     /// The <see cref="decimal"/> to convert.
     /// </param>
+    /// <remarks>
+    /// The resulting <see cref="BigRational"/> represents the exact value of <paramref name="value"/>.
+    /// </remarks>
     public static implicit operator BigRational(decimal value)
     {
         var bits = decimal.GetBits(value);
@@ -472,11 +515,15 @@ public partial struct BigRational :
     /// A <see cref="OverflowException"/> is raised if the <paramref name="value"/>
     /// is not in the valid range of a <see cref="decimal"/>.
     /// </exception>
+    /// <remarks>
+    /// If <paramref name="value"/> cannot be represented exactly, it is rounded to fit decimal precision
+    /// using midpoint-to-even rounding.
+    /// </remarks>
     public static explicit operator decimal(BigRational value)
     {
         if (value < DecimalMin || value > DecimalMax)
         {
-            throw new OverflowException("Value outside of range of valid decimal values.");
+            ThrowDecimalValueOutOfRange();
         }
 
         if (value.IsInteger)
@@ -1127,7 +1174,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns a value indicating whether <paramref name="left"/> is unequal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is not equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1144,7 +1191,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns a value indicating whether <paramref name="left"/> is unequal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is not equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1161,7 +1208,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns a value indicating whether <paramref name="left"/> is unequal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is not equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1178,7 +1225,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns a value indicating whether <paramref name="left"/> is unequal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is not equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1195,7 +1242,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns a value indicating whether <paramref name="left"/> is unequal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is not equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1212,7 +1259,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns a value indicating whether <paramref name="left"/> is unequal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is not equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1229,7 +1276,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns a value indicating whether <paramref name="left"/> is unequal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is not equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1246,7 +1293,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1263,7 +1310,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1280,7 +1327,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1297,7 +1344,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1314,7 +1361,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1331,7 +1378,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1348,7 +1395,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1365,7 +1412,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1382,7 +1429,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1399,7 +1446,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1416,7 +1463,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1433,7 +1480,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1450,7 +1497,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1467,7 +1514,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1484,7 +1531,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1501,7 +1548,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1518,7 +1565,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1535,7 +1582,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1552,7 +1599,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1569,7 +1616,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1586,7 +1633,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is less than <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is less than <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1603,7 +1650,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1620,7 +1667,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1637,7 +1684,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1654,7 +1701,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1671,7 +1718,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1688,7 +1735,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1705,7 +1752,7 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Returns an indication whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
+    /// Returns a value indicating whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.
     /// </summary>
     /// <param name="left">
     /// The first value to compare.
@@ -1756,7 +1803,7 @@ public partial struct BigRational :
     /// The value to add one to.
     /// </param>
     /// <returns>
-    /// The value of <paramref name="value"/> + (1 / 1).
+    /// The value of <paramref name="value"/> + 1.
     /// </returns>
     public static BigRational operator ++(BigRational value)
     {
@@ -1771,7 +1818,7 @@ public partial struct BigRational :
     /// The value to subtract one from.
     /// </param>
     /// <returns>
-    /// The value of <paramref name="value"/> - (1 / 1).
+    /// The value of <paramref name="value"/> - 1.
     /// </returns>
     public static BigRational operator --(BigRational value)
     {
@@ -2175,13 +2222,13 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Divides a <see cref="BigRational"/> value by another <see cref="BigRational"/> value.
+    /// Divides a <see cref="BigRational"/> value by a <see cref="BigInteger"/> value.
     /// </summary>
     /// <param name="dividend">
     /// The <see cref="BigRational"/> to be divided (the dividend).
     /// </param>
     /// <param name="divisor">
-    /// The <see cref="BigRational"/> to divide by (the divisor).
+    /// The <see cref="BigInteger"/> to divide by (the divisor).
     /// </param>
     /// <returns>
     /// The quotient of <paramref name="dividend"/> and <paramref name="divisor"/>.
@@ -2195,10 +2242,10 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Divides a <see cref="BigRational"/> value by another <see cref="BigRational"/> value.
+    /// Divides a <see cref="BigInteger"/> value by a <see cref="BigRational"/> value.
     /// </summary>
     /// <param name="dividend">
-    /// The <see cref="BigRational"/> to be divided (the dividend).
+    /// The <see cref="BigInteger"/> to be divided (the dividend).
     /// </param>
     /// <param name="divisor">
     /// The <see cref="BigRational"/> to divide by (the divisor).
@@ -2215,13 +2262,13 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Divides a <see cref="BigRational"/> value by another <see cref="BigRational"/> value.
+    /// Divides a <see cref="BigRational"/> value by a <see cref="ulong"/> value.
     /// </summary>
     /// <param name="dividend">
     /// The <see cref="BigRational"/> to be divided (the dividend).
     /// </param>
     /// <param name="divisor">
-    /// The <see cref="BigRational"/> to divide by (the divisor).
+    /// The <see cref="ulong"/> to divide by (the divisor).
     /// </param>
     /// <returns>
     /// The quotient of <paramref name="dividend"/> and <paramref name="divisor"/>.
@@ -2235,10 +2282,10 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Divides a <see cref="BigRational"/> value by another <see cref="BigRational"/> value.
+    /// Divides a <see cref="ulong"/> value by a <see cref="BigRational"/> value.
     /// </summary>
     /// <param name="dividend">
-    /// The <see cref="BigRational"/> to be divided (the dividend).
+    /// The <see cref="ulong"/> to be divided (the dividend).
     /// </param>
     /// <param name="divisor">
     /// The <see cref="BigRational"/> to divide by (the divisor).
@@ -2255,13 +2302,13 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Divides a <see cref="BigRational"/> value by another <see cref="BigRational"/> value.
+    /// Divides a <see cref="BigRational"/> value by a <see cref="long"/> value.
     /// </summary>
     /// <param name="dividend">
     /// The <see cref="BigRational"/> to be divided (the dividend).
     /// </param>
     /// <param name="divisor">
-    /// The <see cref="BigRational"/> to divide by (the divisor).
+    /// The <see cref="long"/> to divide by (the divisor).
     /// </param>
     /// <returns>
     /// The quotient of <paramref name="dividend"/> and <paramref name="divisor"/>.
@@ -2275,10 +2322,10 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Divides a <see cref="BigRational"/> value by another <see cref="BigRational"/> value.
+    /// Divides a <see cref="long"/> value by a <see cref="BigRational"/> value.
     /// </summary>
     /// <param name="dividend">
-    /// The <see cref="BigRational"/> to be divided (the dividend).
+    /// The <see cref="long"/> to be divided (the dividend).
     /// </param>
     /// <param name="divisor">
     /// The <see cref="BigRational"/> to divide by (the divisor).
@@ -2298,10 +2345,10 @@ public partial struct BigRational :
     /// Calculates the remainder that results from division with two specified <see cref="BigRational"/> values.
     /// </summary>
     /// <param name="dividend">
-    /// The value to be divided.
+    /// The <see cref="BigRational"/> value to be divided.
     /// </param>
     /// <param name="divisor">
-    /// The value to divide by.
+    /// The <see cref="BigRational"/> value to divide by.
     /// </param>
     /// <returns>
     /// The remainder that results from the division.
@@ -2316,13 +2363,14 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Calculates the remainder that results from division with two specified <see cref="BigRational"/> values.
+    /// Calculates the remainder that results from division with a <see cref="BigRational"/> and a
+    /// <see cref="BigInteger"/>.
     /// </summary>
     /// <param name="dividend">
-    /// The value to be divided.
+    /// The <see cref="BigRational"/> value to be divided.
     /// </param>
     /// <param name="divisor">
-    /// The value to divide by.
+    /// The <see cref="BigInteger"/> value to divide by.
     /// </param>
     /// <returns>
     /// The remainder that results from the division.
@@ -2337,13 +2385,14 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Calculates the remainder that results from division with two specified <see cref="BigRational"/> values.
+    /// Calculates the remainder that results from division with a <see cref="BigInteger"/> and a
+    /// <see cref="BigRational"/>.
     /// </summary>
     /// <param name="dividend">
-    /// The value to be divided.
+    /// The <see cref="BigInteger"/> value to be divided.
     /// </param>
     /// <param name="divisor">
-    /// The value to divide by.
+    /// The <see cref="BigRational"/> value to divide by.
     /// </param>
     /// <returns>
     /// The remainder that results from the division.
@@ -2358,13 +2407,14 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Calculates the remainder that results from division with two specified <see cref="BigRational"/> values.
+    /// Calculates the remainder that results from division with a <see cref="BigRational"/> and a
+    /// <see cref="ulong"/>.
     /// </summary>
     /// <param name="dividend">
-    /// The value to be divided.
+    /// The <see cref="BigRational"/> value to be divided.
     /// </param>
     /// <param name="divisor">
-    /// The value to divide by.
+    /// The <see cref="ulong"/> value to divide by.
     /// </param>
     /// <returns>
     /// The remainder that results from the division.
@@ -2379,13 +2429,14 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Calculates the remainder that results from division with two specified <see cref="BigRational"/> values.
+    /// Calculates the remainder that results from division with a <see cref="ulong"/> and a
+    /// <see cref="BigRational"/>.
     /// </summary>
     /// <param name="dividend">
-    /// The value to be divided.
+    /// The <see cref="ulong"/> value to be divided.
     /// </param>
     /// <param name="divisor">
-    /// The value to divide by.
+    /// The <see cref="BigRational"/> value to divide by.
     /// </param>
     /// <returns>
     /// The remainder that results from the division.
@@ -2400,13 +2451,14 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Calculates the remainder that results from division with two specified <see cref="BigRational"/> values.
+    /// Calculates the remainder that results from division with a <see cref="BigRational"/> and a
+    /// <see cref="long"/>.
     /// </summary>
     /// <param name="dividend">
-    /// The value to be divided.
+    /// The <see cref="BigRational"/> value to be divided.
     /// </param>
     /// <param name="divisor">
-    /// The value to divide by.
+    /// The <see cref="long"/> value to divide by.
     /// </param>
     /// <returns>
     /// The remainder that results from the division.
@@ -2421,13 +2473,14 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Calculates the remainder that results from division with two specified <see cref="BigRational"/> values.
+    /// Calculates the remainder that results from division with a <see cref="long"/> and a
+    /// <see cref="BigRational"/>.
     /// </summary>
     /// <param name="dividend">
-    /// The value to be divided.
+    /// The <see cref="long"/> value to be divided.
     /// </param>
     /// <param name="divisor">
-    /// The value to divide by.
+    /// The <see cref="BigRational"/> value to divide by.
     /// </param>
     /// <returns>
     /// The remainder that results from the division.
@@ -2444,7 +2497,7 @@ public partial struct BigRational :
     /// <inheritdoc cref="INumberBase{BigRational}" />
     public static BigRational Abs(BigRational value)
     {
-        return value.IsNegative ? -value : value;
+        return value.IsLessThanZero ? -value : value;
     }
 
     /// <inheritdoc cref="INumber{BigRational}" />
@@ -2456,7 +2509,7 @@ public partial struct BigRational :
     /// <inheritdoc cref="INumber{BigRational}" />
     public static BigRational CopySign(BigRational value, BigRational sign)
     {
-        return sign.IsNegative ? -Abs(value) : Abs(value);
+        return sign.IsLessThanZero ? -Abs(value) : Abs(value);
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
@@ -2508,9 +2561,9 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
-    static bool INumberBase<BigRational>.IsNegative(BigRational value)
+    public static bool IsNegative(BigRational value)
     {
-        return value.IsNegative;
+        return value.IsLessThanZero;
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
@@ -2531,10 +2584,24 @@ public partial struct BigRational :
         return value.IsInteger && !value.Numerator.IsEven;
     }
 
-    /// <inheritdoc cref="INumberBase{BigRational}" />
-    static bool INumberBase<BigRational>.IsPositive(BigRational value)
+    /// <summary>
+    /// Returns a value indicating whether the specified value is a power of two.
+    /// </summary>
+    /// <param name="value">
+    /// The value to test.
+    /// </param>
+    /// <returns>
+    /// true if <paramref name="value"/> is a positive integer power of two; otherwise, false.
+    /// </returns>
+    public static bool IsPow2(BigRational value)
     {
-        return value.Sign >= 0;
+        return value.IsPowerOfTwo;
+    }
+
+    /// <inheritdoc cref="INumberBase{BigRational}" />
+    public static bool IsPositive(BigRational value)
+    {
+        return value.IsGreaterThanZero;
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
@@ -2622,11 +2689,14 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc cref="INumber{BigRational}" />
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="min"/> is greater than <paramref name="max"/>.
+    /// </exception>
     public static BigRational Clamp(BigRational value, BigRational min, BigRational max)
     {
         if (min > max)
         {
-            throw new ArgumentException("min must be less than or equal to max.", nameof(min));
+            ThrowMinMustBeLessThanOrEqualToMax();
         }
 
         if (value < min)
@@ -2675,7 +2745,7 @@ public partial struct BigRational :
         {
             if (exp < 0)
             {
-                throw new DivideByZeroException("Cannot raise zero to a negative power.");
+                ThrowZeroToNegativePower();
             }
 
             return Zero;
@@ -2688,6 +2758,15 @@ public partial struct BigRational :
                 denominator: BigInteger.Pow(value.Denominator, exp));
         }
 
+        if (exp == int.MinValue)
+        {
+            var numerator = value.Denominator;
+            var denominator = value.Numerator;
+            var powNumerator = BigInteger.Pow(numerator, int.MaxValue);
+            var powDenominator = BigInteger.Pow(denominator, int.MaxValue);
+            return new BigRational(powNumerator * numerator, powDenominator * denominator);
+        }
+
         exp = -exp;
         return new BigRational(
             numerator: BigInteger.Pow(value.Denominator, exp),
@@ -2695,10 +2774,101 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Converts the string representation of a number to its <see cref="BigRational"/> equivalent.
+    /// Calculates the Taylor-series approximation of e raised to <paramref name="power"/>,
+    /// using the specified number of terms.
+    /// </summary>
+    /// <param name="power">
+    /// The exponent to apply to Euler's number.
+    /// </param>
+    /// <param name="terms">
+    /// The number of terms to compute. Must be positive.
+    /// </param>
+    /// <returns>
+    /// The Taylor-series approximation of e raised to <paramref name="power"/>.
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="terms"/> is less than or equal to zero.
+    /// </exception>
+    public static BigRational Exp(BigRational power, int terms)
+    {
+        if (terms <= 0)
+        {
+            ThrowTermsMustBePositive();
+        }
+
+        if (terms == 1)
+        {
+            return One;
+        }
+
+        var xn = One;
+        var sum = xn;
+        var factorial = BigInteger.One;
+        for (var t = 1; t != terms; ++t)
+        {
+            xn *= power;
+            factorial *= t;
+            sum += xn / factorial;
+        }
+
+        return sum;
+    }
+
+    /// <summary>
+    /// Approximates the natural (base e) logarithm of a specified number using a series expansion
+    /// with the specified number of terms.
+    /// </summary>
+    /// <param name="x">
+    /// The number whose logarithm is to be approximated. Must be positive.
+    /// </param>
+    /// <param name="terms">
+    /// The number of terms to compute. Must be positive.
+    /// </param>
+    /// <returns>
+    /// The approximation of the natural (base e) logarithm of the specified number.
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="terms"/> is less than or equal to zero.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="x"/> is less than or equal to zero.
+    /// </exception>
+    public static BigRational Log(BigRational x, int terms)
+    {
+        if (terms <= 0)
+        {
+            ThrowTermsMustBePositive();
+        }
+
+        if (x.IsNegativeOrZero)
+        {
+            ThrowValueMustBePositive();
+        }
+
+        if (x.IsOne)
+        {
+            return Zero;
+        }
+
+        var n = 1 / (x - 1);
+        var factor = 1 / ((2 * n) + 1);
+        var factorSquared = factor * factor;
+        var total = factor;
+        for (int term = 1, power = 3; term < terms; ++term, power += 2)
+        {
+            factor *= factorSquared;
+            total += factor / power;
+        }
+
+        return 2 * total;
+    }
+
+    /// <summary>
+    /// Converts the string representation of an integer or a numerator/denominator fraction
+    /// to its <see cref="BigRational"/> equivalent.
     /// </summary>
     /// <param name="value">
-    /// A string that contains the number to convert.
+    /// A string that contains an integer or a numerator/denominator fraction to convert.
     /// </param>
     /// <returns>
     /// A value that is equivalent to the number specified in the <paramref name="value"/> parameter.
@@ -2716,11 +2886,11 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Converts the string representation of a number to its <see cref="BigRational"/> equivalent
-    /// using the invariant culture.
+    /// Converts the string representation of an integer or a numerator/denominator fraction
+    /// to its <see cref="BigRational"/> equivalent using the invariant culture.
     /// </summary>
     /// <param name="value">
-    /// A string that contains the number to convert.
+    /// A string that contains an integer or a numerator/denominator fraction to convert.
     /// </param>
     /// <returns>
     /// A value that is equivalent to the number specified in the <paramref name="value"/> parameter.
@@ -2760,23 +2930,23 @@ public partial struct BigRational :
     {
         ArgumentNullException.ThrowIfNull(s);
 
-        if (TryParseCore(s.AsSpan(), style, provider, out var result))
+        if (!TryParseCore(s.AsSpan(), style, provider, out var result))
         {
-            return result;
+            ThrowCouldNotParseBigRationalString(s);
         }
 
-        throw new FormatException($"Could not parse \"{s}\" as a BigRational.");
+        return result;
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
     public static BigRational Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider)
     {
-        if (TryParseCore(s, style, provider, out var result))
+        if (!TryParseCore(s, style, provider, out var result))
         {
-            return result;
+            ThrowCouldNotParseBigRationalSpan();
         }
 
-        throw new FormatException("Could not parse value as a BigRational.");
+        return result;
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
@@ -2787,22 +2957,23 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Tries to convert the string representation of a number to its <see cref="BigRational"/> equivalent,
+    /// Tries to convert the string representation of an integer or a numerator/denominator fraction
+    /// to its <see cref="BigRational"/> equivalent,
     /// and returns a value that indicates whether the conversion succeeded.
     /// </summary>
     /// <param name="value">
-    /// The string representation of a number.
+    /// The string representation of an integer or a numerator/denominator fraction.
     /// </param>
     /// <param name="rational">
     /// When this method returns, contains the <see cref="BigRational"/> equivalent to
     /// the number that is contained in value, or zero (0) if the conversion fails.
-    /// The conversion fails if the value <paramref name="value"/> is null or is not of the correct format.
+    /// The conversion fails if <paramref name="value"/> is null or is not in the correct format.
     /// This parameter is passed uninitialized.
     /// </param>
     /// <returns>
     /// true if value was converted successfully; otherwise, false.
     /// </returns>
-    public static bool TryParse(string value, out BigRational rational)
+    public static bool TryParse(string? value, out BigRational rational)
     {
         return TryParse(value, NumberStyles.Integer, null, out rational);
     }
@@ -2828,12 +2999,6 @@ public partial struct BigRational :
     /// <inheritdoc cref="INumberBase{BigRational}" />
     public static bool TryParse(string? s, NumberStyles style, IFormatProvider? provider, out BigRational result)
     {
-        if (s is null)
-        {
-            result = default;
-            return false;
-        }
-
         return TryParseCore(s.AsSpan(), style, provider, out result);
     }
 
@@ -2846,182 +3011,199 @@ public partial struct BigRational :
     /// <inheritdoc cref="INumberBase{BigRational}" />
     public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out BigRational result)
     {
-        if (utf8Text.IsEmpty)
-        {
-            result = default;
-            return false;
-        }
-
         var text = Encoding.UTF8.GetString(utf8Text);
         return TryParse(text, style, provider, out result);
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
+    /// <exception cref="OverflowException">
+    /// If <paramref name="value"/> is not representable by <see cref="BigRational"/>.
+    /// </exception>
+    /// <exception cref="NotSupportedException">
+    /// If <paramref name="value"/> cannot be converted to <see cref="BigRational"/>.
+    /// </exception>
     public static BigRational CreateChecked<TOther>(TOther value)
         where TOther : INumberBase<TOther>
     {
-        if (TryConvertFromChecked(value, out var result))
+        if (!TryConvertFromChecked(value, out var result))
         {
-            return result;
+            ThrowCannotConvertFrom<TOther>();
         }
 
-        throw new NotSupportedException($"Cannot convert from {typeof(TOther)}.");
+        return result;
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
+    /// <exception cref="NotSupportedException">
+    /// If <paramref name="value"/> cannot be converted to <see cref="BigRational"/>.
+    /// </exception>
     public static BigRational CreateSaturating<TOther>(TOther value)
         where TOther : INumberBase<TOther>
     {
-        if (TryConvertFromSaturating(value, out var result))
+        if (!TryConvertFromSaturating(value, out var result))
         {
-            return result;
+            ThrowCannotConvertFrom<TOther>();
         }
 
-        throw new NotSupportedException($"Cannot convert from {typeof(TOther)}.");
+        return result;
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
+    /// <exception cref="NotSupportedException">
+    /// If <paramref name="value"/> cannot be converted to <see cref="BigRational"/>.
+    /// </exception>
     public static BigRational CreateTruncating<TOther>(TOther value)
         where TOther : INumberBase<TOther>
     {
-        if (TryConvertFromTruncating(value, out var result))
+        if (!TryConvertFromTruncating(value, out var result))
         {
-            return result;
+            ThrowCannotConvertFrom<TOther>();
         }
 
-        throw new NotSupportedException($"Cannot convert from {typeof(TOther)}.");
+        return result;
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
+    /// <exception cref="OverflowException">
+    /// If <paramref name="value"/> is not representable by <see cref="BigRational"/>.
+    /// </exception>
     public static bool TryConvertFromChecked<TOther>(TOther value, out BigRational result)
         where TOther : INumberBase<TOther>
     {
-        if (value is BigRational rational)
+        if (typeof(TOther) == typeof(BigRational))
         {
-            result = rational;
+            result = Unsafe.As<TOther, BigRational>(ref value);
             return true;
         }
 
-        if (value is BigInteger bigInteger)
+        if (typeof(TOther) == typeof(BigInteger))
         {
+            var bigInteger = Unsafe.As<TOther, BigInteger>(ref value);
             result = new BigRational(bigInteger);
             return true;
         }
 
-        if (value is sbyte sbyteValue)
+        if (typeof(TOther) == typeof(sbyte))
         {
-            result = sbyteValue;
+            result = Unsafe.As<TOther, sbyte>(ref value);
             return true;
         }
 
-        if (value is byte byteValue)
+        if (typeof(TOther) == typeof(byte))
         {
-            result = byteValue;
+            result = Unsafe.As<TOther, byte>(ref value);
             return true;
         }
 
-        if (value is short shortValue)
+        if (typeof(TOther) == typeof(short))
         {
-            result = shortValue;
+            result = Unsafe.As<TOther, short>(ref value);
             return true;
         }
 
-        if (value is ushort ushortValue)
+        if (typeof(TOther) == typeof(ushort))
         {
-            result = ushortValue;
+            result = Unsafe.As<TOther, ushort>(ref value);
             return true;
         }
 
-        if (value is int intValue)
+        if (typeof(TOther) == typeof(int))
         {
-            result = intValue;
+            result = Unsafe.As<TOther, int>(ref value);
             return true;
         }
 
-        if (value is uint uintValue)
+        if (typeof(TOther) == typeof(uint))
         {
-            result = uintValue;
+            result = Unsafe.As<TOther, uint>(ref value);
             return true;
         }
 
-        if (value is long longValue)
+        if (typeof(TOther) == typeof(long))
         {
-            result = longValue;
+            result = Unsafe.As<TOther, long>(ref value);
             return true;
         }
 
-        if (value is ulong ulongValue)
+        if (typeof(TOther) == typeof(ulong))
         {
-            result = ulongValue;
+            result = Unsafe.As<TOther, ulong>(ref value);
             return true;
         }
 
-        if (value is Int128 int128Value)
+        if (typeof(TOther) == typeof(Int128))
         {
+            var int128Value = Unsafe.As<TOther, Int128>(ref value);
             result = new BigRational((BigInteger)int128Value);
             return true;
         }
 
-        if (value is UInt128 uint128Value)
+        if (typeof(TOther) == typeof(UInt128))
         {
+            var uint128Value = Unsafe.As<TOther, UInt128>(ref value);
             result = new BigRational((BigInteger)uint128Value);
             return true;
         }
 
-        if (value is nint nintValue)
+        if (typeof(TOther) == typeof(nint))
         {
-            result = (long)nintValue;
+            var nativeValue = Unsafe.As<TOther, nint>(ref value);
+            result = (long)nativeValue;
             return true;
         }
 
-        if (value is nuint nuintValue)
+        if (typeof(TOther) == typeof(nuint))
         {
-            result = (ulong)nuintValue;
+            var nativeValue = Unsafe.As<TOther, nuint>(ref value);
+            result = (ulong)nativeValue;
             return true;
         }
 
-        if (value is char charValue)
+        if (typeof(TOther) == typeof(char))
         {
-            result = charValue;
+            result = Unsafe.As<TOther, char>(ref value);
             return true;
         }
 
-        if (value is float floatValue)
+        if (typeof(TOther) == typeof(float))
         {
+            var floatValue = Unsafe.As<TOther, float>(ref value);
             if (!float.IsFinite(floatValue))
             {
-                throw new OverflowException("Value is not representable by BigRational.");
+                ThrowValueNotRepresentableByBigRational();
             }
 
             result = floatValue;
             return true;
         }
 
-        if (value is double doubleValue)
+        if (typeof(TOther) == typeof(double))
         {
+            var doubleValue = Unsafe.As<TOther, double>(ref value);
             if (!double.IsFinite(doubleValue))
             {
-                throw new OverflowException("Value is not representable by BigRational.");
+                ThrowValueNotRepresentableByBigRational();
             }
 
             result = doubleValue;
             return true;
         }
 
-        if (value is Half halfValue)
+        if (typeof(TOther) == typeof(Half))
         {
+            var halfValue = Unsafe.As<TOther, Half>(ref value);
             if (!Half.IsFinite(halfValue))
             {
-                throw new OverflowException("Value is not representable by BigRational.");
+                ThrowValueNotRepresentableByBigRational();
             }
 
             result = (double)halfValue;
             return true;
         }
 
-        if (value is decimal decimalValue)
+        if (typeof(TOther) == typeof(decimal))
         {
-            result = decimalValue;
+            result = Unsafe.As<TOther, decimal>(ref value);
             return true;
         }
 
@@ -3033,22 +3215,32 @@ public partial struct BigRational :
     public static bool TryConvertFromSaturating<TOther>(TOther value, out BigRational result)
         where TOther : INumberBase<TOther>
     {
-        if (value is float floatValue && !float.IsFinite(floatValue))
+        if (typeof(TOther) == typeof(float))
         {
-            result = default;
-            return false;
+            var floatValue = Unsafe.As<TOther, float>(ref value);
+            if (!float.IsFinite(floatValue))
+            {
+                result = default;
+                return false;
+            }
         }
-
-        if (value is double doubleValue && !double.IsFinite(doubleValue))
+        else if (typeof(TOther) == typeof(double))
         {
-            result = default;
-            return false;
+            var doubleValue = Unsafe.As<TOther, double>(ref value);
+            if (!double.IsFinite(doubleValue))
+            {
+                result = default;
+                return false;
+            }
         }
-
-        if (value is Half halfValue && !Half.IsFinite(halfValue))
+        else if (typeof(TOther) == typeof(Half))
         {
-            result = default;
-            return false;
+            var halfValue = Unsafe.As<TOther, Half>(ref value);
+            if (!Half.IsFinite(halfValue))
+            {
+                result = default;
+                return false;
+            }
         }
 
         return TryConvertFromChecked(value, out result);
@@ -3062,6 +3254,9 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
+    /// <exception cref="OverflowException">
+    /// If <paramref name="value"/> is not representable by <typeparamref name="TOther"/>.
+    /// </exception>
     public static bool TryConvertToChecked<TOther>(BigRational value, out TOther result)
         where TOther : INumberBase<TOther>
     {
@@ -3069,7 +3264,7 @@ public partial struct BigRational :
 
         if (typeof(TOther) == typeof(BigRational))
         {
-            result = (TOther)(object)value;
+            result = Unsafe.As<BigRational, TOther>(ref value);
             return true;
         }
 
@@ -3077,10 +3272,11 @@ public partial struct BigRational :
         {
             if (!value.IsInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
-            result = (TOther)(object)value.Numerator;
+            var numerator = value.Numerator;
+            result = Unsafe.As<BigInteger, TOther>(ref numerator);
             return true;
         }
 
@@ -3089,10 +3285,10 @@ public partial struct BigRational :
             var floatValue = (float)value;
             if (!float.IsFinite(floatValue))
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)floatValue;
+            result = Unsafe.As<float, TOther>(ref floatValue);
             return true;
         }
 
@@ -3101,10 +3297,10 @@ public partial struct BigRational :
             var doubleValue = (double)value;
             if (!double.IsFinite(doubleValue))
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)doubleValue;
+            result = Unsafe.As<double, TOther>(ref doubleValue);
             return true;
         }
 
@@ -3113,16 +3309,17 @@ public partial struct BigRational :
             var halfValue = (Half)(double)value;
             if (!Half.IsFinite(halfValue))
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)halfValue;
+            result = Unsafe.As<Half, TOther>(ref halfValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(decimal))
         {
-            result = (TOther)(object)(decimal)value;
+            var decimalValue = (decimal)value;
+            result = Unsafe.As<decimal, TOther>(ref decimalValue);
             return true;
         }
 
@@ -3133,15 +3330,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < sbyte.MinValue || integer > sbyte.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(sbyte)integer;
+            var sbyteValue = (sbyte)integer;
+            result = Unsafe.As<sbyte, TOther>(ref sbyteValue);
             return true;
         }
 
@@ -3149,15 +3347,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < byte.MinValue || integer > byte.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(byte)integer;
+            var byteValue = (byte)integer;
+            result = Unsafe.As<byte, TOther>(ref byteValue);
             return true;
         }
 
@@ -3165,15 +3364,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < short.MinValue || integer > short.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(short)integer;
+            var shortValue = (short)integer;
+            result = Unsafe.As<short, TOther>(ref shortValue);
             return true;
         }
 
@@ -3181,15 +3381,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < ushort.MinValue || integer > ushort.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(ushort)integer;
+            var ushortValue = (ushort)integer;
+            result = Unsafe.As<ushort, TOther>(ref ushortValue);
             return true;
         }
 
@@ -3197,15 +3398,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < int.MinValue || integer > int.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(int)integer;
+            var intValue = (int)integer;
+            result = Unsafe.As<int, TOther>(ref intValue);
             return true;
         }
 
@@ -3213,15 +3415,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < uint.MinValue || integer > uint.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(uint)integer;
+            var uintValue = (uint)integer;
+            result = Unsafe.As<uint, TOther>(ref uintValue);
             return true;
         }
 
@@ -3229,15 +3432,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < long.MinValue || integer > long.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(long)integer;
+            var longValue = (long)integer;
+            result = Unsafe.As<long, TOther>(ref longValue);
             return true;
         }
 
@@ -3245,15 +3449,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < ulong.MinValue || integer > ulong.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(ulong)integer;
+            var ulongValue = (ulong)integer;
+            result = Unsafe.As<ulong, TOther>(ref ulongValue);
             return true;
         }
 
@@ -3261,15 +3466,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < Int128.MinValue || integer > Int128.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(Int128)integer;
+            var int128Value = (Int128)integer;
+            result = Unsafe.As<Int128, TOther>(ref int128Value);
             return true;
         }
 
@@ -3277,15 +3483,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < UInt128.MinValue || integer > UInt128.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(UInt128)integer;
+            var uint128Value = (UInt128)integer;
+            result = Unsafe.As<UInt128, TOther>(ref uint128Value);
             return true;
         }
 
@@ -3293,15 +3500,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < nint.MinValue || integer > nint.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(nint)integer;
+            var nintValue = (nint)integer;
+            result = Unsafe.As<nint, TOther>(ref nintValue);
             return true;
         }
 
@@ -3309,15 +3517,16 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < nuint.MinValue || integer > nuint.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(nuint)integer;
+            var nuintValue = (nuint)integer;
+            result = Unsafe.As<nuint, TOther>(ref nuintValue);
             return true;
         }
 
@@ -3325,19 +3534,139 @@ public partial struct BigRational :
         {
             if (!isInteger)
             {
-                throw new OverflowException("Value is not an integer.");
+                ThrowValueNotInteger();
             }
 
             if (integer < char.MinValue || integer > char.MaxValue)
             {
-                throw new OverflowException("Value is outside the range of the destination type.");
+                ThrowValueOutsideDestinationTypeRange();
             }
 
-            result = (TOther)(object)(char)integer;
+            var charValue = (char)integer;
+            result = Unsafe.As<char, TOther>(ref charValue);
             return true;
         }
 
         return false;
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowCannotConvertFrom<TOther>()
+    {
+        throw new NotSupportedException($"Cannot convert from {typeof(TOther)}.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowValueNotRepresentableByBigRational()
+    {
+        throw new OverflowException("Value is not representable by BigRational.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowValueOutsideDestinationTypeRange()
+    {
+        throw new OverflowException("Value is outside the range of the destination type.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowValueNotInteger()
+    {
+        throw new OverflowException("Value is not an integer.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowDenominatorZero()
+    {
+        throw new DivideByZeroException("The denominator of a BigRational cannot be zero.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowValueMustBeFinite()
+    {
+        throw new ArgumentException("Value must be finite.", "value");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowOtherMustBeFinite()
+    {
+        throw new ArgumentException("Value must be finite.", "other");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowDecimalValueOutOfRange()
+    {
+        throw new OverflowException("Value outside of range of valid decimal values.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowMinMustBeLessThanOrEqualToMax()
+    {
+        throw new ArgumentException("min must be less than or equal to max.", "min");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowZeroToNegativePower()
+    {
+        throw new DivideByZeroException("Cannot raise zero to a negative power.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowCouldNotParseBigRationalSpan()
+    {
+        throw new FormatException("Could not parse value as a BigRational.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowCouldNotParseBigRationalString(string value)
+    {
+        throw new FormatException($"Could not parse \"{value}\" as a BigRational.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowTermsMustBePositive()
+    {
+        throw new ArgumentOutOfRangeException("terms", "Terms must be positive.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowValueMustBePositive()
+    {
+        throw new ArgumentOutOfRangeException("x", "Value must be positive.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static T ThrowObjectMustBeBigRational<T>()
+    {
+        throw new ArgumentException("Object must be of type BigRational.", "obj");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static T ThrowInvalidRoundingMode<T>()
+    {
+        throw new ArgumentOutOfRangeException("mode", "Invalid rounding mode.");
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowTickMustBeGreaterThanZero()
+    {
+        throw new ArgumentOutOfRangeException("tick", "Tick must be greater than zero.");
     }
 
     /// <inheritdoc cref="INumberBase{BigRational}" />
@@ -3348,13 +3677,14 @@ public partial struct BigRational :
 
         if (typeof(TOther) == typeof(BigRational))
         {
-            result = (TOther)(object)value;
+            result = Unsafe.As<BigRational, TOther>(ref value);
             return true;
         }
 
         if (typeof(TOther) == typeof(BigInteger))
         {
-            result = (TOther)(object)TruncateToBigInteger(value);
+            var truncated = TruncateToBigInteger(value);
+            result = Unsafe.As<BigInteger, TOther>(ref truncated);
             return true;
         }
 
@@ -3362,271 +3692,302 @@ public partial struct BigRational :
 
         if (typeof(TOther) == typeof(sbyte))
         {
+            sbyte sbyteValue;
             if (integer < sbyte.MinValue)
             {
-                result = (TOther)(object)sbyte.MinValue;
-                return true;
+                sbyteValue = sbyte.MinValue;
             }
-
-            if (integer > sbyte.MaxValue)
+            else if (integer > sbyte.MaxValue)
             {
-                result = (TOther)(object)sbyte.MaxValue;
-                return true;
+                sbyteValue = sbyte.MaxValue;
+            }
+            else
+            {
+                sbyteValue = (sbyte)integer;
             }
 
-            result = (TOther)(object)(sbyte)integer;
+            result = Unsafe.As<sbyte, TOther>(ref sbyteValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(byte))
         {
+            byte byteValue;
             if (integer < byte.MinValue)
             {
-                result = (TOther)(object)byte.MinValue;
-                return true;
+                byteValue = byte.MinValue;
             }
-
-            if (integer > byte.MaxValue)
+            else if (integer > byte.MaxValue)
             {
-                result = (TOther)(object)byte.MaxValue;
-                return true;
+                byteValue = byte.MaxValue;
+            }
+            else
+            {
+                byteValue = (byte)integer;
             }
 
-            result = (TOther)(object)(byte)integer;
+            result = Unsafe.As<byte, TOther>(ref byteValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(short))
         {
+            short shortValue;
             if (integer < short.MinValue)
             {
-                result = (TOther)(object)short.MinValue;
-                return true;
+                shortValue = short.MinValue;
             }
-
-            if (integer > short.MaxValue)
+            else if (integer > short.MaxValue)
             {
-                result = (TOther)(object)short.MaxValue;
-                return true;
+                shortValue = short.MaxValue;
+            }
+            else
+            {
+                shortValue = (short)integer;
             }
 
-            result = (TOther)(object)(short)integer;
+            result = Unsafe.As<short, TOther>(ref shortValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(ushort))
         {
+            ushort ushortValue;
             if (integer < ushort.MinValue)
             {
-                result = (TOther)(object)ushort.MinValue;
-                return true;
+                ushortValue = ushort.MinValue;
             }
-
-            if (integer > ushort.MaxValue)
+            else if (integer > ushort.MaxValue)
             {
-                result = (TOther)(object)ushort.MaxValue;
-                return true;
+                ushortValue = ushort.MaxValue;
+            }
+            else
+            {
+                ushortValue = (ushort)integer;
             }
 
-            result = (TOther)(object)(ushort)integer;
+            result = Unsafe.As<ushort, TOther>(ref ushortValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(int))
         {
+            int intValue;
             if (integer < int.MinValue)
             {
-                result = (TOther)(object)int.MinValue;
-                return true;
+                intValue = int.MinValue;
             }
-
-            if (integer > int.MaxValue)
+            else if (integer > int.MaxValue)
             {
-                result = (TOther)(object)int.MaxValue;
-                return true;
+                intValue = int.MaxValue;
+            }
+            else
+            {
+                intValue = (int)integer;
             }
 
-            result = (TOther)(object)(int)integer;
+            result = Unsafe.As<int, TOther>(ref intValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(uint))
         {
+            uint uintValue;
             if (integer < uint.MinValue)
             {
-                result = (TOther)(object)uint.MinValue;
-                return true;
+                uintValue = uint.MinValue;
             }
-
-            if (integer > uint.MaxValue)
+            else if (integer > uint.MaxValue)
             {
-                result = (TOther)(object)uint.MaxValue;
-                return true;
+                uintValue = uint.MaxValue;
+            }
+            else
+            {
+                uintValue = (uint)integer;
             }
 
-            result = (TOther)(object)(uint)integer;
+            result = Unsafe.As<uint, TOther>(ref uintValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(long))
         {
+            long longValue;
             if (integer < long.MinValue)
             {
-                result = (TOther)(object)long.MinValue;
-                return true;
+                longValue = long.MinValue;
             }
-
-            if (integer > long.MaxValue)
+            else if (integer > long.MaxValue)
             {
-                result = (TOther)(object)long.MaxValue;
-                return true;
+                longValue = long.MaxValue;
+            }
+            else
+            {
+                longValue = (long)integer;
             }
 
-            result = (TOther)(object)(long)integer;
+            result = Unsafe.As<long, TOther>(ref longValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(ulong))
         {
+            ulong ulongValue;
             if (integer < ulong.MinValue)
             {
-                result = (TOther)(object)ulong.MinValue;
-                return true;
+                ulongValue = ulong.MinValue;
             }
-
-            if (integer > ulong.MaxValue)
+            else if (integer > ulong.MaxValue)
             {
-                result = (TOther)(object)ulong.MaxValue;
-                return true;
+                ulongValue = ulong.MaxValue;
+            }
+            else
+            {
+                ulongValue = (ulong)integer;
             }
 
-            result = (TOther)(object)(ulong)integer;
+            result = Unsafe.As<ulong, TOther>(ref ulongValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(Int128))
         {
+            Int128 int128Value;
             if (integer < Int128.MinValue)
             {
-                result = (TOther)(object)Int128.MinValue;
-                return true;
+                int128Value = Int128.MinValue;
             }
-
-            if (integer > Int128.MaxValue)
+            else if (integer > Int128.MaxValue)
             {
-                result = (TOther)(object)Int128.MaxValue;
-                return true;
+                int128Value = Int128.MaxValue;
+            }
+            else
+            {
+                int128Value = (Int128)integer;
             }
 
-            result = (TOther)(object)(Int128)integer;
+            result = Unsafe.As<Int128, TOther>(ref int128Value);
             return true;
         }
 
         if (typeof(TOther) == typeof(UInt128))
         {
+            UInt128 uint128Value;
             if (integer < UInt128.MinValue)
             {
-                result = (TOther)(object)UInt128.MinValue;
-                return true;
+                uint128Value = UInt128.MinValue;
             }
-
-            if (integer > UInt128.MaxValue)
+            else if (integer > UInt128.MaxValue)
             {
-                result = (TOther)(object)UInt128.MaxValue;
-                return true;
+                uint128Value = UInt128.MaxValue;
+            }
+            else
+            {
+                uint128Value = (UInt128)integer;
             }
 
-            result = (TOther)(object)(UInt128)integer;
+            result = Unsafe.As<UInt128, TOther>(ref uint128Value);
             return true;
         }
 
         if (typeof(TOther) == typeof(nint))
         {
+            nint nintValue;
             if (integer < nint.MinValue)
             {
-                result = (TOther)(object)nint.MinValue;
-                return true;
+                nintValue = nint.MinValue;
             }
-
-            if (integer > nint.MaxValue)
+            else if (integer > nint.MaxValue)
             {
-                result = (TOther)(object)nint.MaxValue;
-                return true;
+                nintValue = nint.MaxValue;
+            }
+            else
+            {
+                nintValue = (nint)integer;
             }
 
-            result = (TOther)(object)(nint)integer;
+            result = Unsafe.As<nint, TOther>(ref nintValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(nuint))
         {
+            nuint nuintValue;
             if (integer < nuint.MinValue)
             {
-                result = (TOther)(object)nuint.MinValue;
-                return true;
+                nuintValue = nuint.MinValue;
             }
-
-            if (integer > nuint.MaxValue)
+            else if (integer > nuint.MaxValue)
             {
-                result = (TOther)(object)nuint.MaxValue;
-                return true;
+                nuintValue = nuint.MaxValue;
+            }
+            else
+            {
+                nuintValue = (nuint)integer;
             }
 
-            result = (TOther)(object)(nuint)integer;
+            result = Unsafe.As<nuint, TOther>(ref nuintValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(char))
         {
+            char charValue;
             if (integer < char.MinValue)
             {
-                result = (TOther)(object)char.MinValue;
-                return true;
+                charValue = char.MinValue;
             }
-
-            if (integer > char.MaxValue)
+            else if (integer > char.MaxValue)
             {
-                result = (TOther)(object)char.MaxValue;
-                return true;
+                charValue = char.MaxValue;
+            }
+            else
+            {
+                charValue = (char)integer;
             }
 
-            result = (TOther)(object)(char)integer;
+            result = Unsafe.As<char, TOther>(ref charValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(float))
         {
-            result = (TOther)(object)(float)value;
+            var floatValue = (float)value;
+            result = Unsafe.As<float, TOther>(ref floatValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(double))
         {
-            result = (TOther)(object)(double)value;
+            var doubleValue = (double)value;
+            result = Unsafe.As<double, TOther>(ref doubleValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(Half))
         {
-            result = (TOther)(object)(Half)(double)value;
+            var halfValue = (Half)(double)value;
+            result = Unsafe.As<Half, TOther>(ref halfValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(decimal))
         {
+            decimal decimalValue;
             if (value < DecimalMin)
             {
-                result = (TOther)(object)decimal.MinValue;
-                return true;
+                decimalValue = decimal.MinValue;
             }
-
-            if (value > DecimalMax)
+            else if (value > DecimalMax)
             {
-                result = (TOther)(object)decimal.MaxValue;
-                return true;
+                decimalValue = decimal.MaxValue;
+            }
+            else
+            {
+                decimalValue = (decimal)value;
             }
 
-            result = (TOther)(object)(decimal)value;
+            result = Unsafe.As<decimal, TOther>(ref decimalValue);
             return true;
         }
 
@@ -3641,13 +4002,14 @@ public partial struct BigRational :
 
         if (typeof(TOther) == typeof(BigRational))
         {
-            result = (TOther)(object)value;
+            result = Unsafe.As<BigRational, TOther>(ref value);
             return true;
         }
 
         if (typeof(TOther) == typeof(BigInteger))
         {
-            result = (TOther)(object)TruncateToBigInteger(value);
+            var truncated = TruncateToBigInteger(value);
+            result = Unsafe.As<BigInteger, TOther>(ref truncated);
             return true;
         }
 
@@ -3655,117 +4017,135 @@ public partial struct BigRational :
 
         if (typeof(TOther) == typeof(sbyte))
         {
-            result = (TOther)(object)(sbyte)WrapToSigned(integer, 8);
+            var sbyteValue = (sbyte)WrapToSigned(integer, 8);
+            result = Unsafe.As<sbyte, TOther>(ref sbyteValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(byte))
         {
-            result = (TOther)(object)(byte)WrapToUnsigned(integer, 8);
+            var byteValue = (byte)WrapToUnsigned(integer, 8);
+            result = Unsafe.As<byte, TOther>(ref byteValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(short))
         {
-            result = (TOther)(object)(short)WrapToSigned(integer, 16);
+            var shortValue = (short)WrapToSigned(integer, 16);
+            result = Unsafe.As<short, TOther>(ref shortValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(ushort))
         {
-            result = (TOther)(object)(ushort)WrapToUnsigned(integer, 16);
+            var ushortValue = (ushort)WrapToUnsigned(integer, 16);
+            result = Unsafe.As<ushort, TOther>(ref ushortValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(int))
         {
-            result = (TOther)(object)(int)WrapToSigned(integer, 32);
+            var intValue = (int)WrapToSigned(integer, 32);
+            result = Unsafe.As<int, TOther>(ref intValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(uint))
         {
-            result = (TOther)(object)(uint)WrapToUnsigned(integer, 32);
+            var uintValue = (uint)WrapToUnsigned(integer, 32);
+            result = Unsafe.As<uint, TOther>(ref uintValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(long))
         {
-            result = (TOther)(object)(long)WrapToSigned(integer, 64);
+            var longValue = (long)WrapToSigned(integer, 64);
+            result = Unsafe.As<long, TOther>(ref longValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(ulong))
         {
-            result = (TOther)(object)(ulong)WrapToUnsigned(integer, 64);
+            var ulongValue = (ulong)WrapToUnsigned(integer, 64);
+            result = Unsafe.As<ulong, TOther>(ref ulongValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(Int128))
         {
-            result = (TOther)(object)(Int128)WrapToSigned(integer, 128);
+            var int128Value = (Int128)WrapToSigned(integer, 128);
+            result = Unsafe.As<Int128, TOther>(ref int128Value);
             return true;
         }
 
         if (typeof(TOther) == typeof(UInt128))
         {
-            result = (TOther)(object)(UInt128)WrapToUnsigned(integer, 128);
+            var uint128Value = (UInt128)WrapToUnsigned(integer, 128);
+            result = Unsafe.As<UInt128, TOther>(ref uint128Value);
             return true;
         }
 
         if (typeof(TOther) == typeof(nint))
         {
             var bits = IntPtr.Size * 8;
-            result = (TOther)(object)(nint)WrapToSigned(integer, bits);
+            var nintValue = (nint)WrapToSigned(integer, bits);
+            result = Unsafe.As<nint, TOther>(ref nintValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(nuint))
         {
             var bits = IntPtr.Size * 8;
-            result = (TOther)(object)(nuint)WrapToUnsigned(integer, bits);
+            var nuintValue = (nuint)WrapToUnsigned(integer, bits);
+            result = Unsafe.As<nuint, TOther>(ref nuintValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(char))
         {
-            result = (TOther)(object)(char)WrapToUnsigned(integer, 16);
+            var charValue = (char)WrapToUnsigned(integer, 16);
+            result = Unsafe.As<char, TOther>(ref charValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(float))
         {
-            result = (TOther)(object)(float)value;
+            var floatValue = (float)value;
+            result = Unsafe.As<float, TOther>(ref floatValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(double))
         {
-            result = (TOther)(object)(double)value;
+            var doubleValue = (double)value;
+            result = Unsafe.As<double, TOther>(ref doubleValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(Half))
         {
-            result = (TOther)(object)(Half)(double)value;
+            var halfValue = (Half)(double)value;
+            result = Unsafe.As<Half, TOther>(ref halfValue);
             return true;
         }
 
         if (typeof(TOther) == typeof(decimal))
         {
+            decimal decimalValue;
             if (value < DecimalMin)
             {
-                result = (TOther)(object)decimal.MinValue;
-                return true;
+                decimalValue = decimal.MinValue;
             }
-
-            if (value > DecimalMax)
+            else if (value > DecimalMax)
             {
-                result = (TOther)(object)decimal.MaxValue;
-                return true;
+                decimalValue = decimal.MaxValue;
+            }
+            else
+            {
+                decimalValue = (decimal)value;
             }
 
-            result = (TOther)(object)(decimal)value;
+            result = Unsafe.As<decimal, TOther>(ref decimalValue);
             return true;
         }
 
@@ -3774,12 +4154,6 @@ public partial struct BigRational :
 
     private static bool TryParseCore(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out BigRational result)
     {
-        if (s.IsEmpty)
-        {
-            result = default;
-            return false;
-        }
-
         var separatorIndex = s.IndexOf('/');
         if (separatorIndex < 0)
         {
@@ -3874,7 +4248,22 @@ public partial struct BigRational :
         return new BigRational(this.denominator, this.numerator);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Converts the value of this instance to its string representation using the specified format and provider.
+    /// </summary>
+    /// <param name="format">
+    /// A standard or custom format string that is applied to the numerator and denominator.
+    /// </param>
+    /// <param name="formatProvider">
+    /// An object that supplies culture-specific formatting information.
+    /// </param>
+    /// <returns>
+    /// The string representation in numerator/denominator form.
+    /// </returns>
+    /// <remarks>
+    /// The format string is applied to both the numerator and denominator, and the result is always
+    /// represented in numerator/denominator form.
+    /// </remarks>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
         var numeratorText = this.Numerator.ToString(format, formatProvider);
@@ -3954,34 +4343,19 @@ public partial struct BigRational :
     /// <inheritdoc />
     public bool Equals(double other)
     {
-        if (!double.IsFinite(other))
-        {
-            return false;
-        }
-
-        return this.Equals((BigRational)other);
+        return double.IsFinite(other) && this.Equals((BigRational)other);
     }
 
     /// <inheritdoc />
     public bool Equals(float other)
     {
-        if (!float.IsFinite(other))
-        {
-            return false;
-        }
-
-        return this.Equals((BigRational)other);
+        return float.IsFinite(other) && this.Equals((BigRational)other);
     }
 
     /// <inheritdoc />
     public bool Equals(Half other)
     {
-        if (!Half.IsFinite(other))
-        {
-            return false;
-        }
-
-        return this.Equals((BigRational)(double)other);
+        return Half.IsFinite(other) && this.Equals((BigRational)(double)other);
     }
 
     /// <inheritdoc />
@@ -4063,28 +4437,6 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    public int CompareTo(object? obj)
-    {
-        if (obj is null)
-        {
-            return 1;
-        }
-
-        if (obj is BigRational other)
-        {
-            return this.CompareTo(other);
-        }
-
-        throw new ArgumentException("Object must be of type BigRational.", nameof(obj));
-    }
-
-    /// <inheritdoc />
-    public int CompareTo(BigRational other)
-    {
-        return (this.Numerator * other.Denominator).CompareTo(other.Numerator * this.Denominator);
-    }
-
-    /// <inheritdoc />
     public int CompareTo(BigInteger other)
     {
         return this.Numerator.CompareTo(other * this.Denominator);
@@ -4097,57 +4449,48 @@ public partial struct BigRational :
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="other"/> is not finite.
-    /// </exception>
     public int CompareTo(double other)
     {
-        if (!double.IsFinite(other))
+        if (double.IsNaN(other))
         {
-            throw new ArgumentException("Value must be finite.", nameof(other));
+            return 1;
+        }
+
+        if (double.IsPositiveInfinity(other))
+        {
+            return -1;
+        }
+
+        if (double.IsNegativeInfinity(other))
+        {
+            return 1;
         }
 
         return this.CompareTo((BigRational)other);
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="other"/> is not finite.
-    /// </exception>
     public int CompareTo(float other)
     {
-        if (!float.IsFinite(other))
-        {
-            throw new ArgumentException("Value must be finite.", nameof(other));
-        }
-
-        return this.CompareTo((BigRational)other);
+        return this.CompareTo((double)other);
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="other"/> is not finite.
-    /// </exception>
     public int CompareTo(Half other)
     {
-        if (!Half.IsFinite(other))
-        {
-            throw new ArgumentException("Value must be finite.", nameof(other));
-        }
-
-        return this.CompareTo((BigRational)(double)other);
+        return this.CompareTo((double)other);
     }
 
     /// <inheritdoc />
     public int CompareTo(Int128 other)
     {
-        return this.CompareTo((BigInteger)other);
+        return this.Numerator.CompareTo((BigInteger)other * this.Denominator);
     }
 
     /// <inheritdoc />
     public int CompareTo(UInt128 other)
     {
-        return this.CompareTo((BigInteger)other);
+        return this.Numerator.CompareTo((BigInteger)other * this.Denominator);
     }
 
     /// <inheritdoc />
@@ -4216,6 +4559,26 @@ public partial struct BigRational :
         return this.Numerator.CompareTo(other * this.Denominator);
     }
 
+    /// <inheritdoc />
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="obj"/> is not a <see cref="BigRational"/>.
+    /// </exception>
+    public int CompareTo(object? obj)
+    {
+        return obj switch
+        {
+            null => 1,
+            BigRational other => this.CompareTo(other),
+            _ => ThrowObjectMustBeBigRational<int>(),
+        };
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(BigRational other)
+    {
+        return (this.Numerator * other.Denominator).CompareTo(other.Numerator * this.Denominator);
+    }
+
     /// <summary>
     /// Returns the smallest integral value that is greater than or equal to the specified
     /// <see cref="BigRational"/> number.
@@ -4224,7 +4587,7 @@ public partial struct BigRational :
     /// A <see cref="BigRational"/> number.
     /// </param>
     /// <returns>
-    /// The smallest <see cref="BigRational"/> value that is greater than or equal to <paramref name="value"/>.
+    /// The smallest integral number that is greater than or equal to the specified <see cref="BigRational"/> number.
     /// </returns>
     public static BigRational Ceiling(BigRational value)
     {
@@ -4254,11 +4617,11 @@ public partial struct BigRational :
     /// The value to round.
     /// </param>
     /// <param name="tick">
-    /// The size of the tickSize.
+    /// The size of the tick.
     /// </param>
     /// <returns>
-    /// The smallest number greater than or equal to <paramref name="value"/> that is
-    /// a whole number of ticks away from zero.
+    /// The smallest multiple of <paramref name="tick"/> that is greater than or equal to
+    /// <paramref name="value"/>.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// If <paramref name="tick"/> is less than or equal to zero.
@@ -4282,8 +4645,8 @@ public partial struct BigRational :
     /// <paramref name="value"/> can be rounded to.
     /// </param>
     /// <returns>
-    /// The largest number less than or equal to <paramref name="value"/> that is a
-    /// multiple of <paramref name="tick"/>.
+    /// The largest multiple of <paramref name="tick"/> that is less than or equal to
+    /// <paramref name="value"/>.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// If <paramref name="tick"/> is less than or equal to zero.
@@ -4296,8 +4659,8 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Rounds <paramref name="value"/> to a nearest number that is multiple of <paramref name="tick"/>.
-    /// If <paramref name="value"/> is exactly half way between two such numbers, <paramref name="mode"/>
+    /// Rounds <paramref name="value"/> to the nearest number that is a multiple of <paramref name="tick"/>.
+    /// If <paramref name="value"/> is exactly halfway between two such numbers, <paramref name="mode"/>
     /// specifies the rounding method to use.
     /// </summary>
     /// <param name="value">
@@ -4308,13 +4671,11 @@ public partial struct BigRational :
     /// can be rounded to.
     /// </param>
     /// <param name="mode">
-    /// The specification of what to do when <paramref name="value"/> is exactly half way between two numbers
-    /// that are a multiple if <paramref name="tick"/>.
+    /// The specification of what to do when <paramref name="value"/> is exactly halfway between two numbers
+    /// that are a multiple of <paramref name="tick"/>.
     /// </param>
     /// <returns>
-    /// Rounds<paramref name="value"/> to a nearest number that is multiple of<paramref name= "tick" />.
-    /// If <paramref name= "value" /> is exactly half way between two such numbers, <paramref name="mode"/>
-    /// specifies the rounding method to use.
+    /// The value of <paramref name="value"/> rounded to a multiple of <paramref name="tick"/>.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// If <paramref name="tick"/> is less than or equal to zero.
@@ -4331,20 +4692,20 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Rounds <paramref name="value"/> to a the nearest <see cref="BigInteger"/>
-    /// If <paramref name="value"/> is exactly half way between two such numbers, <paramref name="mode"/>
-    /// specifies the rounding method to use <see cref="MidpointRoundingMode"/>.
+    /// Rounds <paramref name="value"/> to the nearest <see cref="BigInteger"/>.
+    /// If <paramref name="value"/> is exactly halfway between two such numbers, <paramref name="mode"/>
+    /// specifies the rounding method to use.
     /// </summary>
     /// <param name="value">
     /// The value to be rounded.
     /// </param>
     /// <param name="mode">
-    /// The specification of what to do when <paramref name="value"/> is exactly half way between two integer values.
+    /// The specification of what to do when <paramref name="value"/> is exactly halfway between two integer values.
     /// </param>
     /// <returns>
-    /// The result of rounding <paramref name="value"/> to a the nearest <see cref="BigInteger"/>
-    /// If <paramref name="value"/> is exactly half way between two such numbers, <paramref name="mode"/>
-    /// specifies the rounding method to use <see cref="MidpointRoundingMode"/>.
+    /// The result of rounding <paramref name="value"/> to the nearest <see cref="BigInteger"/>.
+    /// If <paramref name="value"/> is exactly halfway between two such numbers, <paramref name="mode"/>
+    /// specifies the rounding method to use.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// If <paramref name="mode"/> is not a valid <see cref="MidpointRoundingMode"/> value.
@@ -4356,18 +4717,18 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Rounds <paramref name="value"/> to a nearest integral number. If <paramref name="value"/>
-    /// is exactly half way between two such numbers, <paramref name="mode"/> specifies the rounding method to use.
+    /// Rounds <paramref name="value"/> to the nearest integral number. If <paramref name="value"/>
+    /// is exactly halfway between two such numbers, <paramref name="mode"/> specifies the rounding method to use.
     /// </summary>
     /// <param name="value">
     /// The value to round.
     /// </param>
     /// <param name="mode">
-    /// The rounding methodology to use if value is exactly half way between two integral values.
+    /// The rounding methodology to use if the value is exactly halfway between two integral values.
     /// </param>
     /// <returns>
     /// The nearest integral number. If <paramref name="value"/>
-    /// is exactly half way between two such numbers, <paramref name="mode"/> specifies the rounding method to use.
+    /// is exactly halfway between two such numbers, <paramref name="mode"/> specifies the rounding method to use.
     /// </returns>
     /// <remarks>
     /// This method assumes that <paramref name="value"/> is not an integral number.
@@ -4377,21 +4738,15 @@ public partial struct BigRational :
     /// </exception>
     private static BigInteger RoundImpl(BigRational value, MidpointRoundingMode mode)
     {
-        switch (mode)
+        return mode switch
         {
-            case MidpointRoundingMode.ToEven:
-                return RoundToEvenImpl(value);
-            case MidpointRoundingMode.Up:
-                return RoundUpImpl(value);
-            case MidpointRoundingMode.Down:
-                return RoundDownImpl(value);
-            case MidpointRoundingMode.AwayFromZero:
-                return RoundAwayFromZeroImpl(value);
-            case MidpointRoundingMode.TowardZero:
-                return RoundTowardZeroImpl(value);
-            default:
-                throw new ArgumentOutOfRangeException(nameof(mode), "Invalid rounding mode.");
-        }
+            MidpointRoundingMode.ToEven => RoundToEvenImpl(value),
+            MidpointRoundingMode.Up => RoundUpImpl(value),
+            MidpointRoundingMode.Down => RoundDownImpl(value),
+            MidpointRoundingMode.AwayFromZero => RoundAwayFromZeroImpl(value),
+            MidpointRoundingMode.TowardZero => RoundTowardZeroImpl(value),
+            _ => ThrowInvalidRoundingMode<BigInteger>(),
+        };
     }
 
     /// <summary>
@@ -4410,7 +4765,7 @@ public partial struct BigRational :
     private static BigInteger FloorImpl(BigRational value)
     {
         Debug.Assert(!value.IsInteger, "value must not be an integer");
-        if (value.IsPositive)
+        if (value.IsGreaterThanZero)
         {
             return value.Numerator / value.Denominator;
         }
@@ -4426,7 +4781,7 @@ public partial struct BigRational :
     /// A <see cref="BigRational"/> number.
     /// </param>
     /// <returns>
-    /// The smallest <see cref="BigRational"/> value that is greater than or equal to <paramref name="value"/>.
+    /// The smallest integral number that is greater than or equal to the specified <see cref="BigRational"/> number.
     /// </returns>
     /// <remarks>
     /// Assumes that <paramref name="value"/> is not an integer.
@@ -4434,7 +4789,7 @@ public partial struct BigRational :
     private static BigInteger CeilingImpl(BigRational value)
     {
         Debug.Assert(!value.IsInteger, "value must not be an integer");
-        if (value.IsNegative)
+        if (value.IsLessThanZero)
         {
             return value.Numerator / value.Denominator;
         }
@@ -4444,14 +4799,14 @@ public partial struct BigRational :
 
     /// <summary>
     /// Rounds <paramref name="value"/> to the nearest integral value. If <paramref name="value"/>
-    /// is exactly half way between two integral values, it is rounded up.
+    /// is exactly halfway between two integral values, it is rounded up.
     /// </summary>
     /// <param name="value">
     /// The value to round.
     /// </param>
     /// <returns>
     /// The nearest integral value. If <paramref name="value"/>
-    /// is exactly half way between two integral values, it is rounded up.
+    /// is exactly halfway between two integral values, it is rounded up.
     /// </returns>
     /// <remarks>
     /// Assumes that <paramref name="value"/> is not an integer.
@@ -4467,14 +4822,14 @@ public partial struct BigRational :
 
     /// <summary>
     /// Rounds <paramref name="value"/> to the nearest integral value. If <paramref name="value"/>
-    /// is exactly half way between two integral values, it is rounded down.
+    /// is exactly halfway between two integral values, it is rounded down.
     /// </summary>
     /// <param name="value">
     /// The value to round.
     /// </param>
     /// <returns>
     /// The nearest integral value. If <paramref name="value"/>
-    /// is exactly half way between two integral values, it is rounded down.
+    /// is exactly halfway between two integral values, it is rounded down.
     /// </returns>
     /// <remarks>
     /// Assumes that <paramref name="value"/> is not an integer.
@@ -4490,14 +4845,14 @@ public partial struct BigRational :
 
     /// <summary>
     /// Rounds <paramref name="value"/> to the nearest integral value. If <paramref name="value"/>
-    /// is exactly half way between two integral values, it is rounded toward zero.
+    /// is exactly halfway between two integral values, it is rounded toward zero.
     /// </summary>
     /// <param name="value">
     /// The value to round.
     /// </param>
     /// <returns>
     /// The nearest integral value. If <paramref name="value"/>
-    /// is exactly half way between two integral values, it is rounded toward zero.
+    /// is exactly halfway between two integral values, it is rounded toward zero.
     /// </returns>
     /// <remarks>
     /// Assumes that <paramref name="value"/> is not an integer.
@@ -4507,7 +4862,7 @@ public partial struct BigRational :
         Debug.Assert(!value.IsInteger, "value must not be an integer");
         var floor = FloorImpl(value);
         var fraction = value - floor;
-        if (value.IsPositive)
+        if (value.IsGreaterThanZero)
         {
             if (fraction.IsGreaterThanHalf())
             {
@@ -4527,14 +4882,14 @@ public partial struct BigRational :
 
     /// <summary>
     /// Rounds <paramref name="value"/> to the nearest integral value. If <paramref name="value"/>
-    /// is exactly half way between two integral values, it is rounded away from zero.
+    /// is exactly halfway between two integral values, it is rounded away from zero.
     /// </summary>
     /// <param name="value">
     /// The value to round.
     /// </param>
     /// <returns>
     /// The nearest integral value. If <paramref name="value"/>
-    /// is exactly half way between two integral values, it is rounded away from zero.
+    /// is exactly halfway between two integral values, it is rounded away from zero.
     /// </returns>
     /// <remarks>
     /// Assumes that <paramref name="value"/> is not an integer.
@@ -4544,7 +4899,7 @@ public partial struct BigRational :
         Debug.Assert(!value.IsInteger, "value must not be an integer");
         var floor = FloorImpl(value);
         var fraction = value - floor;
-        if (value.IsPositive)
+        if (value.IsGreaterThanZero)
         {
             if (fraction.IsGreaterThanOrEqualToHalf())
             {
@@ -4564,14 +4919,14 @@ public partial struct BigRational :
 
     /// <summary>
     /// Rounds <paramref name="value"/> to the nearest integral value. If <paramref name="value"/>
-    /// is exactly half way between two integral values, it is rounded to the nearest even integral value.
+    /// is exactly halfway between two integral values, it is rounded to the nearest even integral value.
     /// </summary>
     /// <param name="value">
     /// The value to round.
     /// </param>
     /// <returns>
     /// The nearest integral value. If <paramref name="value"/>
-    /// is exactly half way between two integral values, it is rounded to the nearest even integral value.
+    /// is exactly halfway between two integral values, it is rounded to the nearest even integral value.
     /// </returns>
     /// <remarks>
     /// Assumes that <paramref name="value"/> is not an integer.
@@ -4592,38 +4947,38 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Assert a valid rational rounding.
+    /// Validates a midpoint rounding mode.
     /// </summary>
     /// <param name="mode">
-    /// The midpoint rounding mode to be assessed.
+    /// The midpoint rounding mode to validate.
     /// </param>
     private static void AssertValidRationalRounding(MidpointRoundingMode mode)
     {
         if (!Enum.IsDefined(mode))
         {
-            throw new ArgumentOutOfRangeException(nameof(mode), "Invalid rounding mode.");
+            ThrowInvalidRoundingMode<object>();
         }
     }
 
     /// <summary>
-    /// Assert a valid tick.
+    /// Validates a tick value.
     /// </summary>
     /// <param name="tick">
-    /// The big rational to be assessed.
+    /// The tick value to validate.
     /// </param>
     private static void AssertValidTick(BigRational tick)
     {
-        if (!tick.IsPositive)
+        if (!tick.IsGreaterThanZero)
         {
-            throw new ArgumentOutOfRangeException(nameof(tick), "Tick must be greater than zero.");
+            ThrowTickMustBeGreaterThanZero();
         }
     }
 
     /// <summary>
-    /// Check whether number is greater than or equal to one half.
+    /// Checks whether the number is greater than or equal to one half.
     /// </summary>
     /// <returns>
-    /// Returns <c>true</c>, if number is greater than or equal to one half, <c>false</c> otherwise.
+    /// true if the number is greater than or equal to one half; otherwise, false.
     /// </returns>
     private bool IsGreaterThanOrEqualToHalf()
     {
@@ -4631,10 +4986,10 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Check whether number is greater than one half.
+    /// Checks whether the number is greater than one half.
     /// </summary>
     /// <returns>
-    /// Returns <c>true</c>, if number is greater than one half, <c>false</c> otherwise.
+    /// true if the number is greater than one half; otherwise, false.
     /// </returns>
     private bool IsGreaterThanHalf()
     {
@@ -4642,10 +4997,12 @@ public partial struct BigRational :
     }
 
     /// <summary>
-    /// Compare number to one half.
+    /// Compares the number to one half.
     /// </summary>
     /// <returns>
-    /// Returns zero if number is equal to one half.
+    /// A negative value if the number is less than one half,
+    /// zero if the number is equal to one half,
+    /// and a positive value if the number is greater than one half.
     /// </returns>
     private int CompareToHalf()
     {

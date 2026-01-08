@@ -120,17 +120,17 @@ internal sealed partial class BigRationalAiTests
     public void CompareToWithNonFiniteFloatingPointThrows()
     {
         var value = R(1, 2);
-        Assert.Throws<ArgumentException>(() => value.CompareTo(double.NaN));
-        Assert.Throws<ArgumentException>(() => value.CompareTo(double.PositiveInfinity));
-        Assert.Throws<ArgumentException>(() => value.CompareTo(double.NegativeInfinity));
+        Assert.That(value.CompareTo(double.NaN), Is.EqualTo(1));
+        Assert.That(value.CompareTo(double.PositiveInfinity), Is.EqualTo(-1));
+        Assert.That(value.CompareTo(double.NegativeInfinity), Is.EqualTo(1));
 
-        Assert.Throws<ArgumentException>(() => value.CompareTo(float.NaN));
-        Assert.Throws<ArgumentException>(() => value.CompareTo(float.PositiveInfinity));
-        Assert.Throws<ArgumentException>(() => value.CompareTo(float.NegativeInfinity));
+        Assert.That(value.CompareTo(float.NaN), Is.EqualTo(1));
+        Assert.That(value.CompareTo(float.PositiveInfinity), Is.EqualTo(-1));
+        Assert.That(value.CompareTo(float.NegativeInfinity), Is.EqualTo(1));
 
-        Assert.Throws<ArgumentException>(() => value.CompareTo(Half.NaN));
-        Assert.Throws<ArgumentException>(() => value.CompareTo(Half.PositiveInfinity));
-        Assert.Throws<ArgumentException>(() => value.CompareTo(Half.NegativeInfinity));
+        Assert.That(value.CompareTo(Half.NaN), Is.EqualTo(1));
+        Assert.That(value.CompareTo(Half.PositiveInfinity), Is.EqualTo(-1));
+        Assert.That(value.CompareTo(Half.NegativeInfinity), Is.EqualTo(1));
     }
 
     [Test]
