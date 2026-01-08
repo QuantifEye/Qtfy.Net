@@ -236,6 +236,10 @@ public sealed class MersenneTwister32Bit19937 : UIntRandomNumberEngine
     public static MersenneTwister32Bit19937 InitByArray(uint[] seeds)
     {
         ArgumentNullException.ThrowIfNull(seeds);
+        if (seeds.Length == 0)
+        {
+            throw new ArgumentException("seeds must not be empty.", nameof(seeds));
+        }
 
         var state = new uint[N];
         unsafe
@@ -264,6 +268,7 @@ public sealed class MersenneTwister32Bit19937 : UIntRandomNumberEngine
     /// </param>
     private static unsafe void InitByArrayImpl(uint* mt, uint* initKey, uint keyLength)
     {
+        System.Diagnostics.Debug.Assert(keyLength > 0, "seeds must not be empty.");
         unchecked
         {
             const uint mostSignificantBit = 0x1U << 31;

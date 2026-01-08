@@ -69,6 +69,11 @@ public class PiecewiseConstantDistribution : IDistribution<double>
             throw new ArgumentException("Require at least two boundaries");
         }
 
+        if (!AllFinite(b))
+        {
+            throw new ArgumentException("values must be finite.", nameof(domain));
+        }
+
         if (!IsStrictlyMonotonic(b))
         {
             throw new ArgumentException("values must be strictly monotonic.");
@@ -181,6 +186,19 @@ public class PiecewiseConstantDistribution : IDistribution<double>
         for (var i = 0; i < array.Length; ++i)
         {
             if (array[i] < 0d)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool AllFinite(double[] array)
+    {
+        for (var i = 0; i < array.Length; ++i)
+        {
+            if (!double.IsFinite(array[i]))
             {
                 return false;
             }

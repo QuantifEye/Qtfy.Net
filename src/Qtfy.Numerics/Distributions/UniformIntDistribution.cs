@@ -117,7 +117,8 @@ public class UniformIntDistribution : IDiscreteDistribution
                 return this.Min;
             }
 
-            return this.Min + ((int)Math.Ceiling(this.n * probability) - 1);
+            var index = (long)Math.Ceiling(this.n * probability) - 1L;
+            return (int)(this.Min + index);
         }
 
         throw new ArgumentException("Invalid probability", nameof(probability));

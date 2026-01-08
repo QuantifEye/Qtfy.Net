@@ -74,6 +74,13 @@ internal sealed class UniformIntDistributionTests
         IsClose(expected, new UniformIntDistribution(min, max).Quantile(probability));
     }
 
+    [Test]
+    public void TestQuantileLargeRange()
+    {
+        var distribution = new UniformIntDistribution(int.MinValue, int.MaxValue);
+        IsClose(1_073_741_823d, distribution.Quantile(0.75d));
+    }
+
     [TestCase(-0.1)]
     [TestCase(1.1)]
     public void TestInvalidQuantile(double probability)

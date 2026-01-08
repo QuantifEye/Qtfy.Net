@@ -161,6 +161,10 @@ public sealed class MersenneTwister64Bit19937 : ULongRandomNumberEngine
     public static MersenneTwister64Bit19937 InitByArray(ulong[] seeds)
     {
         ArgumentNullException.ThrowIfNull(seeds);
+        if (seeds.Length == 0)
+        {
+            throw new ArgumentException("seeds must not be empty.", nameof(seeds));
+        }
 
         unsafe
         {
@@ -176,6 +180,7 @@ public sealed class MersenneTwister64Bit19937 : ULongRandomNumberEngine
 
     private static unsafe void InitByArrayImpl(ulong* mt, ulong* initKey, ulong keyLength)
     {
+        System.Diagnostics.Debug.Assert(keyLength > 0, "seeds must not be empty.");
         unchecked
         {
             const ulong mostSignificantBit = 1UL << 63;

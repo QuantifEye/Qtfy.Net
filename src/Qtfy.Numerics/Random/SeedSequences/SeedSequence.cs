@@ -54,6 +54,10 @@ public sealed class SeedSequence : ISeedSequence
     public void Generate(uint[] buffer)
     {
         ArgumentNullException.ThrowIfNull(buffer);
+        if (buffer.Length == 0)
+        {
+            return;
+        }
 
         unsafe
         {
@@ -68,6 +72,10 @@ public sealed class SeedSequence : ISeedSequence
     public void Generate(ulong[] buffer)
     {
         ArgumentNullException.ThrowIfNull(buffer);
+        if (buffer.Length == 0)
+        {
+            return;
+        }
 
         unsafe
         {
