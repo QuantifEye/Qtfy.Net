@@ -3594,13 +3594,6 @@ public readonly struct BigRational :
 
     [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void ThrowOtherMustBeFinite()
-    {
-        throw new ArgumentException("Value must be finite.", "other");
-    }
-
-    [DoesNotReturn]
-    [MethodImpl(MethodImplOptions.NoInlining)]
     private static void ThrowDecimalValueOutOfRange()
     {
         throw new OverflowException("Value outside of range of valid decimal values.");

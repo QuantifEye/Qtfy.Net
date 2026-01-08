@@ -4,4 +4,5 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
+[assembly: System.CLSCompliant(false)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Qtfy.Numerics.Tests.BigRationals")]
