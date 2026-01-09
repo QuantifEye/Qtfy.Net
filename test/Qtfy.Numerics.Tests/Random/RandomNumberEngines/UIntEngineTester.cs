@@ -20,8 +20,8 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
     [Test]
     public void TestULongMax()
     {
-        var expected = new[]
-        {
+        ulong[] expected =
+        [
             7348181598068725948UL,
             2702344000030125349UL,
             11375148292589950588UL,
@@ -47,7 +47,7 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
             1890568995285127UL,
             10861772371055007636UL,
             15537961840005424265UL,
-        };
+        ];
 
         this.Compare(expected, mt => mt.NextULong());
         this.Compare(expected, mt => mt.NextULong(ulong.MaxValue));
@@ -62,8 +62,8 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
     [Test]
     public void TestULongOne()
     {
-        var expected = new[]
-        {
+        ulong[] expected =
+        [
             0UL,
             0UL,
             0UL,
@@ -89,7 +89,7 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
             0UL,
             0UL,
             0UL,
-        };
+        ];
 
         this.TestULong(expected, 1);
     }
@@ -97,8 +97,8 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
     [Test]
     public void TestULongSmall()
     {
-        var expected = new[]
-        {
+        ulong[] expected =
+        [
             3UL,
             1UL,
             1UL,
@@ -124,7 +124,7 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
             1UL,
             0UL,
             0UL,
-        };
+        ];
 
         this.TestULong(expected, 7);
     }
@@ -132,8 +132,8 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
     [Test]
     public void TestULongLarge()
     {
-        var expected = new[]
-        {
+        ulong[] expected =
+        [
             1049740228898773180UL,
             386049144951942437UL,
             1625021185718163068UL,
@@ -159,7 +159,7 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
             987045975717703160UL,
             731880887429059322UL,
             173861415430571833UL,
-        };
+        ];
 
         const ulong value = (1UL << 61) - 7U;
         this.TestULong(expected, value);
@@ -168,8 +168,8 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
     [Test]
     public void TestULongVeryLarge()
     {
-        var expected = new[]
-        {
+        ulong[] expected =
+        [
             7348181598068725948UL,
             2702344000030125349UL,
             11375148292589950588UL,
@@ -195,15 +195,15 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
             1890568995285127UL,
             10861772371055007636UL,
             15537961840005424265UL,
-        };
+        ];
         this.TestULong(expected, ulong.MaxValue - 7U);
     }
 
     [Test]
     public void TestUIntMax()
     {
-        var expected = new[]
-        {
+        uint[] expected =
+        [
             1710881851U,
             703781052U,
             629188492U,
@@ -229,7 +229,7 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
             726299775U,
             487284548U,
             258401188U,
-        };
+        ];
 
         this.Compare(expected, mt => mt.NextUInt());
         this.TestUInt(expected, uint.MaxValue);
@@ -238,12 +238,12 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
     [Test]
     public void TestUIntZero()
     {
-        var expected = new[]
-        {
+        uint[] expected =
+        [
             0U,
             0U,
             0U,
-        };
+        ];
 
         this.TestUInt(expected, 0);
     }
@@ -251,8 +251,8 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
     [Test]
     public void TestUIntOne()
     {
-        var expected = new[]
-        {
+        uint[] expected =
+        [
             0U,
             0U,
             0U,
@@ -278,7 +278,7 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
             0U,
             0U,
             0U,
-        };
+        ];
 
         this.TestUInt(expected, 1);
     }
@@ -286,8 +286,8 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
     [Test]
     public void TestUIntLarge()
     {
-        var expected = new[]
-        {
+        uint[] expected =
+        [
             1710881851U,
             703781052U,
             629188492U,
@@ -313,7 +313,7 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
             726299775U,
             487284548U,
             258401188U,
-        };
+        ];
 
         this.TestUInt(expected, uint.MaxValue - 2U);
     }
@@ -321,8 +321,8 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
     [Test]
     public void TestUIntSmall()
     {
-        var expected = new[]
-        {
+        uint[] expected =
+        [
             3U,
             1U,
             1U,
@@ -348,7 +348,7 @@ internal sealed class UIntEngineTester : EngineTester<MersenneTwister32Bit19937>
             1U,
             0U,
             0U,
-        };
+        ];
 
         this.TestUInt(expected, 7);
     }

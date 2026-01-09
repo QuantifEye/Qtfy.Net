@@ -8,7 +8,7 @@ namespace Qtfy.Numerics.Tests;
 
 internal sealed class CombinatoricsTests
 {
-    private static readonly (int[] left, int[] right)[] ExpectedPowerSetAndCompliment =
+    private static readonly (int[] left, int[] right)[] ExpectedPowerSetAndComplement =
     [
         ([], [1, 2, 3]),
         ([1], [2, 3]),
@@ -20,7 +20,7 @@ internal sealed class CombinatoricsTests
         ([1, 2, 3], [])
     ];
 
-    private static readonly int[][] ExpectedPowerSet = ExpectedPowerSetAndCompliment
+    private static readonly int[][] ExpectedPowerSet = ExpectedPowerSetAndComplement
         .Select(x => x.left)
         .ToArray();
 
@@ -34,9 +34,9 @@ internal sealed class CombinatoricsTests
         }
     }
 
-    private static void TestPowerSetWithComplimentHelper((int[] left, int[] right)[] actual)
+    private static void TestPowerSetWithComplementHelper((int[] left, int[] right)[] actual)
     {
-        var expected = ExpectedPowerSetAndCompliment;
+        var expected = ExpectedPowerSetAndComplement;
         Assert.That(actual.Length, Is.EqualTo(expected.Length));
         for (var i = 0; i < actual.Length; i++)
         {
@@ -66,16 +66,16 @@ internal sealed class CombinatoricsTests
     }
 
     [Test]
-    public void TestPowerSetWithComplimentNull()
+    public void TestPowerSetWithComplementNull()
     {
         Assert.Throws<ArgumentNullException>(
-            () => _ = Combinatorics.PowerSetWithCompliment<int>(null!));
+            () => _ = Combinatorics.PowerSetWithComplement<int>(null!));
 
         Assert.Throws<ArgumentNullException>(
-            () => _ = Combinatorics.PowerSetWithCompliment([1, 2], null!));
+            () => _ = Combinatorics.PowerSetWithComplement([1, 2], null!));
 
         Assert.Throws<ArgumentNullException>(
-            () => _ = Combinatorics.PowerSetWithCompliment(null!, EqualityComparer<int>.Default));
+            () => _ = Combinatorics.PowerSetWithComplement(null!, EqualityComparer<int>.Default));
     }
 
     [Test]
@@ -88,19 +88,19 @@ internal sealed class CombinatoricsTests
     }
 
     [Test]
-    public void TestPowerSetWithCompliment()
+    public void TestPowerSetWithComplement()
     {
-        var actual = Combinatorics.PowerSetWithCompliment([1, 2, 3]);
-        TestPowerSetWithComplimentHelper(actual.ToArray());
+        var actual = Combinatorics.PowerSetWithComplement([1, 2, 3]);
+        TestPowerSetWithComplementHelper(actual.ToArray());
     }
 
     [Test]
-    public void TestPowerSetWithComplimentAndEqualityComparer()
+    public void TestPowerSetWithComplementAndEqualityComparer()
     {
-        var actual = Combinatorics.PowerSetWithCompliment(
+        var actual = Combinatorics.PowerSetWithComplement(
             [1, 2, 3],
             EqualityComparer<int>.Default);
-        TestPowerSetWithComplimentHelper(actual.ToArray());
+        TestPowerSetWithComplementHelper(actual.ToArray());
     }
 
     [Test]

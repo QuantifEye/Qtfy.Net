@@ -9,7 +9,7 @@ namespace Qtfy.Numerics.Random.Samplers;
 using static System.Math;
 
 /// <summary>
-/// The simple form box muller transform.
+/// A sampler for the standard normal distribution using the Box-Muller transform.
 /// </summary>
 public sealed class StandardNormalSampler : ISampler<double>
 {
@@ -23,7 +23,7 @@ public sealed class StandardNormalSampler : ISampler<double>
     /// Initializes a new instance of the <see cref="StandardNormalSampler"/> class.
     /// </summary>
     /// <param name="engine">
-    /// The pseudo random engine used to generate random numbers.
+    /// The random number engine to use.
     /// </param>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="engine"/> is null.
@@ -77,7 +77,7 @@ public sealed class StandardNormalSampler : ISampler<double>
     /// Fills the provided array with independent standard normal values.
     /// </summary>
     /// <param name="buffer">
-    /// Fills the buffer.
+    /// The buffer to fill.
     /// </param>
     public void Fill(Span<double> buffer)
     {

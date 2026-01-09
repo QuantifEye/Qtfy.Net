@@ -63,8 +63,8 @@ email: m-mat @ math.sci.hiroshima-u.ac.jp (remove spaces)
 namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
 /// <summary>
-/// The Mersenne Twister random number generator.
-/// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/emt19937ar.html" />.
+/// The Mersenne Twister random number engine.
+/// <see href="https://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/VERSIONS/C-LANG/mt19937-64.c"/>.
 /// </summary>
 public sealed class MersenneTwister64Bit19937 : ULongRandomNumberEngine
 {
@@ -110,12 +110,12 @@ public sealed class MersenneTwister64Bit19937 : ULongRandomNumberEngine
     /// The seed used to seed the initial state.
     /// </param>
     /// <returns>
-    /// A new instance of a Mersenne Twister PRNG.
+    /// A new instance of a Mersenne Twister random number engine.
     /// </returns>
     /// <remarks>
-    /// This method uses the initialization procedure called init_by_array in the original
-    /// c code.
-    /// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/CODES/mt19937ar.c" />.
+    /// This method uses the initialization procedure called init_genrand64 in the original
+    /// C code.
+    /// <see href="https://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/VERSIONS/C-LANG/mt19937-64.c" />.
     /// </remarks>
     public static MersenneTwister64Bit19937 InitGenRand(ulong seed)
     {
@@ -145,18 +145,26 @@ public sealed class MersenneTwister64Bit19937 : ULongRandomNumberEngine
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MersenneTwister32Bit19937"/> class.
+    /// Initializes a new instance of the <see cref="MersenneTwister64Bit19937"/> class.
     /// </summary>
     /// <param name="seeds">
     /// The seeds used to seed the initial state.
     /// </param>
     /// <returns>
-    /// A new instance of a Mersenne Twister PRNG.
+    /// A new instance of a Mersenne Twister random number engine.
     /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="seeds"/> is null.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="seeds"/> is empty.
+    /// </exception>
     /// <remarks>
     /// This method uses the initialization procedure called init_by_array in the original
-    /// c code.
-    /// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/CODES/mt19937ar.c" />.
+    /// C code.
+    /// <see href="https://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/VERSIONS/C-LANG/mt19937-64.c" />.
+    /// For general-purpose seeding across engines, prefer the <see cref="ISeedSequence"/> constructor.
+    /// Use this method when you need compatibility with the reference init_by_array implementation.
     /// </remarks>
     public static MersenneTwister64Bit19937 InitByArray(ulong[] seeds)
     {
@@ -239,7 +247,7 @@ public sealed class MersenneTwister64Bit19937 : ULongRandomNumberEngine
     /// The implementation of <see cref="UpdateState"/>.
     /// </summary>
     /// <param name="mt">
-    /// A pointer to the first element in the state. The name mt is retained from the original c code.
+    /// A pointer to the first element in the state. The name mt is retained from the original C code.
     /// </param>
     private static unsafe void UpdateStateImpl(ulong* mt)
     {

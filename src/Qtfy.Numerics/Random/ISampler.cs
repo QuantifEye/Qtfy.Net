@@ -7,8 +7,8 @@
 namespace Qtfy.Numerics.Random;
 
 /// <summary>
-/// An object used to transform the values produced by a bit random generator
-/// into a random number with the desired distribution.
+/// An object used to transform the values produced by a random number engine
+/// into values from the desired distribution.
 /// </summary>
 /// <typeparam name="T">
 /// The type of the generated values.

@@ -10,8 +10,7 @@ namespace Qtfy.Numerics;
 /// A base interface for statistical distributions with a quantile function.
 /// </summary>
 /// <typeparam name="T">
-/// The numeric type of the possible values that the underlying
-/// random variable can have.
+/// The numeric type of values the distribution can return.
 /// </typeparam>
 public interface IDistribution<T> : IDistribution
 {
@@ -19,10 +18,10 @@ public interface IDistribution<T> : IDistribution
     /// Calculates the quantile of the distribution for a provided probability.
     /// </summary>
     /// <param name="probability">
-    /// The probability of the quantile to calculate.
+    /// A probability in the interval [0, 1].
     /// </param>
     /// <returns>
-    /// The quantile of the distribution for a provided probability.
+    /// The quantile of the distribution for the provided probability.
     /// </returns>
     T Quantile(double probability);
 }

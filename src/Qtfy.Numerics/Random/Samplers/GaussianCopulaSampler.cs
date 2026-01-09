@@ -9,8 +9,8 @@ namespace Qtfy.Numerics.Random.Samplers;
 using Qtfy.Numerics.Distributions;
 
 /// <summary>
-/// A gaussian copula sampler. That is a sampler that uses a correlation matrix
-/// to generate correlated uniform[0, 1] variables.
+/// A Gaussian copula sampler. That is, a sampler that uses a correlation matrix
+/// to generate correlated uniform variables on [0, 1].
 /// </summary>
 public sealed partial class GaussianCopulaSampler : ISampler<double[]>
 {
@@ -24,7 +24,7 @@ public sealed partial class GaussianCopulaSampler : ISampler<double[]>
     /// Initializes a new instance of the <see cref="GaussianCopulaSampler"/> class.
     /// </summary>
     /// <param name="engine">
-    /// The random number engine.
+    /// The random number engine to use.
     /// </param>
     /// <param name="choleskyFactor">
     /// The Cholesky factorization of the correlation matrix.

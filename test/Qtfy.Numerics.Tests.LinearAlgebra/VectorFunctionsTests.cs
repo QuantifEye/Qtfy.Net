@@ -13,8 +13,8 @@ internal sealed class VectorFunctionsTests
     [Test]
     public void DotReturnsExpectedValue()
     {
-        var left = new[] { 1d, -2d, 3d };
-        var right = new[] { 4d, 5d, -6d };
+        double[] left = [1d, -2d, 3d];
+        double[] right = [4d, 5d, -6d];
 
         var actual = VectorFunctions.Dot(left, right);
 

@@ -7,7 +7,7 @@
 namespace Qtfy.Numerics.Distributions;
 
 /// <summary>
-/// A standard normal distribution object.
+/// A standard normal distribution.
 /// </summary>
 public class StandardNormalDistribution : IContinuousDistribution
 {
@@ -48,7 +48,7 @@ public class StandardNormalDistribution : IContinuousDistribution
     }
 
     /// <summary>
-    /// Calculates the probability that a standard normal random variable is less than <paramref name="x"/>.
+    /// Calculates the probability that a standard normal random variable is less than or equal to <paramref name="x"/>.
     /// </summary>
     /// <param name="x">
     /// The value at which to evaluate the standard normal CDF.

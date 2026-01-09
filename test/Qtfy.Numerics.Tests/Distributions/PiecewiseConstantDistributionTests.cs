@@ -31,6 +31,9 @@ internal sealed class PiecewiseConstantDistributionTests
         ConstructInvalid([1d, 1d], [1d]);
         ConstructInvalid([1d, 2d], [-1d]);
         ConstructInvalid([1d, 2d], [0d]);
+        ConstructInvalid([1d, double.NaN], [1d]);
+        ConstructInvalid([1d, double.PositiveInfinity], [1d]);
+        ConstructInvalid([double.NegativeInfinity, 1d], [1d]);
     }
 
     [Test]

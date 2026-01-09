@@ -7,7 +7,7 @@
 namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
 /// <summary>
-/// The Permuted Congruential Generator.
+/// A Permuted Congruential Generator (PCG) random number engine.
 /// <see href="https://www.pcg-random.org/index.html" />.
 /// </summary>
 public sealed class PermutedCongruentialGenerator : UIntRandomNumberEngine
@@ -20,13 +20,13 @@ public sealed class PermutedCongruentialGenerator : UIntRandomNumberEngine
     /// Initializes a new instance of the <see cref="PermutedCongruentialGenerator"/> class.
     /// </summary>
     /// <param name="stateInitializer">
-    /// The state initializer.
+    /// The initial state value.
     /// </param>
     /// <param name="streamId">
-    /// The stream id. Must be in range [0, 2^63).
+    /// The stream ID. Must be in the range [0, 2^63).
     /// </param>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="streamId"/> is not in [0, 2^63).
+    /// If <paramref name="streamId"/> is not in the range [0, 2^63).
     /// </exception>
     public PermutedCongruentialGenerator(ulong stateInitializer, ulong streamId)
     {

@@ -111,12 +111,12 @@ internal sealed class ImplTests
             { 0.5, 0.5, 1.0 },
         };
 
-        var expected = new[]
-        {
+        double[] expected =
+        [
             1.0,
             0.5, 0.8660254037844386,
             0.5, 0.28867513459481292, 0.81649658092772603,
-        };
+        ];
 
         Assert.That(PackedCholeskyFactorCorrelationMatrix(input), Is.EquivalentTo(expected));
         Assert.That(PackedCholeskyFactorCovarianceMatrix(input), Is.EquivalentTo(expected));

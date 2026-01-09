@@ -7,51 +7,45 @@
 namespace Qtfy.Numerics.Random;
 
 /// <summary>
-/// The common interface that all bit generators that produce uniform values share.
+/// The common interface for random number engines that produce uniform values.
 /// </summary>
 public interface IRandomNumberEngine
 {
     /// <summary>
-    /// Generates a <see cref="uint"/> that is uniformly distributed across all possible <see cref="uint"/> values,
-    /// this is [0, 2^32).
+    /// Generates a <see cref="uint"/> uniformly distributed over [0, 2^32).
     /// </summary>
     /// <returns>
-    /// An <see cref="uint"/> that is uniformly distributed across all possible <see cref="uint"/> values.
+    /// A <see cref="uint"/> uniformly distributed over [0, 2^32).
     /// </returns>
     uint NextUInt();
 
     /// <summary>
-    /// Generates a <see cref="uint"/> that is uniformly distributed across all possible <see cref="uint"/> values,
-    /// this is [0, max].
+    /// Generates a <see cref="uint"/> uniformly distributed over [0, max].
     /// </summary>
     /// <param name="max">
     /// The largest possible number that will be returned.
     /// </param>
     /// <returns>
-    /// A <see cref="uint"/> that is uniformly distributed across all possible <see cref="uint"/> values,
-    /// this is [0, max].
+    /// A <see cref="uint"/> uniformly distributed over [0, max].
     /// </returns>
     uint NextUInt(uint max);
 
     /// <summary>
-    /// Generates a <see cref="ulong"/> that is uniformly distributed across all possible <see cref="ulong"/> values,
-    /// this is [0, 2^64).
+    /// Generates a <see cref="ulong"/> uniformly distributed over [0, 2^64).
     /// </summary>
     /// <returns>
-    /// An <see cref="ulong"/> that is uniformly distributed across all possible <see cref="ulong"/> values.
+    /// A <see cref="ulong"/> uniformly distributed over [0, 2^64).
     /// </returns>
     ulong NextULong();
 
     /// <summary>
-    /// Generates a <see cref="ulong"/> that is uniformly distributed across all possible <see cref="ulong"/> values,
-    /// this is [0, max].
+    /// Generates a <see cref="ulong"/> uniformly distributed over [0, max].
     /// </summary>
     /// <param name="max">
     /// The largest possible number that will be returned.
     /// </param>
     /// <returns>
-    /// A <see cref="ulong"/> that is uniformly distributed across all possible <see cref="ulong"/> values,
-    /// this is [0, max].
+    /// A <see cref="ulong"/> uniformly distributed over [0, max].
     /// </returns>
     ulong NextULong(ulong max);
 
@@ -65,7 +59,7 @@ public interface IRandomNumberEngine
     double NextCanonical();
 
     /// <summary>
-    /// Creates a double in the interval (0, 1] by creating an integer the range (0, 2^53],
+    /// Creates a double in the interval (0, 1] by creating an integer in the range (0, 2^53],
     /// converting this integer to a double, and dividing this number by 2^53.
     /// </summary>
     /// <returns>

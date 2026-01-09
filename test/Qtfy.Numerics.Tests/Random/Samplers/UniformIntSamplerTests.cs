@@ -23,7 +23,7 @@ internal sealed class UniformIntSamplerTests
     [Test]
     public void TestConstructInvalid()
     {
-        Assert.Throws<ArgumentException>(
+        Assert.Throws<ArgumentOutOfRangeException>(
             () => _ = GetSampler(12, 7));
 
         Assert.Throws<ArgumentNullException>(

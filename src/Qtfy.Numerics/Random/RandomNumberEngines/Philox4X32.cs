@@ -7,9 +7,9 @@
 namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
 /// <summary>
-/// The Philox4x32 counter based random number generator that performs 10 rounds.
+/// The Philox4X32 counter-based random number engine that performs 10 rounds.
 /// See the paper <see href="http://www.thesalmons.org/john/random123/papers/random123sc11.pdf"/>.
-/// There are 2^64 possible keyed generators, each with a period of 2^130.
+/// There are 2^64 possible keyed engines, each with a period of 2^130.
 /// </summary>
 public sealed class Philox4X32 : UIntRandomNumberEngine
 {

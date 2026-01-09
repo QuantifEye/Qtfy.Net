@@ -218,22 +218,6 @@ public readonly struct BigRational :
     }
 
     /// <summary>
-    /// Gets a value indicating whether this <see cref="BigRational"/> is positive or zero.
-    /// </summary>
-    public bool IsPositiveOrZero
-    {
-        get => this.IsGreaterThanOrEqualZero;
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether this <see cref="BigRational"/> is negative or zero.
-    /// </summary>
-    public bool IsNegativeOrZero
-    {
-        get => this.IsLessThanOrEqualZero;
-    }
-
-    /// <summary>
     /// Gets a value indicating whether this <see cref="BigRational"/> is equal to zero.
     /// </summary>
     public bool IsZero
@@ -2862,7 +2846,7 @@ public readonly struct BigRational :
             ThrowTermsMustBePositive();
         }
 
-        if (x.IsNegativeOrZero)
+        if (x.IsLessThanOrEqualZero)
         {
             ThrowValueMustBePositive();
         }

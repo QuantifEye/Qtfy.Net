@@ -7,7 +7,7 @@
 namespace Qtfy.Numerics.Distributions;
 
 /// <summary>
-/// A Normal(Gaussian) distribution object.
+/// A normal (Gaussian) distribution.
 /// </summary>
 public class NormalDistribution : IContinuousDistribution
 {
@@ -21,9 +21,9 @@ public class NormalDistribution : IContinuousDistribution
     /// The standard deviation parameter of the distribution.
     /// </param>
     /// <exception cref="ArgumentException">
-    /// if <paramref name="mu"/> is not finite,
+    /// If <paramref name="mu"/> is not finite,
     /// if <paramref name="sigma"/> is not finite,
-    /// or of <paramref name="sigma"/> if not greater than zero.
+    /// or if <paramref name="sigma"/> is not greater than zero.
     /// </exception>
     public NormalDistribution(double mu, double sigma)
     {
@@ -111,11 +111,11 @@ public class NormalDistribution : IContinuousDistribution
     /// The mean, must be finite.
     /// </param>
     /// <param name="sigma">
-    /// The standard deviation, must be positive and finite.
+    /// The standard deviation, must be finite and greater than zero.
     /// </param>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="mu"/> is infinite or nan.
-    /// If <paramref name="sigma"/> is infinite or nan.
+    /// If <paramref name="mu"/> is infinite or NaN.
+    /// If <paramref name="sigma"/> is infinite or NaN.
     /// If <paramref name="sigma"/> is less than or equal to zero.
     /// </exception>
     internal static void ValidateParameters(double mu, double sigma)
@@ -127,7 +127,7 @@ public class NormalDistribution : IContinuousDistribution
 
         if (!double.IsFinite(sigma) || sigma <= 0d)
         {
-            throw new ArgumentException("sigma must be positive and finite");
+            throw new ArgumentException("sigma must be finite and greater than zero");
         }
     }
 }

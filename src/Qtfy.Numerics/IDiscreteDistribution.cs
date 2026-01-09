@@ -12,24 +12,24 @@ namespace Qtfy.Numerics;
 public interface IDiscreteDistribution : IDistribution<int>
 {
     /// <summary>
-    /// Calculates the probability density function at <paramref name="x"/>.
+    /// Calculates the probability mass function at <paramref name="x"/>.
     /// </summary>
     /// <param name="x">
     /// The value at which to evaluate the probability mass function.
     /// </param>
     /// <returns>
-    /// The probability density function at <paramref name="x"/>.
+    /// The probability mass function at <paramref name="x"/>.
     /// </returns>
     double Probability(int x);
 
     /// <summary>
-    /// Calculates natural logarithm of the probability density function at <paramref name="x"/>.
+    /// Calculates the natural logarithm of the probability mass function at <paramref name="x"/>.
     /// </summary>
     /// <param name="x">
-    /// The value at which to evaluate the logarithm of the probability mass function.
+    /// The value at which to evaluate the natural logarithm of the probability mass function.
     /// </param>
     /// <returns>
-    /// The log of the probability density function evaluated at <paramref name="x"/>.
+    /// The natural logarithm of the probability mass function evaluated at <paramref name="x"/>.
     /// </returns>
     double ProbabilityLn(int x);
 }

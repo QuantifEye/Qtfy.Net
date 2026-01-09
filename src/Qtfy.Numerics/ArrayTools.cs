@@ -18,7 +18,7 @@ public static class ArrayTools
     /// The array to copy.
     /// </param>
     /// <typeparam name="T">
-    /// The type of the elements in the matrix.
+    /// The type of the elements in the array.
     /// </typeparam>
     /// <returns>
     /// A copy of the provided array.

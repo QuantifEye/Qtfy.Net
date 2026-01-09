@@ -7,7 +7,7 @@
 namespace Qtfy.Numerics.Distributions;
 
 /// <summary>
-/// A standard uniform distribution. That is a continuous uniform distribution on [0, 1].
+/// A standard uniform distribution on [0, 1].
 /// </summary>
 public class StandardUniformDistribution : IContinuousDistribution
 {

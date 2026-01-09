@@ -7,7 +7,7 @@
 namespace Qtfy.Numerics.Distributions;
 
 /// <summary>
-/// A uniform real (continuous) distribution object.
+/// A continuous uniform distribution.
 /// </summary>
 public class UniformRealDistribution : IContinuousDistribution
 {
@@ -23,9 +23,9 @@ public class UniformRealDistribution : IContinuousDistribution
     /// The maximum parameter.
     /// </param>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="min"/> is infinite or nan.
-    /// If <paramref name="max"/> is infinite or nan.
-    /// or if <paramref name="min"/> is greater-than-or-equal-to <paramref name="max"/>.
+    /// If <paramref name="min"/> is infinite or NaN.
+    /// If <paramref name="max"/> is infinite or NaN.
+    /// or if <paramref name="min"/> is greater than or equal to <paramref name="max"/>.
     /// </exception>
     public UniformRealDistribution(double min, double max)
     {
@@ -51,7 +51,7 @@ public class UniformRealDistribution : IContinuousDistribution
     public double Max { get; }
 
     /// <summary>
-    /// Gets the mean if the distribution.
+    /// Gets the mean of the distribution.
     /// </summary>
     public double Mean { get; }
 
@@ -75,8 +75,8 @@ public class UniformRealDistribution : IContinuousDistribution
     /// The greatest value the variable can have.
     /// </param>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="min"/> is infinite or nan.
-    /// If <paramref name="max"/> is infinite or nan.
+    /// If <paramref name="min"/> is infinite or NaN.
+    /// If <paramref name="max"/> is infinite or NaN.
     /// or if <paramref name="min"/> is greater-than-or-equal-to <paramref name="max"/>.
     /// </exception>
     internal static void ValidateParameters(double min, double max)

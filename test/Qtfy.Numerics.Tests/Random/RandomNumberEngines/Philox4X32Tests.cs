@@ -20,13 +20,13 @@ internal sealed class Philox4X32Tests
             actual[i] = engine.NextUInt();
         }
 
-        var expected = new[]
-        {
+        uint[] expected =
+        [
             0x6627e8d5U,
             0xe169c58dU,
             0xbc57ac4cU,
             0x9b00dbd8U,
-        };
+        ];
 
         Assert.That(actual, Is.EqualTo(expected));
     }

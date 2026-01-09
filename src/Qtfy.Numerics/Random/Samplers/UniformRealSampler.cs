@@ -9,7 +9,7 @@ namespace Qtfy.Numerics.Random.Samplers;
 using Qtfy.Numerics.Distributions;
 
 /// <summary>
-/// A distribution that generates continuous uniform values.
+/// A sampler for the continuous uniform distribution.
 /// </summary>
 public sealed class UniformRealSampler : ISampler<double>
 {
@@ -19,7 +19,7 @@ public sealed class UniformRealSampler : ISampler<double>
     /// Initializes a new instance of the <see cref="UniformRealSampler"/> class.
     /// </summary>
     /// <param name="generator">
-    /// The underlying bit generator to use.
+    /// The random number engine to use.
     /// </param>
     /// <param name="min">
     /// The lower bound of the values that will be generated.
@@ -31,8 +31,8 @@ public sealed class UniformRealSampler : ISampler<double>
     /// If <paramref name="generator"/> is null.
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="min"/> is infinite or nan.
-    /// If <paramref name="max"/> is infinite or nan.
+    /// If <paramref name="min"/> is infinite or NaN.
+    /// If <paramref name="max"/> is infinite or NaN.
     /// If <paramref name="min"/> is greater than or equal to <paramref name="max"/>.
     /// </exception>
     public UniformRealSampler(IRandomNumberEngine generator, double min, double max)

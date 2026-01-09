@@ -7,7 +7,7 @@
 namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
 /// <summary>
-/// A base class for all random bit generators that generate uniformly distributed values.
+/// A base class for random number engines that generate uniformly distributed values.
 /// </summary>
 public abstract class UIntRandomNumberEngine : IRandomNumberEngine
 {

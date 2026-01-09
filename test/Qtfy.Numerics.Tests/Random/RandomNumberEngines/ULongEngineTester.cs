@@ -20,8 +20,8 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
     [Test]
     public void TestULongMax()
     {
-        var expected = new[]
-        {
+        ulong[] expected =
+        [
             1831209241179374162UL,
             4398843623863442686UL,
             2280222209083243558UL,
@@ -47,7 +47,7 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
             15099895210921580593UL,
             8510258085793372635UL,
             11389751187763450802UL,
-        };
+        ];
 
         this.Compare(expected, mt => mt.NextULong());
         this.Compare(expected, mt => mt.NextULong(ulong.MaxValue));
@@ -63,8 +63,8 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
     [Test]
     public void TestULongOne()
     {
-        var expected = new[]
-        {
+        ulong[] expected =
+        [
             0UL,
             0UL,
             0UL,
@@ -90,7 +90,7 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
             1UL,
             0UL,
             1UL,
-        };
+        ];
 
         this.TestULong(expected, 1);
     }
@@ -98,8 +98,8 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
     [Test]
     public void TestULongLarge()
     {
-        var expected = new[]
-        {
+        ulong[] expected =
+        [
             915604620589687081UL,
             2199421811931721343UL,
             1140111104541621779UL,
@@ -125,7 +125,7 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
             7549947605460790296UL,
             4255129042896686317UL,
             5694875593881725401UL,
-        };
+        ];
 
         this.TestULong(expected, ulong.MaxValue / 2U - 7U);
     }
@@ -133,8 +133,8 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
     [Test]
     public void TestULongVeryLarge()
     {
-        var expected = new[]
-        {
+        ulong[] expected =
+        [
             1831209241179374162UL,
             4398843623863442686UL,
             2280222209083243558UL,
@@ -160,7 +160,7 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
             15099895210921580593UL,
             8510258085793372635UL,
             11389751187763450802UL,
-        };
+        ];
 
         this.TestULong(expected, ulong.MaxValue - 7U);
     }
@@ -168,8 +168,8 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
     [Test]
     public void TestUIntMax()
     {
-        var expected = new[]
-        {
+        uint[] expected =
+        [
             426361626U,
             1024185592U,
             530905604U,
@@ -195,7 +195,7 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
             3515718321U,
             1981448868U,
             2651883100U,
-        };
+        ];
 
         this.Compare(expected, mt => mt.NextUInt());
         this.TestUInt(expected, uint.MaxValue);
@@ -204,8 +204,8 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
     [Test]
     public void TestUIntLarge()
     {
-        var expected = new[]
-        {
+        uint[] expected =
+        [
             213180812U,
             512092794U,
             265452801U,
@@ -231,7 +231,7 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
             1757859154U,
             990724430U,
             1325941545U,
-        };
+        ];
 
         this.TestUInt(expected, uint.MaxValue / 2U - 7U);
     }
@@ -239,8 +239,8 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
     [Test]
     public void TestUIntVeryLarge()
     {
-        var expected = new[]
-        {
+        uint[] expected =
+        [
             426361625U,
             1024185590U,
             530905603U,
@@ -266,7 +266,7 @@ internal sealed class ULongEngineTester : EngineTester<MersenneTwister64Bit19937
             3515718315U,
             1981448864U,
             2651883095U,
-        };
+        ];
 
         this.TestUInt(expected, uint.MaxValue - 7U);
     }

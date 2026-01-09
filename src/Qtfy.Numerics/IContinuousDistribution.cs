@@ -7,7 +7,7 @@
 namespace Qtfy.Numerics;
 
 /// <summary>
-/// The base interface for continuous statistical distributions.
+/// A base interface for continuous statistical distributions.
 /// </summary>
 public interface IContinuousDistribution : IDistribution<double>
 {
@@ -15,21 +15,21 @@ public interface IContinuousDistribution : IDistribution<double>
     /// Calculates the probability density function at <paramref name="x"/>.
     /// </summary>
     /// <param name="x">
-    /// The value at which to evaluate the probability mass function.
+    /// The value at which to evaluate the probability density function.
     /// </param>
     /// <returns>
-    /// The probability density function at <paramref name="x"/>.
+    /// The probability density function evaluated at <paramref name="x"/>.
     /// </returns>
     double Density(double x);
 
     /// <summary>
-    /// Calculates natural logarithm of the probability density function at <paramref name="x"/>.
+    /// Calculates the natural logarithm of the probability density function at <paramref name="x"/>.
     /// </summary>
     /// <param name="x">
-    /// The value at which to evaluate the function.
+    /// The value at which to evaluate the probability density function.
     /// </param>
     /// <returns>
-    /// The log of the probability density function evaluated at <paramref name="x"/>.
+    /// The natural logarithm of the probability density function evaluated at <paramref name="x"/>.
     /// </returns>
     double DensityLn(double x);
 }

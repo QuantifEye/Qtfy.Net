@@ -7,7 +7,7 @@
 namespace Qtfy.Numerics.Random.Samplers;
 
 /// <summary>
-/// A multivariate normal (gaussian) sampler.
+/// A sampler for the multivariate normal (Gaussian) distribution.
 /// </summary>
 public sealed partial class MultivariateNormalSampler : ISampler<double[]>
 {
@@ -23,7 +23,7 @@ public sealed partial class MultivariateNormalSampler : ISampler<double[]>
     /// Initializes a new instance of the <see cref="MultivariateNormalSampler"/> class.
     /// </summary>
     /// <param name="engine">
-    /// The simulation engine to be used for sampling.
+    /// The random number engine to use.
     /// </param>
     /// <param name="mean">
     /// The mean values of the variables to be generated simultaneously.

@@ -7,18 +7,18 @@
 namespace Qtfy.Numerics.Distributions;
 
 /// <summary>
-/// A piecewise constant distribution is described distribution which is uniformly distributed within sub intervals.
-/// This can be thought of as being analogous to the distribution implied by a histogram.
+/// A piecewise constant distribution is a distribution that is uniform within sub-intervals.
+/// This can be thought of as analogous to the distribution implied by a histogram.
 /// </summary>
 /// <para>
 /// A piecewise constant distribution is described by n distinct domain points,
-/// where n is greater than 1, and n - 1 non-negative weight.
-/// let S be the sum of all weights.
-/// let w_i be the weight assigned to interval i.
-/// let i_lower be the lower bound of interval i.
-/// let i_upper be the upper bound of an interval i.
+/// where n is greater than 1, and n - 1 weights that are greater than or equal to zero.
+/// Let S be the sum of all weights.
+/// Let w_i be the weight assigned to interval i.
+/// Let i_lower be the lower bound of interval i.
+/// Let i_upper be the upper bound of interval i.
 /// Then the probability that a random variable will fall in interval i is equal to
-/// w_i / (S * (i_upper - i_lower)).
+/// w_i / S. The density within interval i is w_i / (S * (i_upper - i_lower)).
 /// </para>
 public class PiecewiseConstantDistribution : IDistribution<double>
 {
@@ -40,7 +40,7 @@ public class PiecewiseConstantDistribution : IDistribution<double>
     /// A sequence of strictly monotonically increasing values.
     /// </param>
     /// <param name="weights">
-    /// A sequence of non negative weights.
+    /// A sequence of weights that are greater than or equal to zero.
     /// </param>
     /// <returns>
     /// Returns a new <see cref="PiecewiseConstantDistribution"/>.
@@ -51,10 +51,11 @@ public class PiecewiseConstantDistribution : IDistribution<double>
     /// </exception>
     /// <exception cref="ArgumentException">
     /// If the number of elements in <paramref name="domain"/> is less than 2.
-    /// If the number of element in <paramref name="weights"/> is not one less than the number of elements in <paramref name="domain"/>.
-    /// If <paramref name="domain"/> is not sorted and unique.
-    /// If any of the values in <paramref name="weights"/> is less than zero.
-    /// If the sum of <paramref name="weights"/> is not a positive finite value.
+    /// If the number of elements in <paramref name="weights"/> is not one less than the number of elements in <paramref name="domain"/>.
+    /// If any of the values in <paramref name="domain"/> are not finite.
+    /// If <paramref name="domain"/> is not strictly increasing.
+    /// If any of the values in <paramref name="weights"/> are less than zero.
+    /// If the sum of <paramref name="weights"/> is not finite or is less than or equal to zero.
     /// </exception>
     public static PiecewiseConstantDistribution Create(IEnumerable<double> domain, IEnumerable<double> weights)
     {
@@ -79,9 +80,9 @@ public class PiecewiseConstantDistribution : IDistribution<double>
             throw new ArgumentException("values must be strictly monotonic.");
         }
 
-        if (!AllNonNegative(cp))
+        if (!AllGreaterThanOrEqualZero(cp))
         {
-            throw new ArgumentException("Weights must be non negative");
+            throw new ArgumentException("Weights must be greater than or equal to zero.");
         }
 
         for (var i = 1; i < cp.Length; ++i)
@@ -92,7 +93,7 @@ public class PiecewiseConstantDistribution : IDistribution<double>
         var total = cp[^1];
         if (!double.IsFinite(total) || total <= 0d)
         {
-            throw new ArgumentException("weights must sum to a positive finite value.", nameof(weights));
+            throw new ArgumentException("weights must sum to a finite value greater than zero.", nameof(weights));
         }
 
         for (var i = 0; i < cp.Length; ++i)
@@ -181,7 +182,7 @@ public class PiecewiseConstantDistribution : IDistribution<double>
         return true;
     }
 
-    private static bool AllNonNegative(double[] array)
+    private static bool AllGreaterThanOrEqualZero(double[] array)
     {
         for (var i = 0; i < array.Length; ++i)
         {

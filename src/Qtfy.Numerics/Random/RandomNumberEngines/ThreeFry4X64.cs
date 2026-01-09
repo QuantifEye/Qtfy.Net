@@ -7,9 +7,9 @@
 namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
 /// <summary>
-/// The ThreeFry4X64 counter based random number generator that performs 20 rounds.
+/// The ThreeFry4X64 counter-based random number engine that performs 20 rounds.
 /// See the paper <see href="http://www.thesalmons.org/john/random123/papers/random123sc11.pdf"/>.
-/// There are 2^256 possible keyed generators, each with a period of 2^258.
+/// There are 2^256 possible keyed engines, each with a period of 2^258.
 /// </summary>
 public sealed class ThreeFry4X64 : ULongRandomNumberEngine
 {
@@ -45,20 +45,20 @@ public sealed class ThreeFry4X64 : ULongRandomNumberEngine
     /// Initializes a new instance of the <see cref="ThreeFry4X64"/> class.
     /// </summary>
     /// <param name="key0">
-    /// The first key to the generator.
+    /// The first key to the engine.
     /// </param>
     /// <param name="key1">
-    /// The second key to the generator.
+    /// The second key to the engine.
     /// </param>
     /// <param name="key2">
-    /// The third key to the generator.
+    /// The third key to the engine.
     /// </param>
     /// <param name="key3">
-    /// The fourth key to the generator.
+    /// The fourth key to the engine.
     /// </param>
     /// <remarks>
     /// Conceptually the key is equal to
-    /// key0 + (key1 * 2^64) + (key2 * 2^128) + (key3 * 2^196)
+    /// key0 + (key1 * 2^64) + (key2 * 2^128) + (key3 * 2^192)
     /// resulting in 2^256 possible keys.
     /// </remarks>
     public ThreeFry4X64(ulong key0, ulong key1 = 0UL, ulong key2 = 0UL, ulong key3 = 0UL)

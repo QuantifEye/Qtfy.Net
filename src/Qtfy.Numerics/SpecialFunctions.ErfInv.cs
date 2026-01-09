@@ -415,14 +415,17 @@ public static partial class SpecialFunctions
     }
 
     /// <summary>
-    /// Calculates the inverse error of the error function.
+    /// Calculates the inverse error function.
     /// <see href="https://en.wikipedia.org/wiki/Error_function#Inverse_functions"/>.
     /// </summary>
     /// <param name="p">
-    /// The value at which to evaluate the function.
+    /// The value at which to evaluate the inverse error function.
     /// </param>
     /// <returns>
-    /// The value of the inverse error function evaluated at <paramref name="p"/>.
+    /// The inverse error function evaluated at <paramref name="p"/>.
+    /// Returns <see cref="double.NegativeInfinity"/> when <paramref name="p"/> is -1,
+    /// <see cref="double.PositiveInfinity"/> when <paramref name="p"/> is 1,
+    /// and <see cref="double.NaN"/> when <paramref name="p"/> is NaN or |<paramref name="p"/>| &gt; 1.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     public static double ErfInv(double p)
@@ -445,8 +448,8 @@ public static partial class SpecialFunctions
             var v = Sqrt(-Log(1 - p));
 
             // p = BitDecrement(1d) => v = 6.061089058055252
-            // The original implementation was written to also accomodate 80bit floating point values.
-            // additional branches are retained in case some systems allow the retention of 80bit temporaries.
+            // The original implementation was written to also accommodate 80bit floating point values.
+            // Additional branches are retained in case some systems allow the retention of 80bit temporaries.
             if (v < 3.0)
             {
                 return 0.807220458984375 * v + ErfInvImplC(v - 1.125) * v;

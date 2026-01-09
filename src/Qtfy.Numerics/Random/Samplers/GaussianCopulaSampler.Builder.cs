@@ -10,7 +10,7 @@ public sealed partial class GaussianCopulaSampler
 {
     /// <summary>
     /// An object that is able to create <see cref="GaussianCopulaSampler"/>s with the
-    /// same covariance matrix, but with different <see cref="IRandomNumberEngine"/>s.
+    /// same correlation structure, but with different <see cref="IRandomNumberEngine"/>s.
     /// </summary>
     public sealed class Builder
     {
@@ -28,12 +28,12 @@ public sealed partial class GaussianCopulaSampler
         /// If <paramref name="correlationMatrix"/> is null.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// If <paramref name="correlationMatrix"/> is not zero indexed,
+        /// If <paramref name="correlationMatrix"/> is not zero-indexed,
         /// if <paramref name="correlationMatrix"/> is not symmetric,
         /// if <paramref name="correlationMatrix"/> is empty,
-        /// if <paramref name="correlationMatrix"/> is not positive definite.
+        /// if <paramref name="correlationMatrix"/> does not have all eigenvalues greater than zero.
         /// if any value in <paramref name="correlationMatrix"/> is not a valid correlation.
-        /// if any value on the diagonal if <paramref name="correlationMatrix"/> is not equal to one.
+        /// if any value on the diagonal of <paramref name="correlationMatrix"/> is not equal to one.
         /// </exception>
         public Builder(double[,] correlationMatrix)
         {
@@ -44,13 +44,13 @@ public sealed partial class GaussianCopulaSampler
         }
 
         /// <summary>
-        /// Builds a new instance of a gaussian copula sampler.
+        /// Builds a new instance of a Gaussian copula sampler.
         /// </summary>
         /// <param name="engine">
-        /// The random number engine to use as a ransom source.
+        /// The random number engine to use.
         /// </param>
         /// <returns>
-        /// A new instance of a gaussian copula sampler.
+        /// A new instance of a Gaussian copula sampler.
         /// </returns>
         public GaussianCopulaSampler Build(IRandomNumberEngine engine)
         {

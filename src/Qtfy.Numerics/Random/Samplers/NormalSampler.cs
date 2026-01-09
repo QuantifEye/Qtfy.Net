@@ -9,7 +9,7 @@ namespace Qtfy.Numerics.Random.Samplers;
 using Qtfy.Numerics.Distributions;
 
 /// <summary>
-/// A random distribution that generates normally distributed values.
+/// A sampler for the normal distribution.
 /// </summary>
 public sealed class NormalSampler : ISampler<double>
 {
@@ -19,7 +19,7 @@ public sealed class NormalSampler : ISampler<double>
     /// Initializes a new instance of the <see cref="NormalSampler"/> class.
     /// </summary>
     /// <param name="generator">
-    /// The underlying bit generator to use.
+    /// The random number engine to use.
     /// </param>
     /// <param name="mu">
     /// The mean of the distribution.
@@ -29,8 +29,10 @@ public sealed class NormalSampler : ISampler<double>
     /// </param>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="generator"/> is null.
-    /// If <paramref name="mu"/> is nan or infinite.
-    /// If <paramref name="sigma"/> is infinite or nan.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="mu"/> is NaN or infinite.
+    /// If <paramref name="sigma"/> is infinite or NaN.
     /// If <paramref name="sigma"/> is less than or equal to 0.
     /// </exception>
     public NormalSampler(IRandomNumberEngine generator, double mu, double sigma)

@@ -15,10 +15,10 @@ public interface IDistribution
     /// Calculates the probability that a random variable is less than or equal to <paramref name="x"/>.
     /// </summary>
     /// <param name="x">
-    /// The point at which to evaluated the cumulative distribution function.
+    /// The point at which to evaluate the cumulative distribution function.
     /// </param>
     /// <returns>
-    /// The value of the cumulative distribution function evaluated at <paramref name="x"/>.
+    /// The cumulative distribution function evaluated at <paramref name="x"/>.
     /// </returns>
     double CumulativeDistribution(double x);
 }

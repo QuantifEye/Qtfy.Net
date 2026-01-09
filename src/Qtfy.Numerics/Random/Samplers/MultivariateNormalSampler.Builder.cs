@@ -32,10 +32,10 @@ public sealed partial class MultivariateNormalSampler
         /// If <paramref name="covarianceMatrix"/> is null.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// If any values in <paramref name="mean"/> are nan or infinite.
+        /// If any values in <paramref name="mean"/> are not finite.
         /// If the number of entries in <paramref name="mean"/> is not equal to the number of rows (or columns) of <paramref name="covarianceMatrix"/>.
         /// If <paramref name="covarianceMatrix"/> is not a valid covariance matrix.
-        /// If <paramref name="covarianceMatrix"/> is not zero indexed.
+        /// If <paramref name="covarianceMatrix"/> is not zero-indexed.
         /// </exception>
         public Builder(double[] mean, double[,] covarianceMatrix)
         {
@@ -66,7 +66,7 @@ public sealed partial class MultivariateNormalSampler
         /// Builds a new instance of a multivariate normal sampler.
         /// </summary>
         /// <param name="engine">
-        /// The random number engine to use as a ransom source.
+        /// The random number engine to use.
         /// </param>
         /// <returns>
         /// A new instance of a multivariate normal sampler.

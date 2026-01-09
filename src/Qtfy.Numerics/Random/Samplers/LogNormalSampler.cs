@@ -9,7 +9,7 @@ namespace Qtfy.Numerics.Random.Samplers;
 using Qtfy.Numerics.Distributions;
 
 /// <summary>
-/// A log normal random distribution.
+/// A sampler for the log-normal distribution.
 /// </summary>
 public sealed class LogNormalSampler : ISampler<double>
 {
@@ -19,7 +19,7 @@ public sealed class LogNormalSampler : ISampler<double>
     /// Initializes a new instance of the <see cref="LogNormalSampler"/> class.
     /// </summary>
     /// <param name="generator">
-    /// The underlying bit generator to use.
+    /// The random number engine to use.
     /// </param>
     /// <param name="mu">
     /// The mean of the related normal distribution.
@@ -31,8 +31,8 @@ public sealed class LogNormalSampler : ISampler<double>
     /// If <paramref name="generator"/> is null.
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="mu"/> is infinite or nan.
-    /// if <paramref name="sigma"/> is infinite or nan.
+    /// If <paramref name="mu"/> is infinite or NaN.
+    /// if <paramref name="sigma"/> is infinite or NaN.
     /// if <paramref name="sigma"/> is less than or equal to zero.
     /// </exception>
     public LogNormalSampler(IRandomNumberEngine generator, double mu, double sigma)

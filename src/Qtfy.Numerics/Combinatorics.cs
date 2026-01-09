@@ -16,7 +16,7 @@ public static class Combinatorics
     /// equality comparer to compare values.
     /// </summary>
     /// <typeparam name="T">
-    /// The type of the elements of the source sequence.<paramref name="sourceElements" />.
+    /// The type of the elements of the source sequence.
     /// </typeparam>
     /// <param name="sourceElements">
     /// The sequence whose power set must be enumerated.
@@ -27,20 +27,24 @@ public static class Combinatorics
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="sourceElements"/> is null.
     /// </exception>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="sourceElements"/> has more than 63 distinct elements.
+    /// </exception>
     /// <example>
     /// <code>
-    /// var result = PowerSet(new int { 1, 2, 3 }).ToArray();
-    /// var expected = new int[][]
-    /// {
-    ///    new int[] {},
-    ///    new int[] { 1 }),
-    ///    new int[] { 2 },
-    ///    new int[] { 1, 2 },
-    ///    new int[] { 3 },
-    ///    new int[] { 1, 3 },
-    ///    new int[] { 2, 3 },
-    ///    new int[] { 1, 2, 3 },
-    /// };
+    /// int[] sourceElements = [1, 2, 3];
+    /// var result = PowerSet(sourceElements).ToArray();
+    /// int[][] expected =
+    /// [
+    ///    [],
+    ///    [1],
+    ///    [2],
+    ///    [1, 2],
+    ///    [3],
+    ///    [1, 3],
+    ///    [2, 3],
+    ///    [1, 2, 3],
+    /// ];
     /// </code>
     /// </example>
     public static IEnumerable<T[]> PowerSet<T>(IEnumerable<T> sourceElements)
@@ -58,11 +62,11 @@ public static class Combinatorics
     }
 
     /// <summary>
-    /// Returns the power set of the distinct elements from a sequence  by using
+    /// Returns the power set of the distinct elements from a sequence by using
     /// a specified <see cref="IEqualityComparer{T}"/> to compare values.
     /// </summary>
     /// <typeparam name="T">
-    /// The type of the elements of the source sequence.<paramref name="sourceElements" />.
+    /// The type of the elements of the source sequence.
     /// </typeparam>
     /// <param name="sourceElements">
     /// The sequence whose power set must be enumerated.
@@ -76,6 +80,9 @@ public static class Combinatorics
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="sourceElements"/> is null.
     /// If <paramref name="equalityComparer"/> is null.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="sourceElements"/> has more than 63 distinct elements.
     /// </exception>
     public static IEnumerable<T[]> PowerSet<T>(IEnumerable<T> sourceElements, IEqualityComparer<T> equalityComparer)
     {
@@ -97,28 +104,32 @@ public static class Combinatorics
     /// A collection of elements.
     /// </param>
     /// <returns>
-    /// A <see cref="IEnumerable{T}"/> that iterates all possible ways to split a set into two groups (left and right).
+    /// A sequence that iterates all possible ways to split a set into two groups (left and right).
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="sourceElements"/> is null.
     /// </exception>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="sourceElements"/> has more than 63 distinct elements.
+    /// </exception>
     /// <example>
     /// <code>
-    /// var result = PowerSetWithCompliment(new int { 1, 2, 3 }).ToArray();
-    /// var expected = new (int[], int[])[]
-    /// {
-    ///    (new[] {}, new[] { 1, 2, 3 }),
-    ///    (new[] { 1 }, new[] { 2, 3 }),
-    ///    (new[] { 2 }, new[] { 1, 3 }),
-    ///    (new[] { 1, 2 }, new[] { 3 }),
-    ///    (new[] { 3 }, new[] { 1, 2 }),
-    ///    (new[] { 1, 3 }, new[] { 2 }),
-    ///    (new[] { 2, 3 }, new[] { 1 }),
-    ///    (new[] { 1, 2, 3 }, new[] {}),
-    /// };
+    /// int[] sourceElements = [1, 2, 3];
+    /// var result = PowerSetWithComplement(sourceElements).ToArray();
+    /// (int[] left, int[] right)[] expected =
+    /// [
+    ///    ([], [1, 2, 3]),
+    ///    ([1], [2, 3]),
+    ///    ([2], [1, 3]),
+    ///    ([1, 2], [3]),
+    ///    ([3], [1, 2]),
+    ///    ([1, 3], [2]),
+    ///    ([2, 3], [1]),
+    ///    ([1, 2, 3], []),
+    /// ];
     /// </code>
     /// </example>
-    public static IEnumerable<(T[] left, T[] right)> PowerSetWithCompliment<T>(IEnumerable<T> sourceElements)
+    public static IEnumerable<(T[] left, T[] right)> PowerSetWithComplement<T>(IEnumerable<T> sourceElements)
     {
         ArgumentNullException.ThrowIfNull(sourceElements);
 
@@ -140,14 +151,17 @@ public static class Combinatorics
     /// The <see cref="IEqualityComparer{T}"/> used to compare values.
     /// </param>
     /// <returns>
-    /// A <see see="IEnumerable{ValueTuple{T[], T[]}}"/> that iterates all possible ways to
+    /// A sequence that iterates all possible ways to
     /// split a set into two groups (left and right), using the provided <see cref="IEqualityComparer{T}"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="sourceElements"/> is null.
     /// If <paramref name="equalityComparer"/> is null.
     /// </exception>
-    public static IEnumerable<(T[] left, T[] right)> PowerSetWithCompliment<T>(
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="sourceElements"/> has more than 63 distinct elements.
+    /// </exception>
+    public static IEnumerable<(T[] left, T[] right)> PowerSetWithComplement<T>(
         IEnumerable<T> sourceElements,
         IEqualityComparer<T> equalityComparer)
     {
@@ -181,11 +195,11 @@ public static class Combinatorics
         T[] elements,
         ulong powerSetSize,
         T[] powerSetBuffer,
-        T[] complimentBuffer)
+        T[] complementBuffer)
     {
         for (var bits = 0UL; bits < powerSetSize; bits++)
         {
-            yield return Current(elements, bits, powerSetBuffer, complimentBuffer);
+            yield return Current(elements, bits, powerSetBuffer, complementBuffer);
         }
     }
 
@@ -204,10 +218,10 @@ public static class Combinatorics
         return GetFirst(powerSetBuffer, powerSetCount);
     }
 
-    private static (T[], T[]) Current<T>(T[] elements, ulong bits, T[] powerSetBuffer, T[] complimentBuffer)
+    private static (T[], T[]) Current<T>(T[] elements, ulong bits, T[] powerSetBuffer, T[] complementBuffer)
     {
         var powerSetCount = 0;
-        var complimentCount = 0;
+        var complementCount = 0;
         for (var i = 0; i < elements.Length; i++)
         {
             if ((bits & (1UL << i)) != 0)
@@ -217,12 +231,12 @@ public static class Combinatorics
             }
             else
             {
-                complimentBuffer[complimentCount] = elements[i];
-                ++complimentCount;
+                complementBuffer[complementCount] = elements[i];
+                ++complementCount;
             }
         }
 
-        return (GetFirst(powerSetBuffer, powerSetCount), GetFirst(complimentBuffer, complimentCount));
+        return (GetFirst(powerSetBuffer, powerSetCount), GetFirst(complementBuffer, complementCount));
     }
 
     private static T[] GetFirst<T>(T[] buffer, int count)

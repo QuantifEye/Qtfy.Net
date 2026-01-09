@@ -24,7 +24,7 @@ public static class SamplerExtensions
     /// The type of the values that are sampled.
     /// </typeparam>
     /// <returns>
-    /// An array containing <paramref name="n"/> observations drawn from sampler.
+    /// An array containing <paramref name="n"/> observations drawn from the sampler.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="sampler"/> is null.
@@ -38,7 +38,7 @@ public static class SamplerExtensions
 
         if (n < 0)
         {
-            throw new ArgumentException("value must be positive", nameof(n));
+            throw new ArgumentException("value must be greater than or equal to zero.", nameof(n));
         }
 
         var result = new T[n];

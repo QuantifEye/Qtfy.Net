@@ -1,0 +1,22 @@
+# Build output
+/build/
+*.dSYM/
+
+# Compiler outputs
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+
+# Editor/OS noise
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/

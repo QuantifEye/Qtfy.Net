@@ -114,6 +114,13 @@ internal sealed class MersenneTwister64Bit19937Tests
     }
 
     [Test]
+    public void InitByArrayEmpty()
+    {
+        Assert.Throws<ArgumentException>(
+            () => MersenneTwister64Bit19937.InitByArray(Array.Empty<ulong>()));
+    }
+
+    [Test]
     public void TestConstructWithSeedSequence()
     {
     }

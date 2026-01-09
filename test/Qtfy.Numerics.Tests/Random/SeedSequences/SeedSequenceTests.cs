@@ -39,6 +39,13 @@ internal sealed class SeedSequenceTests
     }
 
     [Test]
+    public void TestGenerateWithEmptyBuffer()
+    {
+        Assert.DoesNotThrow(() => new SeedSequence(1).Generate(Array.Empty<uint>()));
+        Assert.DoesNotThrow(() => new SeedSequence(1).Generate(Array.Empty<ulong>()));
+    }
+
+    [Test]
     public void TestConstructWithEmpty()
     {
         Assert.Throws<ArgumentException>(

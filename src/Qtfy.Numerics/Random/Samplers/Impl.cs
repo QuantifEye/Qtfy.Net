@@ -12,33 +12,34 @@ namespace Qtfy.Numerics.Random.Samplers;
 internal static class Impl
 {
     /// <summary>
-    /// Performs the cholesky decomposition of the provided matrix,
-    /// and returns it in row major packed form.
+    /// Performs the Cholesky decomposition of the provided matrix,
+    /// and returns it in row-major packed form.
     /// </summary>
     /// <param name="covarianceMatrix">
     /// The covariance matrix to factor.
     /// </param>
     /// <returns>
-    /// The factored correlation matrix.
+    /// The factored covariance matrix.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="covarianceMatrix"/> is null.
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="covarianceMatrix"/> is not zero indexed,
+    /// If <paramref name="covarianceMatrix"/> is not zero-indexed,
     /// if <paramref name="covarianceMatrix"/> is not symmetric,
-    /// if <paramref name="covarianceMatrix"/> is not positive definite,
+    /// if <paramref name="covarianceMatrix"/> does not have all eigenvalues greater than zero,
     /// if <paramref name="covarianceMatrix"/> is not a valid covariance matrix.
     /// </exception>
     internal static double[] PackedCholeskyFactorCovarianceMatrix(double[,] covarianceMatrix)
     {
+        ArgumentNullException.ThrowIfNull(covarianceMatrix);
         AssertValidCovarianceMatrix(covarianceMatrix);
         return PackedCholeskyDecomposition(covarianceMatrix);
     }
 
     /// <summary>
-    /// Performs the cholesky decomposition of the provided matrix,
-    /// and returns it in row major packed form.
+    /// Performs the Cholesky decomposition of the provided matrix,
+    /// and returns it in row-major packed form.
     /// </summary>
     /// <param name="correlationMatrix">
     /// The correlation matrix to factor.
@@ -47,13 +48,17 @@ internal static class Impl
     /// The factored correlation matrix.
     /// </returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="correlationMatrix"/> is not zero indexed,
+    /// If <paramref name="correlationMatrix"/> is null.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="correlationMatrix"/> is not zero-indexed,
     /// if <paramref name="correlationMatrix"/> is not symmetric,
-    /// if <paramref name="correlationMatrix"/> is not positive definite,
-    /// if <paramref name="correlationMatrix"/> is not a valid covariance matrix.
+    /// if <paramref name="correlationMatrix"/> does not have all eigenvalues greater than zero,
+    /// if <paramref name="correlationMatrix"/> is not a valid correlation matrix.
     /// </exception>
     internal static double[] PackedCholeskyFactorCorrelationMatrix(double[,] correlationMatrix)
     {
+        ArgumentNullException.ThrowIfNull(correlationMatrix);
         AssertValidCorrelationMatrix(correlationMatrix);
         return PackedCholeskyDecomposition(correlationMatrix);
     }
@@ -96,7 +101,7 @@ internal static class Impl
             sum = *inputRow - Dot(outputRowI, outputRowI + i, outputRowJ);
             if (sum <= 0d)
             {
-                throw new ArgumentException("expected positive definite matrix.");
+                throw new ArgumentException("expected a matrix with all eigenvalues greater than zero.");
             }
 
             outputRowI[i] = Math.Sqrt(sum);
@@ -120,7 +125,7 @@ internal static class Impl
     {
         if (matrix.GetLowerBound(0) != 0 || matrix.GetLowerBound(1) != 0)
         {
-            throw new ArgumentException("matrix must be zero indexed");
+            throw new ArgumentException("matrix must be zero-indexed");
         }
 
         if (matrix.GetLength(0) != matrix.GetLength(1))
@@ -169,7 +174,7 @@ internal static class Impl
             var variance = matrix[r, r];
             if (!double.IsFinite(variance) || variance <= 0d)
             {
-                throw new ArgumentException("diagonal entries must be positive and finite.");
+                throw new ArgumentException("diagonal entries must be finite and greater than zero.");
             }
         }
     }

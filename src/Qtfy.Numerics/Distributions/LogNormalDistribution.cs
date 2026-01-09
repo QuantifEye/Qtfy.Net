@@ -10,7 +10,7 @@ using static System.Math;
 using static SpecialFunctions;
 
 /// <summary>
-/// A Log-Normal statistical distribution object.
+/// A log-normal distribution.
 /// </summary>
 public class LogNormalDistribution : IContinuousDistribution
 {
@@ -24,8 +24,8 @@ public class LogNormalDistribution : IContinuousDistribution
     /// The standard deviation of the related normal distribution.
     /// </param>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="mu"/> is infinite or nan.
-    /// If <paramref name="sigma"/> is infinite or nan.
+    /// If <paramref name="mu"/> is infinite or NaN.
+    /// If <paramref name="sigma"/> is infinite or NaN.
     /// If <paramref name="sigma"/> is less than or equal to zero.
     /// </exception>
     public LogNormalDistribution(double mu, double sigma)
@@ -74,8 +74,8 @@ public class LogNormalDistribution : IContinuousDistribution
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentNullException">
-    /// if <paramref name="probability"/> is not in range [0, 1].
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="probability"/> is not in range [0, 1].
     /// </exception>
     public double Quantile(double probability)
     {

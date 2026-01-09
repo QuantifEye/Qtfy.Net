@@ -612,7 +612,7 @@ public static partial class SpecialFunctions
     /// The point at which to evaluate the error function.
     /// </param>
     /// <returns>
-    /// A double in the range [-1, 1].
+    /// A double in the range [-1, 1]. If <paramref name="x"/> is NaN, the result is NaN.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     public static double Erf(double x)

@@ -7,7 +7,7 @@
 namespace Qtfy.Numerics.Distributions;
 
 /// <summary>
-/// A uniform discrete distribution object.
+/// A discrete uniform distribution.
 /// </summary>
 public class UniformIntDistribution : IDiscreteDistribution
 {
@@ -36,7 +36,7 @@ public class UniformIntDistribution : IDiscreteDistribution
     /// The maximum parameter.
     /// </param>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="min"/> is greater than max.
+    /// If <paramref name="min"/> is greater than <paramref name="max"/>.
     /// </exception>
     public UniformIntDistribution(int min, int max)
     {

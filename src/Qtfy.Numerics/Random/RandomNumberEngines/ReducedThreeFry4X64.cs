@@ -7,12 +7,12 @@
 namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
 /// <summary>
-/// The ReducedThreeFry4X64 counter based random number generator that performs 20 rounds.
-/// The class is similar to the <see cref="ThreeFry4X64"/> but limits the number of keys that can be used,
-/// and reduces the period of the generator.
-/// There are 2^64 possible keyed generators, each with a period of 2^66.
-/// For any given generator the first 2^66 draws are identical to that of the
-/// equivalently constructed <see cref="ReducedThreeFry4X64"/>, after which they counter is reset.
+/// The ReducedThreeFry4X64 counter-based random number engine that performs 20 rounds.
+/// The class is similar to the <see cref="ThreeFry4X64"/>, but limits the number of keys that can be used,
+/// and reduces the period of the engine.
+/// There are 2^64 possible keyed engines, each with a period of 2^66.
+/// For any given engine, the first 2^66 draws from <see cref="ReducedThreeFry4X64"/> are identical to those
+/// from an equivalently constructed <see cref="ThreeFry4X64"/>. After that, the counter is reset.
 /// </summary>
 public sealed class ReducedThreeFry4X64 : ULongRandomNumberEngine
 {
@@ -34,7 +34,7 @@ public sealed class ReducedThreeFry4X64 : ULongRandomNumberEngine
     /// Initializes a new instance of the <see cref="ReducedThreeFry4X64"/> class.
     /// </summary>
     /// <param name="key">
-    /// The key to the generator.
+    /// The key to the engine.
     /// </param>
     public ReducedThreeFry4X64(ulong key)
     {

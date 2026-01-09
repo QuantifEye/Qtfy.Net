@@ -38,7 +38,7 @@ email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 namespace Qtfy.Numerics.Random.RandomNumberEngines;
 
 /// <summary>
-/// The Mersenne Twister random number generator.
+/// The Mersenne Twister random number engine.
 /// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/emt19937ar.html" />.
 /// </summary>
 public sealed class MersenneTwister32Bit19937 : UIntRandomNumberEngine
@@ -105,7 +105,7 @@ public sealed class MersenneTwister32Bit19937 : UIntRandomNumberEngine
     /// The implementation of <see cref="UpdateState"/>.
     /// </summary>
     /// <param name="mt">
-    /// A pointer to the first element in the state. The name mt is retained from the original c code.
+    /// A pointer to the first element in the state. The name mt is retained from the original C code.
     /// </param>
     private static unsafe void UpdateStateImpl(uint* mt)
     {
@@ -171,11 +171,11 @@ public sealed class MersenneTwister32Bit19937 : UIntRandomNumberEngine
     /// The seed used to seed the initial state.
     /// </param>
     /// <returns>
-    /// A new instance of a Mersenne Twister PRNG.
+    /// A new instance of a Mersenne Twister random number engine.
     /// </returns>
     /// <remarks>
-    /// This method uses the initialization procedure called init_by_array in the original
-    /// c code.
+    /// This method uses the initialization procedure called init_genrand in the original
+    /// C code.
     /// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/CODES/mt19937ar.c" />.
     /// </remarks>
     public static MersenneTwister32Bit19937 InitGenRand(uint seed)
@@ -194,10 +194,10 @@ public sealed class MersenneTwister32Bit19937 : UIntRandomNumberEngine
 
     /// <summary>
     /// Private backend to the constructor function, i.e. the actions on the
-    /// generator's state are performed here.
+    /// engine's state are performed here.
     /// </summary>
     /// <param name="mt">
-    /// The generator state.
+    /// The engine state.
     /// </param>
     /// <param name="seed">
     /// The seed.
@@ -223,15 +223,20 @@ public sealed class MersenneTwister32Bit19937 : UIntRandomNumberEngine
     /// The seeds used to seed the initial state.
     /// </param>
     /// <returns>
-    /// A new instance of a Mersenne Twister PRNG.
+    /// A new instance of a Mersenne Twister random number engine.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="seeds"/> is null.
     /// </exception>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="seeds"/> is empty.
+    /// </exception>
     /// <remarks>
     /// This method uses the initialization procedure called init_by_array in the original
-    /// c code.
+    /// C code.
     /// <see href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/CODES/mt19937ar.c" />.
+    /// For general-purpose seeding across engines, prefer the <see cref="ISeedSequence"/> constructor.
+    /// Use this method when you need compatibility with the reference init_by_array implementation.
     /// </remarks>
     public static MersenneTwister32Bit19937 InitByArray(uint[] seeds)
     {
@@ -255,10 +260,10 @@ public sealed class MersenneTwister32Bit19937 : UIntRandomNumberEngine
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MersenneTwister32Bit19937"/> class,
-    /// i.e. private backend to the function before.
+    /// that is, the private backend for the method above.
     /// </summary>
     /// <param name="mt">
-    /// The generator's state.
+    /// The engine's state.
     /// </param>
     /// <param name="initKey">
     /// The initial key.

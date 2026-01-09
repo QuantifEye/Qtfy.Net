@@ -16,7 +16,7 @@ internal sealed class MultivariateNormalSamplerTests
     [Test]
     public void TestLength()
     {
-        var mean = new[] { 0d, 0d };
+        double[] mean = [0d, 0d];
         var sigma = new[,]
         {
             { 1d, 0.5 },
@@ -59,7 +59,7 @@ internal sealed class MultivariateNormalSamplerTests
             { 0.5, 1.0 },
         };
 
-        var mean = new[] { 0.0, 0.0 };
+        double[] mean = [0.0, 0.0];
         var engine = MersenneTwister32Bit19937.InitGenRand(1);
         Assert.DoesNotThrow(() => _ = new MultivariateNormalSampler.Builder(mean, covarianceMatrix).Build(engine));
     }

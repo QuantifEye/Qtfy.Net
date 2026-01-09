@@ -20,13 +20,13 @@ internal sealed class ThreeFry4X64Tests
             actual[i] = engine.NextULong();
         }
 
-        var expected = new[]
-        {
+        ulong[] expected =
+        [
             0x09218ebde6c85537UL,
             0x55941f5266d86105UL,
             0x4bd25e16282434dcUL,
             0xee29ec846bd2e40bUL,
-        };
+        ];
 
         Assert.That(actual, Is.EqualTo(expected));
     }
