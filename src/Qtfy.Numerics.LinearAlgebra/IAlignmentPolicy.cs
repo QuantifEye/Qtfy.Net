@@ -14,3 +14,11 @@ public readonly struct Align64 : IAlignmentPolicy<Align64>
         return 64;
     }
 }
+
+public readonly struct Align128 : IAlignmentPolicy<Align64>
+{
+    public static int ByteAlignment()
+    {
+        return 128;
+    }
+}

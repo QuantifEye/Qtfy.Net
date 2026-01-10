@@ -8,11 +8,8 @@ using System.Numerics;
 
 namespace Qtfy.Numerics.LinearAlgebra;
 
-/// <summary>
-/// A dense vector backed by aligned native memory.
-/// </summary>
 public sealed class Vector<TNumber>
-    where TNumber : INumber<TNumber>
+    where TNumber : unmanaged, INumber<TNumber>
 {
     private readonly TNumber[] data;
 
