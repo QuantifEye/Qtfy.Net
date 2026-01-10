@@ -2,8 +2,4 @@
   <PropertyGroup>
     <TargetFramework>$(QtfyTargetFramework)</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\\Qtfy\\Qtfy.csproj" />
-  </ItemGroup>
 </Project>

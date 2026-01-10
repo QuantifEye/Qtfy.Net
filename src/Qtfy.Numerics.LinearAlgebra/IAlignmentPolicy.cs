@@ -1,46 +1,16 @@
-namespace LinAlg;
+namespace Qtfy.Numerics.LinearAlgebra;
+
 
 public interface IAlignmentPolicy<TAlignment>
     where TAlignment : struct, IAlignmentPolicy<TAlignment>
 {
-    public static abstract int IndexAlignment();
-
-    public static virtual int ByteAlignment()
-    {
-        return TAlignment.IndexAlignment() * sizeof(double);
-    }
-
-    public static virtual int AlignUpIndex(int majorLength)
-    {
-        return (int)AlignmentHelper.AlignUp((nuint)majorLength, (nuint)TAlignment.IndexAlignment());
-    }
+    public static abstract int ByteAlignment();
 }
 
-public readonly struct ElementAlignment : IAlignmentPolicy<VectorAlignment>
+public readonly struct Align64 : IAlignmentPolicy<Align64>
 {
-    public static int IndexAlignment()
+    public static int ByteAlignment()
     {
-        return 1;
-    }
-}
-
-public readonly struct VectorAlignment : IAlignmentPolicy<VectorAlignment>
-{
-    public static int IndexAlignment()
-    {
-        if (System.Numerics.Vector.IsHardwareAccelerated && System.Numerics.Vector<double>.IsSupported)
-        {
-            return System.Numerics.Vector<double>.Count;
-        }
-
-        return 1;
-    }
-}
-
-public readonly struct SharingAlignment : IAlignmentPolicy<VectorAlignment>
-{
-    public static int IndexAlignment()
-    {
-        return 64 / sizeof(double);
+        return 64;
     }
 }

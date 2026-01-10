@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/Qtfy/Qtfy.csproj" />
     <Project Path="src/Qtfy.Numerics/Qtfy.Numerics.csproj" />
     <Project Path="src/Qtfy.Numerics.BigRational/Qtfy.Numerics.BigRational.csproj" />
     <Project Path="src/Qtfy.Numerics.LinearAlgebra/Qtfy.Numerics.LinearAlgebra.csproj" />
