@@ -19,3 +19,10 @@ Local instructions for `Qtfy.Numerics.LinearAlgebra`. This project is in a scaff
 - For linear algebra math routines (BLAS, vector/matrix ops), keep method bodies as `throw new NotImplementedException();`.
 - No argument validation or exception handling, other than the `NotImplementedException` placeholders.
 
+## Function calling
+- When calling BLAS or RawBlas function. Always use all named arguemnts and place each arguments on new line
+
+
+## Style.
+- System.* usings should be in global using.
+- Usings should appear inside namespace

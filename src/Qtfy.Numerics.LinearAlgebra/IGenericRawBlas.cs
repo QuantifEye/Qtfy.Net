@@ -4,9 +4,8 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Numerics.LinearAlgebra.GenericMath;
+namespace Qtfy.Numerics.LinearAlgebra;
 
-using Qtfy.Numerics.LinearAlgebra;
 using System.Numerics;
 
 public interface IGenericRawBlas

@@ -1,14 +1,15 @@
-// <copyright file="GenericRawBlas.cs" company="QuantifEye">
+// <copyright file="GenericParallelRawBlas.cs" company="QuantifEye">
 // Copyright (c) QuantifEye. All rights reserved.
 // Licensed under the Apache 2.0 license.
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
+namespace Qtfy.Numerics.LinearAlgebra.GenericMath;
+
+using Qtfy.Numerics.LinearAlgebra;
 using System.Numerics;
 
-namespace Qtfy.Numerics.LinearAlgebra;
-
-public readonly struct GenericRawBlas : IGenericRawBlas
+public readonly struct GenericParallelRawBlas : IGenericRawBlas
 {
     public static TNumber Dot<TNumber>(
         int n,
