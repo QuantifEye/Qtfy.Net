@@ -1,4 +1,4 @@
-// <copyright file="MatrixView.cs" company="QuantifEye">
+// <copyright file="MatrixView`1.cs" company="QuantifEye">
 // Copyright (c) QuantifEye. All rights reserved.
 // Licensed under the Apache 2.0 license.
 // See LICENSE.txt file in the project root for full license information.
@@ -6,15 +6,17 @@
 
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public readonly ref struct MatrixView<TNumber>
+using System.Runtime.CompilerServices;
+
+public readonly ref struct MatrixView<TElement>
 {
-    private readonly Span<TNumber> data;
+    private readonly ref TElement data;
     private readonly int rows;
     private readonly int columns;
     private readonly int rowSpan;
     private readonly int colSpan;
 
-    internal MatrixView(Span<TNumber> data, int rows, int columns, int rowSpan, int colSpan)
+    internal MatrixView(ref TElement data, int rows, int columns, int rowSpan, int colSpan)
     {
         this.data = data;
         this.rows = rows;
@@ -31,14 +33,17 @@ public readonly ref struct MatrixView<TNumber>
 
     public int ColSpan => this.colSpan;
 
-    internal Span<TNumber> Data => this.data;
+    internal ref TElement GetReference()
+    {
+        return ref this.data;
+    }
 
-    public ref readonly TNumber this[int row, int column]
+    public ref TElement this[int row, int column]
     {
         get
         {
             var offset = (row * this.rowSpan) + (column * this.colSpan);
-            return ref this.data[offset];
+            return ref Unsafe.Add(ref this.data, offset);
         }
     }
 }

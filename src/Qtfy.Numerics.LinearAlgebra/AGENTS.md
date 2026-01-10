@@ -19,6 +19,11 @@ Local instructions for `Qtfy.Numerics.LinearAlgebra`. This project is in a scaff
 - For linear algebra math routines (BLAS, vector/matrix ops), keep method bodies as `throw new NotImplementedException();`.
 - No argument validation or exception handling, other than the `NotImplementedException` placeholders.
 
+## BLAS surface area
+- Keep BLAS-related APIs limited to: `Dot`, `AddScaled`, `MatrixVectorMultiply`, `MatrixMultiply`.
+- Apply this limit consistently across `GenericBlas`, `IGenericBlas`, `GenericRawBlas`, `IGenericRawBlas`, `GenericParallelRawBlas`, `IUnsafeRawBlas`, and `UnsafeRawBlas`.
+- Only add additional BLAS routines if explicitly requested.
+
 ## Function calling
 - When calling BLAS or RawBlas function. Always use all named arguemnts and place each arguments on new line
 

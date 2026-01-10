@@ -6,10 +6,10 @@
 
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public sealed class Matrix<TNumber>
-    where TNumber : unmanaged
+public sealed class Matrix<TElement>
+    where TElement : unmanaged
 {
-    private readonly TNumber[] data;
+    private readonly TElement[] array;
     private readonly int rows;
     private readonly int columns;
     private readonly int rowSpan;
@@ -31,7 +31,7 @@ public sealed class Matrix<TNumber>
             this.colSpan = rows;
         }
 
-        this.data = new TNumber[rows * columns];
+        this.array = new TElement[rows * columns];
     }
 
     public int Rows => this.rows;
@@ -42,24 +42,17 @@ public sealed class Matrix<TNumber>
 
     public int ColSpan => this.colSpan;
 
-    internal TNumber[] Data => this.data;
-
-    public ref TNumber this[int row, int column]
+    public ref TElement this[int row, int column]
     {
         get
         {
             var offset = (row * this.rowSpan) + (column * this.colSpan);
-            return ref this.Data[offset];
+            return ref this.array[offset];
         }
     }
 
-    public MatrixView<TNumber> AsView()
+    public MatrixView<TElement> AsView()
     {
-        return new MatrixView<TNumber>(this.Data.AsSpan(), this.rows, this.columns, this.rowSpan, this.colSpan);
-    }
-
-    public MatrixView<TNumber> AsSpan()
-    {
-        return new MatrixView<TNumber>(this.Data.AsSpan(), this.rows, this.columns, this.rowSpan, this.colSpan);
+        return new MatrixView<TElement>(ref this.array.GetReferenceToFirstElement(), this.rows, this.columns, this.rowSpan, this.colSpan);
     }
 }
