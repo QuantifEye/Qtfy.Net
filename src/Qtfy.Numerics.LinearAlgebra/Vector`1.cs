@@ -9,7 +9,7 @@ namespace Qtfy.Numerics.LinearAlgebra;
 using System.Numerics;
 
 public sealed class Vector<TNumber>
-    where TNumber : unmanaged, INumber<TNumber>
+    where TNumber : INumber<TNumber>
 {
     private readonly TNumber[] data;
 

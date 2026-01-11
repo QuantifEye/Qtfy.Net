@@ -3,8 +3,8 @@ using Qtfy.Memory;
 
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public sealed class Vector<TNumber, TAlignment>
-    where TNumber : unmanaged, INumber<TNumber>
+public sealed class Vector<TElement, TAlignment>
+    where TElement : unmanaged
     where TAlignment : unmanaged, IAlignmentPolicy<TAlignment>
 {
     private readonly NativeMemoryOwner memory;
@@ -17,18 +17,18 @@ public sealed class Vector<TNumber, TAlignment>
 
     public int Length { get; }
 
-    public ref TNumber this[int index]
+    public ref TElement this[int index]
     {
         get
         {
             unsafe
             {
-                return ref this.memory.Pointer<TNumber>()[index];
+                return ref this.memory.Pointer<TElement>()[index];
             }
         }
     }
 
-    public Span<TNumber> AsView()
+    public Span<TElement> AsView()
     {
         // TODO: Implement me
         throw new NotImplementedException();
