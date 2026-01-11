@@ -1,7 +1,6 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
 public sealed class ColumnMajorMatrix<TElement>
-    where TElement : unmanaged
 {
     private readonly TElement[] memory;
 
@@ -21,5 +20,5 @@ public sealed class ColumnMajorMatrix<TElement>
     public int Columns => this.columns;
 
     public ColumnMajorMatrixView<TElement> AsView()
-        => new(ref this.memory.GetReferenceToFirstElement(), this.rows, this.columns);
+        => new(ref this.memory.Reference(), this.rows, this.columns);
 }

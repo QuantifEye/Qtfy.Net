@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Qtfy.Memory;
 
 namespace Qtfy.Numerics.LinearAlgebra;
@@ -13,14 +12,18 @@ public sealed unsafe class RowMajorMatrix<TElement, TAlignment> : IDisposable
 
     private readonly int columns;
 
+    private readonly int rowStride;
+
     public RowMajorMatrix(int rows, int columns)
     {
-        var bytesPerRow =
-            AddressMath.AlignUpTo((nuint)Unsafe.SizeOf<TElement>() * (nuint)rows, TAlignment.ByteAlignment());
-        var totalBytes = bytesPerRow * (nuint)columns;
+        var elementSize = (nuint)Unsafe.SizeOf<TElement>();
+        var bytesPerRow = elementSize * (nuint)columns;
+        var alignedBytesPerRow = AddressMath.AlignUpTo(bytesPerRow, TAlignment.ByteAlignment());
+        var totalBytes = alignedBytesPerRow * (nuint)rows;
         this.memory = new NativeMemoryOwner(totalBytes, TAlignment.ByteAlignment());
         this.rows = rows;
         this.columns = columns;
+        this.rowStride = (int)(alignedBytesPerRow / elementSize);
     }
 
     public int Rows => this.rows;
@@ -30,7 +33,7 @@ public sealed unsafe class RowMajorMatrix<TElement, TAlignment> : IDisposable
     public unsafe TElement* Pointer => this.memory.Pointer<TElement>();
 
     public RowMajorMatrixView<TElement, TAlignment> AsView()
-        => new(this.Pointer, this.rows, this.columns);
+        => new(ref this.memory.Reference<TElement>(), this.rows, this.columns, this.rowStride);
 
     public void Dispose()
     {

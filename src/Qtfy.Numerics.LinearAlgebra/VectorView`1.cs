@@ -1,9 +1,6 @@
-using System.Runtime.CompilerServices;
-
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public readonly ref struct VectorView<TElement> : IVectorView<TElement>
-    where TElement : unmanaged
+public readonly ref struct VectorView<TElement> : IVectorView<VectorView<TElement>, TElement>
 {
     private readonly ref TElement reference;
 

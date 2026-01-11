@@ -1,7 +1,7 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
 public readonly ref struct ColumnMajorMatrixView<TElement>
-    where TElement : unmanaged
+    : IMatrixView<TElement, StrideVectorView<TElement>, VectorView<TElement>>
 {
     private readonly ref TElement reference;
 
@@ -23,7 +23,7 @@ public readonly ref struct ColumnMajorMatrixView<TElement>
     public StrideVectorView<TElement> Row(int row)
     {
         return new(
-            ref System.Runtime.CompilerServices.Unsafe.Add(ref this.reference, row),
+            ref Unsafe.Add(ref this.reference, row),
             this.rows,
             this.columns);
     }
@@ -34,4 +34,7 @@ public readonly ref struct ColumnMajorMatrixView<TElement>
             ref System.Runtime.CompilerServices.Unsafe.Add(ref this.reference, column * this.rows),
             this.rows);
     }
+
+    public ref TElement this[int row, int column]
+        => ref System.Runtime.CompilerServices.Unsafe.Add(ref this.reference, row + (column * this.rows));
 }

@@ -1,19 +1,19 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public readonly unsafe ref struct VectorView<TElement, TAlignment> : IVectorView<TElement, TAlignment>
+public readonly ref struct VectorView<TElement, TAlignment>
+    : IVectorView<VectorView<TElement, TAlignment>, TElement>
     where TAlignment : unmanaged, IAlignmentPolicy<TAlignment>
-    where TElement : unmanaged
 {
-    private readonly TElement* pointer;
+    private readonly ref TElement reference;
 
-    public VectorView(TElement* pointer, int length)
+    public VectorView(ref TElement reference, int length)
     {
-        this.pointer = pointer;
+        this.reference = reference;
         this.Length = length;
     }
 
     public int Length { get; }
 
     public ref TElement this[int index]
-        => ref this.pointer[index];
+        => ref Unsafe.Add(ref this.reference, index);
 }

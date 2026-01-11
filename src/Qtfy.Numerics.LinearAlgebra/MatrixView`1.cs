@@ -8,7 +8,7 @@ namespace Qtfy.Numerics.LinearAlgebra;
 
 using System.Runtime.CompilerServices;
 
-public readonly ref struct MatrixView<TElement>
+public readonly ref struct MatrixView<TElement> : IMatrixView<TElement, StrideVectorView<TElement>, StrideVectorView<TElement>>
 {
     private readonly ref TElement data;
     private readonly int rows;
@@ -45,5 +45,23 @@ public readonly ref struct MatrixView<TElement>
             var offset = (row * this.rowSpan) + (column * this.colSpan);
             return ref Unsafe.Add(ref this.data, offset);
         }
+    }
+
+    public StrideVectorView<TElement> Row(int row)
+    {
+        var offset = row * this.rowSpan;
+        return new(
+            ref Unsafe.Add(ref this.data, offset),
+            this.colSpan,
+            this.columns);
+    }
+
+    public StrideVectorView<TElement> Column(int column)
+    {
+        var offset = column * this.colSpan;
+        return new(
+            ref Unsafe.Add(ref this.data, offset),
+            this.rowSpan,
+            this.rows);
     }
 }

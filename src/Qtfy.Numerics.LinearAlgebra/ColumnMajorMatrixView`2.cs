@@ -1,36 +1,39 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public readonly unsafe ref struct ColumnMajorMatrixView<TElement, TAlignment>
-    where TElement : unmanaged
+public readonly ref struct ColumnMajorMatrixView<TElement, TAlignment>
+    : IMatrixView<TElement, StrideVectorView<TElement>, VectorView<TElement, TAlignment>>
     where TAlignment : unmanaged, IAlignmentPolicy<TAlignment>
 {
-    private readonly TElement* pointer;
+    private readonly ref TElement reference;
 
     private readonly int rows;
 
     private readonly int columns;
 
-    public ColumnMajorMatrixView(TElement* pointer, int rows, int columns)
+    private readonly int columnStride;
+
+    public ColumnMajorMatrixView(ref TElement reference, int rows, int columns, int columnStride)
     {
-        this.pointer = pointer;
+        this.reference = reference;
         this.rows = rows;
         this.columns = columns;
+        this.columnStride = columnStride;
     }
 
     public int Rows => this.rows;
 
     public int Columns => this.columns;
 
-    public StrideVectorView<TElement, TAlignment> Row(int row)
+    public StrideVectorView<TElement> Row(int row)
     {
-        return new(this.pointer + row, this.rows, this.columns);
+        return new(ref Unsafe.Add(ref this.reference, row), this.columnStride, this.columns);
     }
 
     public VectorView<TElement, TAlignment> Column(int column)
     {
-        return new(this.pointer + (column * this.rows), this.rows);
+        return new(ref Unsafe.Add(ref this.reference, column * this.columnStride), this.rows);
     }
 
     public ref TElement this[int row, int column]
-        => ref this.pointer[row + (column * this.rows)];
+        => ref Unsafe.Add(ref this.reference, row + column * this.columnStride);
 }

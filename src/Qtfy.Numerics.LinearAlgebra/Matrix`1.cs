@@ -6,8 +6,7 @@
 
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public sealed class Matrix<TElement>
-    where TElement : unmanaged
+public sealed class Matrix<TElement> : IMatrix<TElement>
 {
     private readonly TElement[] array;
     private readonly int rows;
@@ -52,7 +51,5 @@ public sealed class Matrix<TElement>
     }
 
     public MatrixView<TElement> AsView()
-    {
-        return new MatrixView<TElement>(ref this.array.GetReferenceToFirstElement(), this.rows, this.columns, this.rowSpan, this.colSpan);
-    }
+        => new (ref this.array.Reference(), this.rows, this.columns, this.rowSpan, this.colSpan);
 }

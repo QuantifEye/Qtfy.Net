@@ -7,5 +7,8 @@
 #pragma warning disable SA1200
 
 global using System;
+global using System.Numerics;
+global using System.Runtime.CompilerServices;
+global using System.Runtime.InteropServices;
 
 #pragma warning restore SA1200

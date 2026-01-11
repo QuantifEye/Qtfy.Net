@@ -1,9 +1,6 @@
-using System.Runtime.CompilerServices;
-
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public readonly ref struct StrideVectorView<TElement> : IVectorView<TElement>
-    where TElement : unmanaged
+public readonly ref struct StrideVectorView<TElement> : IVectorView<StrideVectorView<TElement>, TElement>
 {
     private readonly ref TElement reference;
     private readonly int stride;
