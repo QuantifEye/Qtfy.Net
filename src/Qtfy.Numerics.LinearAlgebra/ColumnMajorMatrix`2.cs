@@ -8,7 +8,7 @@ public sealed class ColumnMajorMatrix<TElement, TAlignment> : IDisposable,
     where TAlignment : unmanaged, IAlignmentPolicy<TAlignment>
     where TElement : unmanaged
 {
-    private nuint pointer;
+    private unsafe TElement* pointer;
 
     private NativeMemoryOwner memory;
 
@@ -27,7 +27,7 @@ public sealed class ColumnMajorMatrix<TElement, TAlignment> : IDisposable,
         this.memory = new NativeMemoryOwner(totalBytes, TAlignment.ByteAlignment());
         unsafe
         {
-            this.pointer = (nuint)this.memory.Pointer();
+            this.pointer = (TElement*)this.memory.Pointer();
         }
 
         this.rows = rows;
@@ -40,19 +40,30 @@ public sealed class ColumnMajorMatrix<TElement, TAlignment> : IDisposable,
     public int Columns => this.columns;
 
     public ref TElement this[int row, int column]
-        => ref Unsafe.Add(ref this.memory.Reference<TElement>(), row + (column * this.columnStride));
+    {
+        get
+        {
+            unsafe
+            {
+                return ref this.pointer[row + (column * this.columnStride)];
+            }
+        }
+    }
 
     public ColumnMajorMatrixView<TElement, TAlignment> AsView()
     {
         unsafe
         {
-            return new (ref *(TElement*)this.pointer, this.rows, this.columns, this.columnStride);
+            return new(ref Unsafe.AsRef<TElement>(this.pointer), this.rows, this.columns, this.columnStride);
         }
     }
 
     public void Dispose()
     {
         this.memory.Dispose();
-        this.pointer = 0;
+        unsafe
+        {
+            this.pointer = null;
+        }
     }
 }

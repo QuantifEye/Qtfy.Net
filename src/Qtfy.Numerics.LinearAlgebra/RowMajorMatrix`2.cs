@@ -6,6 +6,8 @@ public sealed class RowMajorMatrix<TElement, TAlignment> :
     where TAlignment : unmanaged, IAlignmentPolicy<TAlignment>
     where TElement : unmanaged
 {
+    private unsafe TElement* pointer;
+
     private readonly NativeMemoryOwner memory;
 
     private readonly int rows;
@@ -21,6 +23,11 @@ public sealed class RowMajorMatrix<TElement, TAlignment> :
         var alignedBytesPerRow = AddressMath.AlignUpTo(bytesPerRow, TAlignment.ByteAlignment());
         var totalBytes = alignedBytesPerRow * (nuint)rows;
         this.memory = new NativeMemoryOwner(totalBytes, TAlignment.ByteAlignment());
+        unsafe
+        {
+            this.pointer = (TElement*)this.memory.Pointer();
+        }
+
         this.rows = rows;
         this.columns = columns;
         this.rowStride = (int)(alignedBytesPerRow / elementSize);
@@ -31,25 +38,51 @@ public sealed class RowMajorMatrix<TElement, TAlignment> :
     public int Columns => this.columns;
 
     public ref TElement this[int row, int column]
-        => ref Unsafe.Add(ref this.memory.Reference<TElement>(), row * this.rowStride + column);
+    {
+        get
+        {
+            unsafe
+            {
+                return ref this.pointer[(row * this.rowStride) + column];
+            }
+        }
+    }
 
     public VectorView<TElement, TAlignment> Row(int row)
     {
-        return new(
-            ref Unsafe.Add(ref this.memory.Reference<TElement>(), row * this.rowStride),
-            this.columns);
+        unsafe
+        {
+            return new(
+                ref this.pointer[row * this.rowStride],
+                this.columns);
+        }
     }
 
     public StrideVectorView<TElement> Column(int column)
     {
-        return new(
-            ref Unsafe.Add(ref this.memory.Reference<TElement>(), column),
-            this.rowStride,
-            this.rows);
+        unsafe
+        {
+            return new(
+                ref this.pointer[column],
+                this.rowStride,
+                this.rows);
+        }
     }
 
     public RowMajorMatrixView<TElement, TAlignment> AsView()
-        => new(ref this.memory.Reference<TElement>(), this.rows, this.columns, this.rowStride);
+    {
+        unsafe
+        {
+            return new(ref Unsafe.AsRef<TElement>(this.pointer), this.rows, this.columns, this.rowStride);
+        }
+    }
 
-    public void Dispose() => this.memory.Dispose();
+    public void Dispose()
+    {
+        this.memory.Dispose();
+        unsafe
+        {
+            this.pointer = null;
+        }
+    }
 }

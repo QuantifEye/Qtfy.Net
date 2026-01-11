@@ -6,6 +6,10 @@ Local instructions for `Qtfy.Numerics.LinearAlgebra`. This project is in a scaff
 - Focus on types and signatures; avoid full implementations until the design is settled.
 - Assume dense, contiguous storage (no padding, no alignment rules yet).
 
+## Breaking changes are fine. 
+- The library is in a early stage of development.
+- Breaking changes are fine.
+
 ## Documentation
 - Remove existing XML docs.
 - Do not add XML docs beyond a short one-line summary, and avoid `<param>`, `<returns>`, or `<remarks>`.
