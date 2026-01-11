@@ -27,6 +27,8 @@ Local instructions for `Qtfy.Numerics.LinearAlgebra`. This project is in a scaff
 ## Function calling
 - When calling BLAS or RawBlas function. Always use all named arguemnts and place each arguments on new line
 
+## Immutability.
+- for now elements in a matrix/vector does not have to be ReadOnly. That will detract from the current goal.
 
 ## Style.
 - System.* usings should be in global using.
