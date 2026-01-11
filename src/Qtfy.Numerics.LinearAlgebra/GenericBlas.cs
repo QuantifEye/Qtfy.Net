@@ -6,7 +6,7 @@
 
 namespace Qtfy.Numerics.LinearAlgebra.GenericMath;
 
-using Qtfy.Numerics.LinearAlgebra;
+using LinearAlgebra;
 
 public readonly struct GenericBlas<TRawBlas> : IGenericBlas
     where TRawBlas : IGenericRawBlas

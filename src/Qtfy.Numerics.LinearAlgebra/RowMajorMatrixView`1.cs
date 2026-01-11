@@ -25,14 +25,14 @@ public readonly ref struct RowMajorMatrixView<TElement>
 
     public VectorView<TElement> Row(int row)
     {
-        return new (ref System.Runtime.CompilerServices.Unsafe.Add(ref this.reference, row * this.rowStride), this.columns);
+        return new (ref Unsafe.Add(ref this.reference, row * this.rowStride), this.columns);
     }
 
     public StrideVectorView<TElement> Column(int column)
     {
-        return new (ref System.Runtime.CompilerServices.Unsafe.Add(ref this.reference, column), this.rowStride, this.rows);
+        return new (ref Unsafe.Add(ref this.reference, column), this.rowStride, this.rows);
     }
 
     public ref TElement this[int row, int column]
-        => ref System.Runtime.CompilerServices.Unsafe.Add(ref this.reference, (row * this.rowStride) + column);
+        => ref Unsafe.Add(ref this.reference, (row * this.rowStride) + column);
 }

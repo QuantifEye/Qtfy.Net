@@ -1,17 +1,23 @@
-using Qtfy.Memory;
-
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public sealed class Vector<TElement, TAlignment>
+using static Unsafe;
+
+public sealed class Vector<TElement, TAlignment> : IDisposable
     where TElement : unmanaged
     where TAlignment : unmanaged, IAlignmentPolicy<TAlignment>
 {
+    private unsafe TElement* pointer;
+
     private readonly NativeMemoryOwner memory;
 
     public Vector(int length)
     {
-        this.memory = new NativeMemoryOwner((nuint)length, TAlignment.ByteAlignment());
-        this.Length = this.Length;
+        unsafe
+        {
+            this.memory = new NativeMemoryOwner((nuint)length, TAlignment.ByteAlignment());
+            this.pointer = (TElement*)this.memory.Pointer();
+            this.Length = this.Length;
+        }
     }
 
     public int Length { get; }
@@ -22,14 +28,25 @@ public sealed class Vector<TElement, TAlignment>
         {
             unsafe
             {
-                return ref this.memory.Pointer<TElement>()[index];
+                return ref this.pointer[index];
             }
         }
     }
 
-    public Span<TElement> AsView()
+    public VectorView<TElement, TAlignment> AsView()
     {
-        // TODO: Implement me
-        throw new NotImplementedException();
+        unsafe
+        {
+            return new VectorView<TElement, TAlignment>(ref AsRef<TElement>(this.pointer), this.Length);
+        }
+    }
+
+    public void Dispose()
+    {
+        this.memory.Dispose();
+        unsafe
+        {
+            pointer = null;
+        }
     }
 }

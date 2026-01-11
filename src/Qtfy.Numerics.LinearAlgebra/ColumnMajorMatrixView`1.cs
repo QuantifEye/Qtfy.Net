@@ -31,10 +31,10 @@ public readonly ref struct ColumnMajorMatrixView<TElement>
     public VectorView<TElement> Column(int column)
     {
         return new(
-            ref System.Runtime.CompilerServices.Unsafe.Add(ref this.reference, column * this.rows),
+            ref Unsafe.Add(ref this.reference, column * this.rows),
             this.rows);
     }
 
     public ref TElement this[int row, int column]
-        => ref System.Runtime.CompilerServices.Unsafe.Add(ref this.reference, row + (column * this.rows));
+        => ref Unsafe.Add(ref this.reference, row + (column * this.rows));
 }

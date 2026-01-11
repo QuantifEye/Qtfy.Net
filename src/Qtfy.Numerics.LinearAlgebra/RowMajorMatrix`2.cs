@@ -1,8 +1,8 @@
-using Qtfy.Memory;
-
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public sealed unsafe class RowMajorMatrix<TElement, TAlignment> : IDisposable
+public sealed class RowMajorMatrix<TElement, TAlignment> :
+    IMatrix<TElement, RowMajorMatrixView<TElement, TAlignment>, VectorView<TElement, TAlignment>, StrideVectorView<TElement>>,
+    IDisposable
     where TAlignment : unmanaged, IAlignmentPolicy<TAlignment>
     where TElement : unmanaged
 {
@@ -30,13 +30,26 @@ public sealed unsafe class RowMajorMatrix<TElement, TAlignment> : IDisposable
 
     public int Columns => this.columns;
 
-    public unsafe TElement* Pointer => this.memory.Pointer<TElement>();
+    public ref TElement this[int row, int column]
+        => ref Unsafe.Add(ref this.memory.Reference<TElement>(), row * this.rowStride + column);
+
+    public VectorView<TElement, TAlignment> Row(int row)
+    {
+        return new(
+            ref Unsafe.Add(ref this.memory.Reference<TElement>(), row * this.rowStride),
+            this.columns);
+    }
+
+    public StrideVectorView<TElement> Column(int column)
+    {
+        return new(
+            ref Unsafe.Add(ref this.memory.Reference<TElement>(), column),
+            this.rowStride,
+            this.rows);
+    }
 
     public RowMajorMatrixView<TElement, TAlignment> AsView()
         => new(ref this.memory.Reference<TElement>(), this.rows, this.columns, this.rowStride);
 
-    public void Dispose()
-    {
-        this.memory.Dispose();
-    }
+    public void Dispose() => this.memory.Dispose();
 }

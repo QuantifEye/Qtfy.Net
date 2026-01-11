@@ -87,31 +87,13 @@ public sealed class NativeMemoryOwner : IDisposable
     /// <summary>
     /// Gets the native pointer for this allocation.
     /// </summary>
-    /// <typeparam name="T">
-    /// The element type.
-    /// </typeparam>
     /// <returns>
     /// A pointer to the allocation.
     /// </returns>
     /// <exception cref="ObjectDisposedException">
     /// If the owner is disposed.
     /// </exception>
-    public unsafe T* Pointer<T>()
-        where T : unmanaged
-    {
-        return (T*)this.Pointer();
-    }
-
-    /// <summary>
-    /// Gets the native pointer for this allocation.
-    /// </summary>
-    /// <returns>
-    /// A pointer to the allocation.
-    /// </returns>
-    /// <exception cref="ObjectDisposedException">
-    /// If the owner is disposed.
-    /// </exception>
-    public unsafe void* Pointer()
+    public nuint Pointer()
     {
         var ptr = this.pointer;
         if (ptr == 0)
@@ -119,7 +101,7 @@ public sealed class NativeMemoryOwner : IDisposable
             ThrowDisposed();
         }
 
-        return (void*)ptr;
+        return ptr;
     }
 
     /// <summary>
@@ -137,25 +119,7 @@ public sealed class NativeMemoryOwner : IDisposable
     public unsafe ref T Reference<T>()
         where T : unmanaged
     {
-        return ref Unsafe.AsRef<T>(this.Pointer());
-    }
-
-    /// <summary>
-    /// Gets a read-only reference to the first element in the allocation.
-    /// </summary>
-    /// <typeparam name="T">
-    /// The element type.
-    /// </typeparam>
-    /// <returns>
-    /// A read-only reference to the first element.
-    /// </returns>
-    /// <exception cref="ObjectDisposedException">
-    /// If the owner is disposed.
-    /// </exception>
-    public unsafe ref readonly T ReadOnlyReference<T>()
-        where T : unmanaged
-    {
-        return ref Unsafe.AsRef<T>(this.Pointer());
+        return ref Unsafe.AsRef<T>((void*)this.Pointer());
     }
 
     /// <inheritdoc />

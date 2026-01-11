@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 /// <summary>
 /// Provides alignment helpers for native addresses.
 /// </summary>
-public static class AddressMath
+public struct AddressMath
 {
     /// <summary>
     /// Tries to clamp an element range to vector-aligned bounds.

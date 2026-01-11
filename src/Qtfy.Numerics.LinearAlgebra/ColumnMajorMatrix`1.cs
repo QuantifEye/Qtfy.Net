@@ -1,6 +1,7 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
 public sealed class ColumnMajorMatrix<TElement>
+    : IMatrix<TElement, ColumnMajorMatrixView<TElement>, StrideVectorView<TElement>, VectorView<TElement>>
 {
     private readonly TElement[] memory;
 
@@ -18,6 +19,9 @@ public sealed class ColumnMajorMatrix<TElement>
     public int Rows => this.rows;
 
     public int Columns => this.columns;
+
+    public ref TElement this[int row, int column]
+        => ref this.memory[row + (column * this.rows)];
 
     public ColumnMajorMatrixView<TElement> AsView()
         => new(ref this.memory.Reference(), this.rows, this.columns);

@@ -6,7 +6,7 @@
 
 namespace Qtfy.Numerics.LinearAlgebra.GenericMath;
 
-using Qtfy.Numerics.LinearAlgebra;
+using LinearAlgebra;
 using System.Numerics;
 
 public interface IGenericBlas

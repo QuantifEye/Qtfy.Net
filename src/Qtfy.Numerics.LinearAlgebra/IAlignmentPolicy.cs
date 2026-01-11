@@ -1,5 +1,3 @@
-using Qtfy.Memory;
-
 namespace Qtfy.Numerics.LinearAlgebra;
 
 

@@ -6,7 +6,8 @@
 
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public sealed class Matrix<TElement> : IMatrix<TElement>
+public sealed class Matrix<TElement> :
+    IMatrix<TElement, MatrixView<TElement>, StrideVectorView<TElement>, StrideVectorView<TElement>>
 {
     private readonly TElement[] array;
     private readonly int rows;
@@ -37,10 +38,6 @@ public sealed class Matrix<TElement> : IMatrix<TElement>
 
     public int Columns => this.columns;
 
-    public int RowSpan => this.rowSpan;
-
-    public int ColSpan => this.colSpan;
-
     public ref TElement this[int row, int column]
     {
         get
@@ -51,5 +48,5 @@ public sealed class Matrix<TElement> : IMatrix<TElement>
     }
 
     public MatrixView<TElement> AsView()
-        => new (ref this.array.Reference(), this.rows, this.columns, this.rowSpan, this.colSpan);
+        => new(ref this.array.Reference(), this.rows, this.columns, this.rowSpan, this.colSpan);
 }
