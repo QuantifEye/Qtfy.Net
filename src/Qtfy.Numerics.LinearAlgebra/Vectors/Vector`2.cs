@@ -1,6 +1,6 @@
-namespace Qtfy.Numerics.LinearAlgebra;
+using Qtfy.Numerics.LinearAlgebra.Memory;
 
-using static Unsafe;
+namespace Qtfy.Numerics.LinearAlgebra;
 
 public sealed class Vector<TElement, TAlignment> : IDisposable
     where TElement : unmanaged
@@ -46,7 +46,7 @@ public sealed class Vector<TElement, TAlignment> : IDisposable
         this.memory.Dispose();
         unsafe
         {
-            pointer = null;
+            this.pointer = null;
         }
     }
 }

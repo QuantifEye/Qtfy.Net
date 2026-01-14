@@ -1,3 +1,5 @@
+using Qtfy.Numerics.LinearAlgebra.Memory;
+
 namespace Qtfy.Numerics.LinearAlgebra;
 
 public sealed class RowMajorMatrix<TElement, TAlignment> :

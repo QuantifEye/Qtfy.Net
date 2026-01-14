@@ -14,6 +14,10 @@ public readonly ref struct StrideVectorView<TElement> : IVectorView<StrideVector
 
     public int Length { get; }
 
+    internal int Stride => this.stride;
+
+    internal ref TElement GetReference() => ref this.reference;
+
     public ref TElement this[int index]
-        => ref Unsafe.Add(ref this.reference, index * this.stride);
+        => ref Add(ref this.reference, index * this.stride);
 }

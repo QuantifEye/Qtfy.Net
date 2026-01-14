@@ -1,7 +1,11 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public sealed class ColumnMajorMatrix<TElement>
-    : IMatrix<TElement, ColumnMajorMatrixView<TElement>, StrideVectorView<TElement>, VectorView<TElement>>
+public sealed class ColumnMajorMatrix<TElement> :
+    IMatrix<
+        TElement,
+        ColumnMajorMatrixView<TElement>,
+        StrideVectorView<TElement>,
+        VectorView<TElement>>
 {
     private readonly TElement[] memory;
 

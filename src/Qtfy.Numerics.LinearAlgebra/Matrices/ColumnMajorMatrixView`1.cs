@@ -1,7 +1,7 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public readonly ref struct ColumnMajorMatrixView<TElement>
-    : IMatrixView<TElement, StrideVectorView<TElement>, VectorView<TElement>>
+public readonly ref struct ColumnMajorMatrixView<TElement> :
+    IMatrixView<TElement, StrideVectorView<TElement>, VectorView<TElement>>
 {
     private readonly ref TElement reference;
 

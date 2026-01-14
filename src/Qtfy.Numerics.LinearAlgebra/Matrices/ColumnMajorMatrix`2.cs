@@ -2,9 +2,13 @@ namespace Qtfy.Numerics.LinearAlgebra;
 
 using Memory;
 
-public sealed class ColumnMajorMatrix<TElement, TAlignment> : IDisposable,
-    IMatrix<TElement, ColumnMajorMatrixView<TElement, TAlignment>, StrideVectorView<TElement>,
-        VectorView<TElement, TAlignment>>
+public sealed class ColumnMajorMatrix<TElement, TAlignment> :
+    IMatrix<
+        TElement,
+        ColumnMajorMatrixView<TElement, TAlignment>,
+        StrideVectorView<TElement>,
+        VectorView<TElement, TAlignment>>,
+    IDisposable
     where TAlignment : unmanaged, IAlignmentPolicy<TAlignment>
     where TElement : unmanaged
 {

@@ -1,10 +1,6 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public interface IVectorView<TSelf, TElement>
-    where TSelf : IVectorView<TSelf, TElement>, allows ref struct
+public interface IVectorView<TElement, TAlignment> : IVectorView<TElement>
+    where TAlignment : unmanaged, IAlignmentPolicy<TAlignment>
 {
-    int Length { get; }
-
-    ref TElement this[int index] { get; }
 }
-

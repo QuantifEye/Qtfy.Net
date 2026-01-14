@@ -6,8 +6,6 @@
 
 namespace Qtfy.Numerics.LinearAlgebra;
 
-using System.Runtime.CompilerServices;
-
 public readonly ref struct MatrixView<TElement> : IMatrixView<TElement, StrideVectorView<TElement>, StrideVectorView<TElement>>
 {
     private readonly ref TElement data;
