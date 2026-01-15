@@ -67,7 +67,7 @@ public partial struct Blas3<TNumber>
         where TMatrixRowC : struct, IVectorView<TNumber>, allows ref struct
         where TMatrixColumnC : struct, IVectorView<TNumber>, allows ref struct
     {
-        MatrixMultiply(
+        MatrixMultiply<TMatrixViewA, TMatrixRowA, TMatrixColumnA, TMatrixViewB, TMatrixRowB, TMatrixColumnB, TMatrixViewC, TMatrixRowC, TMatrixColumnC>(
             alpha: TNumber.One,
             a: a,
             b: b,

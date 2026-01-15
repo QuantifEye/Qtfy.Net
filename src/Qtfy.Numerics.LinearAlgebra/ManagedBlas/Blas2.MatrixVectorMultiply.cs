@@ -48,7 +48,7 @@ public partial struct Blas2<TNumber>
         where TVectorViewX : struct, IVectorView<TNumber>, allows ref struct
         where TVectorViewY : struct, IVectorView<TNumber>, allows ref struct
     {
-        MatrixVectorMultiply(
+        MatrixVectorMultiply<TMatrixView, TMatrixRow, TMatrixColumn, TVectorViewX, TVectorViewY>(
             alpha: TNumber.One,
             matrix: matrix,
             x: x,
