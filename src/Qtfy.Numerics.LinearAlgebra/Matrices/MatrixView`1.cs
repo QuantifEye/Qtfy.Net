@@ -4,9 +4,11 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Numerics.LinearAlgebra;
+using Qtfy.Numerics.LinearAlgebra.Vectors;
 
-public readonly ref struct MatrixView<TElement> : IMatrixView<TElement, StrideVectorView<TElement>, StrideVectorView<TElement>>
+namespace Qtfy.Numerics.LinearAlgebra.Matrices;
+
+public readonly ref struct MatrixView<TElement> : IStridedMatrixView<TElement, StrideVectorView<TElement>, StrideVectorView<TElement>>
 {
     private readonly ref TElement data;
     private readonly int rows;
@@ -27,29 +29,35 @@ public readonly ref struct MatrixView<TElement> : IMatrixView<TElement, StrideVe
 
     public int Columns => this.columns;
 
+    public int RowStride => this.rowSpan;
+
+    public int ColumnStride => this.colSpan;
+
+    public static bool RowStrideIsAlwaysOne() => false;
+
+    public static bool ColumnStrideIsAlwaysOne() => false;
+
     public int RowSpan => this.rowSpan;
 
     public int ColSpan => this.colSpan;
 
-    internal ref TElement GetReference()
-    {
-        return ref this.data;
-    }
+    public ref TElement GetPinnableReference()
+        => ref this.data;
 
     public ref TElement this[int row, int column]
     {
         get
         {
-            var offset = (row * this.rowSpan) + (column * this.colSpan);
-            return ref Unsafe.Add(ref this.data, offset);
+            var offset = row * this.rowSpan + column * this.colSpan;
+            return ref Add(ref this.data, offset);
         }
     }
 
     public StrideVectorView<TElement> Row(int row)
     {
         var offset = row * this.rowSpan;
-        return new(
-            ref Unsafe.Add(ref this.data, offset),
+        return new (
+            ref Add(ref this.data, offset),
             this.colSpan,
             this.columns);
     }
@@ -57,9 +65,14 @@ public readonly ref struct MatrixView<TElement> : IMatrixView<TElement, StrideVe
     public StrideVectorView<TElement> Column(int column)
     {
         var offset = column * this.colSpan;
-        return new(
-            ref Unsafe.Add(ref this.data, offset),
+        return new (
+            ref Add(ref this.data, offset),
             this.rowSpan,
             this.rows);
+    }
+
+    public static bool IsPinned()
+    {
+        throw new NotImplementedException();
     }
 }

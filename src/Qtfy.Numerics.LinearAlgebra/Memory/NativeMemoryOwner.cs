@@ -4,12 +4,7 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Memory;
-
-using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+namespace Qtfy.Numerics.LinearAlgebra.Memory;
 
 /// <summary>
 /// Owns aligned native memory.
@@ -119,7 +114,7 @@ public sealed class NativeMemoryOwner : IDisposable
     public unsafe ref T Reference<T>()
         where T : unmanaged
     {
-        return ref Unsafe.AsRef<T>((void*)this.Pointer());
+        return ref AsRef<T>((void*)this.Pointer());
     }
 
     /// <inheritdoc />

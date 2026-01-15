@@ -10,4 +10,5 @@
     <Project Path="test/Qtfy.Numerics.Tests.BigRationals/Qtfy.Numerics.Tests.BigRationals.csproj" />
     <Project Path="test/Qtfy.Numerics.Tests.LinearAlgebra/Qtfy.Numerics.Tests.LinearAlgebra.csproj" />
   </Folder>
+  <Folder Name="/samples/" />
 </Solution>

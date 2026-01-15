@@ -1,7 +1,7 @@
-namespace Qtfy.Numerics.LinearAlgebra;
+namespace Qtfy.Numerics.LinearAlgebra.Vectors;
 
 public readonly ref struct VectorView<TElement, TAlignment>
-    : IVectorView<VectorView<TElement, TAlignment>, TElement>
+    : IVectorView<TElement>
     where TAlignment : unmanaged, IAlignmentPolicy<TAlignment>
 {
     private readonly ref TElement reference;
@@ -14,8 +14,20 @@ public readonly ref struct VectorView<TElement, TAlignment>
 
     public int Length { get; }
 
-    internal ref TElement GetReference() => ref this.reference;
+    public int Stride
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => 1;
+    }
+
+    public ref TElement GetPinnableReference() => ref this.reference;
 
     public ref TElement this[int index]
         => ref Add(ref this.reference, index);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool StrideIsAlwaysOne() => true;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsPinned() => throw new NotImplementedException();
 }

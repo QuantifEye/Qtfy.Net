@@ -4,6 +4,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\\Qtfy\\Qtfy.csproj" />
+    <ProjectReference Include="$(QtfyProjectPath)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ManagedBlas\Iterators\" />
   </ItemGroup>
 </Project>

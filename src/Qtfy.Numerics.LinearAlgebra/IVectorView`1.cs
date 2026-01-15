@@ -1,9 +1,15 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public interface IVectorView<TElement>
+public interface IVectorView<TElement> :
+    IStorage
 {
     int Length { get; }
 
-    ref TElement this[int index] { get; }
-}
+    int Stride { get; }
 
+    ref TElement GetPinnableReference();
+
+    ref TElement this[int index] { get; }
+
+    static abstract bool StrideIsAlwaysOne();
+}

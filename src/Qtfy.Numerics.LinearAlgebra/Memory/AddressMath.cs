@@ -4,12 +4,7 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Memory;
-
-using System.Diagnostics;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+namespace Qtfy.Numerics.LinearAlgebra.Memory;
 
 /// <summary>
 /// Provides alignment helpers for native addresses.
@@ -41,18 +36,18 @@ public struct AddressMath
     public static unsafe bool TryGetVectorAlignedRange<T>(
         T* begin,
         T* end,
-        out Vector<T> * vBegin,
-        out Vector<T> * vEnd)
+        out System.Numerics.Vector<T> * vBegin,
+        out System.Numerics.Vector<T> * vEnd)
         where T : unmanaged
     {
-        if (Vector<T>.IsSupported && Vector.IsHardwareAccelerated)
+        if (System.Numerics.Vector<T>.IsSupported && Vector.IsHardwareAccelerated)
         {
-            var u = AlignUpTo<Vector<T>>((nuint)begin);
-            var d = AlignDownTo<Vector<T>>((nuint)end);
+            var u = AlignUpTo<System.Numerics.Vector<T>>((nuint)begin);
+            var d = AlignDownTo<System.Numerics.Vector<T>>((nuint)end);
             if (u != 0 && u < d)
             {
-                vBegin = (Vector<T> *)u;
-                vEnd = (Vector<T> *)d;
+                vBegin = (System.Numerics.Vector<T> *)u;
+                vEnd = (System.Numerics.Vector<T> *)d;
                 return true;
             }
         }
@@ -78,7 +73,7 @@ public struct AddressMath
     public static nuint AlignUpTo<T>(nuint address)
         where T : unmanaged
     {
-        var size = (nuint)Unsafe.SizeOf<T>();
+        var size = (nuint)SizeOf<T>();
         if (!BitOperations.IsPow2((ulong)size))
         {
             throw new InvalidOperationException();
@@ -105,7 +100,7 @@ public struct AddressMath
     public static nuint AlignDownTo<T>(nuint address)
         where T : unmanaged
     {
-        var size = (nuint)Unsafe.SizeOf<T>();
+        var size = (nuint)SizeOf<T>();
 
         if (!BitOperations.IsPow2((ulong)size))
         {
@@ -173,9 +168,9 @@ public struct AddressMath
         where T : unmanaged
     {
         var probe = default(AlignmentProbe<T>);
-        ref byte padding = ref Unsafe.As<AlignmentProbe<T>, byte>(ref probe);
+        ref byte padding = ref As<AlignmentProbe<T>, byte>(ref probe);
         ref T value = ref probe.Value;
-        var offset = Unsafe.ByteOffset(ref padding, ref Unsafe.As<T, byte>(ref value));
+        var offset = ByteOffset(ref padding, ref As<T, byte>(ref value));
         return (nuint)offset;
     }
 
@@ -195,7 +190,7 @@ public struct AddressMath
     public static bool IsAlignedTo<T>(nuint address)
         where T : unmanaged
     {
-        var size = (nuint)Unsafe.SizeOf<T>();
+        var size = (nuint)SizeOf<T>();
         if (!BitOperations.IsPow2((ulong)size))
         {
             throw new InvalidOperationException();

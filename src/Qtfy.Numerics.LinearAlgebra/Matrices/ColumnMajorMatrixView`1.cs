@@ -1,7 +1,9 @@
-namespace Qtfy.Numerics.LinearAlgebra;
+using Qtfy.Numerics.LinearAlgebra.Vectors;
+
+namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 public readonly ref struct ColumnMajorMatrixView<TElement> :
-    IMatrixView<TElement, StrideVectorView<TElement>, VectorView<TElement>>
+    IStridedMatrixView<TElement, StrideVectorView<TElement>, VectorView<TElement>>
 {
     private readonly ref TElement reference;
 
@@ -20,21 +22,37 @@ public readonly ref struct ColumnMajorMatrixView<TElement> :
 
     public int Columns => this.columns;
 
+    public int RowStride => 1;
+
+    public int ColumnStride => this.rows;
+
+    public ref TElement GetPinnableReference()
+        => ref this.reference;
+
+    public static bool RowStrideIsAlwaysOne() => true;
+
+    public static bool ColumnStrideIsAlwaysOne() => false;
+
     public StrideVectorView<TElement> Row(int row)
     {
-        return new(
-            ref Unsafe.Add(ref this.reference, row),
+        return new (
+            ref Add(ref this.reference, row),
             this.rows,
             this.columns);
     }
 
     public VectorView<TElement> Column(int column)
     {
-        return new(
-            ref Unsafe.Add(ref this.reference, column * this.rows),
+        return new (
+            ref Add(ref this.reference, column * this.rows),
             this.rows);
     }
 
     public ref TElement this[int row, int column]
-        => ref Unsafe.Add(ref this.reference, row + (column * this.rows));
+        => ref Add(ref this.reference, row + column * this.rows);
+
+    public static bool IsPinned()
+    {
+        throw new NotImplementedException();
+    }
 }

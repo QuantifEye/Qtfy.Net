@@ -4,26 +4,36 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Numerics.LinearAlgebra.GenericMath;
+using Qtfy.Numerics.LinearAlgebra.Matrices;
 
-using LinearAlgebra;
-using System.Numerics;
+namespace Qtfy.Numerics.LinearAlgebra;
 
 public interface IGenericBlas
 {
-    public static abstract TNumber Dot<TNumber>(ReadOnlySpan<TNumber> x, ReadOnlySpan<TNumber> y)
+    public static abstract TNumber Dot<TNumber, TVectorViewX, TVectorViewY>(TVectorViewX x, TVectorViewY y)
+        where TVectorViewX : IVectorView<TNumber>
+        where TVectorViewY : IVectorView<TNumber>
         where TNumber : INumberBase<TNumber>;
 
-    public static abstract void AddScaled<TNumber>(TNumber alpha, ReadOnlySpan<TNumber> x, Span<TNumber> y)
-        where TNumber : INumberBase<TNumber>;
-
-    public static abstract void MatrixVectorMultiply<TNumber>(
+    public static abstract void AddScaled<TNumber, TVectorViewX, TVectorViewY>(
         TNumber alpha,
-        MatrixView<TNumber> matrix,
-        ReadOnlySpan<TNumber> x,
-        TNumber beta,
-        Span<TNumber> y)
+        TVectorViewX x,
+        TVectorViewY y)
+        where TVectorViewX : IVectorView<TNumber>
+        where TVectorViewY : IVectorView<TNumber>
         where TNumber : INumberBase<TNumber>;
+
+    public static abstract void MatrixVectorMultiply<TNumber, TMatrixView, TMatrixRow, TMatrixColumn, TVectorViewX, TVectorViewY>(
+        TNumber alpha,
+        TMatrixView matrix,
+        TVectorViewX x,
+        TNumber beta,
+        TVectorViewY y)
+        where TNumber : INumberBase<TNumber>
+        where TMatrixRow : IVectorView<TNumber>
+        where TMatrixColumn : IVectorView<TNumber>
+        where TMatrixView : IMatrixView<TNumber, TMatrixRow, TMatrixColumn>
+        where TVectorViewY : IVectorView<TNumber>;
 
     public static abstract void MatrixMultiply<TNumber>(
         TNumber alpha,

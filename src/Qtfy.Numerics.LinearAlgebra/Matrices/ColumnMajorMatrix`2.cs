@@ -1,4 +1,6 @@
-namespace Qtfy.Numerics.LinearAlgebra;
+using Qtfy.Numerics.LinearAlgebra.Vectors;
+
+namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 using Memory;
 
@@ -24,7 +26,7 @@ public sealed class ColumnMajorMatrix<TElement, TAlignment> :
 
     public ColumnMajorMatrix(int rows, int columns)
     {
-        var elementSize = (nuint)Unsafe.SizeOf<TElement>();
+        var elementSize = (nuint)SizeOf<TElement>();
         var bytesPerColumn = elementSize * (nuint)rows;
         var alignedBytesPerColumn = AddressMath.AlignUpTo(bytesPerColumn, TAlignment.ByteAlignment());
         var totalBytes = alignedBytesPerColumn * (nuint)columns;
@@ -43,13 +45,21 @@ public sealed class ColumnMajorMatrix<TElement, TAlignment> :
 
     public int Columns => this.columns;
 
+    public ref TElement GetPinnableReference()
+    {
+        unsafe
+        {
+            return ref AsRef<TElement>(this.pointer);
+        }
+    }
+
     public ref TElement this[int row, int column]
     {
         get
         {
             unsafe
             {
-                return ref this.pointer[row + (column * this.columnStride)];
+                return ref this.pointer[row + column * this.columnStride];
             }
         }
     }
@@ -58,7 +68,7 @@ public sealed class ColumnMajorMatrix<TElement, TAlignment> :
     {
         unsafe
         {
-            return new(ref Unsafe.AsRef<TElement>(this.pointer), this.rows, this.columns, this.columnStride);
+            return new (ref AsRef<TElement>(this.pointer), this.rows, this.columns, this.columnStride);
         }
     }
 
@@ -70,4 +80,6 @@ public sealed class ColumnMajorMatrix<TElement, TAlignment> :
             this.pointer = null;
         }
     }
+
+    public static bool IsPinned() => true;
 }

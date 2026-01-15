@@ -1,6 +1,7 @@
+using System.ComponentModel.DataAnnotations;
 using Qtfy.Numerics.LinearAlgebra.Memory;
 
-namespace Qtfy.Numerics.LinearAlgebra;
+namespace Qtfy.Numerics.LinearAlgebra.Vectors;
 
 public sealed class Vector<TElement, TAlignment> : IDisposable
     where TElement : unmanaged
@@ -10,17 +11,19 @@ public sealed class Vector<TElement, TAlignment> : IDisposable
 
     private readonly NativeMemoryOwner memory;
 
+    private readonly int length;
+
     public Vector(int length)
     {
         unsafe
         {
             this.memory = new NativeMemoryOwner((nuint)length, TAlignment.ByteAlignment());
             this.pointer = (TElement*)this.memory.Pointer();
-            this.Length = this.Length;
+            this.length = this.length;
         }
     }
 
-    public int Length { get; }
+    public int Length => this.length;
 
     public ref TElement this[int index]
     {
@@ -37,7 +40,7 @@ public sealed class Vector<TElement, TAlignment> : IDisposable
     {
         unsafe
         {
-            return new VectorView<TElement, TAlignment>(ref AsRef<TElement>(this.pointer), this.Length);
+            return new VectorView<TElement, TAlignment>(ref AsRef<TElement>(this.pointer), this.length);
         }
     }
 

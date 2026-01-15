@@ -1,4 +1,6 @@
-namespace Qtfy.Numerics.LinearAlgebra;
+using Qtfy.Numerics.LinearAlgebra.Vectors;
+
+namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 public sealed class ColumnMajorMatrix<TElement> :
     IMatrix<
@@ -24,9 +26,14 @@ public sealed class ColumnMajorMatrix<TElement> :
 
     public int Columns => this.columns;
 
+    public ref TElement GetPinnableReference()
+        => ref this.memory.Reference();
+
     public ref TElement this[int row, int column]
-        => ref this.memory[row + (column * this.rows)];
+        => ref this.memory[row + column * this.rows];
 
     public ColumnMajorMatrixView<TElement> AsView()
-        => new(ref this.memory.Reference(), this.rows, this.columns);
+        => new (ref this.memory.Reference(), this.rows, this.columns);
+
+    public static bool IsPinned() => false;
 }

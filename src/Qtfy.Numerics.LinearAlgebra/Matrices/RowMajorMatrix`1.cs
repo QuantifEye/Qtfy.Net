@@ -1,9 +1,11 @@
-namespace Qtfy.Numerics.LinearAlgebra;
+using Qtfy.Numerics.LinearAlgebra.Vectors;
+
+namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 public sealed class RowMajorMatrix<TElement>
     : IMatrix<TElement, RowMajorMatrixView<TElement>, VectorView<TElement>, StrideVectorView<TElement>>
 {
-    private readonly TElement[] memory;
+    private readonly TElement[] array;
 
     private readonly int rows;
 
@@ -11,7 +13,7 @@ public sealed class RowMajorMatrix<TElement>
 
     public RowMajorMatrix(int rows, int columns)
     {
-        this.memory = new TElement[rows * columns];
+        this.array = new TElement[rows * columns];
         this.rows = rows;
         this.columns = columns;
     }
@@ -20,24 +22,14 @@ public sealed class RowMajorMatrix<TElement>
 
     public int Columns => this.columns;
 
+    public ref TElement GetPinnableReference()
+        => ref this.array.Reference();
+
     public ref TElement this[int row, int column]
-        => ref this.memory[(row * this.columns) + column];
-
-    public VectorView<TElement> Row(int row)
-    {
-        return new(
-            ref Unsafe.Add(ref this.memory.Reference(), row * this.columns),
-            this.columns);
-    }
-
-    public StrideVectorView<TElement> Column(int column)
-    {
-        return new(
-            ref Unsafe.Add(ref this.memory.Reference(), column),
-            this.columns,
-            this.rows);
-    }
+        => ref this.array[row * this.columns + column];
 
     public RowMajorMatrixView<TElement> AsView()
-        => new(ref this.memory.Reference(), this.rows, this.columns);
+        => new (ref this.array.Reference(), this.rows, this.columns);
+
+    public static bool IsPinned() => false;
 }

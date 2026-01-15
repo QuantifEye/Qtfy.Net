@@ -1,0 +1,132 @@
+namespace Qtfy.Numerics.LinearAlgebra.BLAS;
+
+public partial struct UnsafeBlas1
+{
+    public static void ApplyGivensRotation<TNumber>(
+        int n,
+        ref TNumber x,
+        int strideX,
+        ref TNumber y,
+        int strideY,
+        TNumber c,
+        TNumber s)
+        where TNumber : INumberBase<TNumber>
+    {
+        DebugAssertNotZero(n);
+        ref var xRef = ref x;
+        ref var yRef = ref y;
+
+        var xValue = xRef;
+        var yValue = yRef;
+        var temp = (c * xValue) + (s * yValue);
+        yRef = (c * yValue) - (s * xValue);
+        xRef = temp;
+
+        while (--n != 0)
+        {
+            xRef = ref Add(ref xRef, strideX);
+            yRef = ref Add(ref yRef, strideY);
+
+            xValue = xRef;
+            yValue = yRef;
+            temp = (c * xValue) + (s * yValue);
+            yRef = (c * yValue) - (s * xValue);
+            xRef = temp;
+        }
+    }
+
+    public static void ApplyGivensRotation<TNumber>(
+        int n,
+        ref TNumber x,
+        int strideX,
+        ref TNumber y,
+        TNumber c,
+        TNumber s)
+        where TNumber : INumberBase<TNumber>
+    {
+        DebugAssertNotZero(n);
+        ref var xRef = ref x;
+        ref var yRef = ref y;
+
+        var xValue = xRef;
+        var yValue = yRef;
+        var temp = (c * xValue) + (s * yValue);
+        yRef = (c * yValue) - (s * xValue);
+        xRef = temp;
+
+        while (--n != 0)
+        {
+            xRef = ref Add(ref xRef, strideX);
+            yRef = ref Add(ref yRef, 1);
+
+            xValue = xRef;
+            yValue = yRef;
+            temp = (c * xValue) + (s * yValue);
+            yRef = (c * yValue) - (s * xValue);
+            xRef = temp;
+        }
+    }
+
+    public static void ApplyGivensRotation<TNumber>(
+        int n,
+        ref TNumber x,
+        ref TNumber y,
+        int strideY,
+        TNumber c,
+        TNumber s)
+        where TNumber : INumberBase<TNumber>
+    {
+        DebugAssertNotZero(n);
+        ref var xRef = ref x;
+        ref var yRef = ref y;
+
+        var xValue = xRef;
+        var yValue = yRef;
+        var temp = (c * xValue) + (s * yValue);
+        yRef = (c * yValue) - (s * xValue);
+        xRef = temp;
+
+        while (--n != 0)
+        {
+            xRef = ref Add(ref xRef, 1);
+            yRef = ref Add(ref yRef, strideY);
+
+            xValue = xRef;
+            yValue = yRef;
+            temp = (c * xValue) + (s * yValue);
+            yRef = (c * yValue) - (s * xValue);
+            xRef = temp;
+        }
+    }
+
+    public static void ApplyGivensRotation<TNumber>(
+        int n,
+        ref TNumber x,
+        ref TNumber y,
+        TNumber c,
+        TNumber s)
+        where TNumber : INumberBase<TNumber>
+    {
+        DebugAssertNotZero(n);
+        ref var xRef = ref x;
+        ref var yRef = ref y;
+
+        var xValue = xRef;
+        var yValue = yRef;
+        var temp = (c * xValue) + (s * yValue);
+        yRef = (c * yValue) - (s * xValue);
+        xRef = temp;
+
+        while (--n != 0)
+        {
+            xRef = ref Add(ref xRef, 1);
+            yRef = ref Add(ref yRef, 1);
+
+            xValue = xRef;
+            yValue = yRef;
+            temp = (c * xValue) + (s * yValue);
+            yRef = (c * yValue) - (s * xValue);
+            xRef = temp;
+        }
+    }
+}

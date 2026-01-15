@@ -4,7 +4,9 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-namespace Qtfy.Numerics.LinearAlgebra;
+using Qtfy.Numerics.LinearAlgebra.Vectors;
+
+namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 public sealed class Matrix<TElement> :
     IMatrix<TElement, MatrixView<TElement>, StrideVectorView<TElement>, StrideVectorView<TElement>>
@@ -38,15 +40,26 @@ public sealed class Matrix<TElement> :
 
     public int Columns => this.columns;
 
+    public ref TElement GetPinnableReference()
+        => ref this.array.Reference();
+
+    internal TElement[] Data => this.array;
+
+    internal int RowSpan => this.rowSpan;
+
+    internal int ColSpan => this.colSpan;
+
     public ref TElement this[int row, int column]
     {
         get
         {
-            var offset = (row * this.rowSpan) + (column * this.colSpan);
+            var offset = row * this.rowSpan + column * this.colSpan;
             return ref this.array[offset];
         }
     }
 
     public MatrixView<TElement> AsView()
-        => new(ref this.array.Reference(), this.rows, this.columns, this.rowSpan, this.colSpan);
+        => new (ref this.array.Reference(), this.rows, this.columns, this.rowSpan, this.colSpan);
+
+    public static bool IsPinned() => false;
 }

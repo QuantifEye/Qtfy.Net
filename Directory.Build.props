@@ -16,6 +16,13 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <QtfyProjectPath>$(MSBuildThisFileDirectory)src/Qtfy/Qtfy.csproj</QtfyProjectPath>
+    <QtfyNumericsProjectPath>$(MSBuildThisFileDirectory)src/Qtfy.Numerics/Qtfy.Numerics.csproj</QtfyNumericsProjectPath>
+    <QtfyNumericsBigRationalProjectPath>$(MSBuildThisFileDirectory)src/Qtfy.Numerics.BigRational/Qtfy.Numerics.BigRational.csproj</QtfyNumericsBigRationalProjectPath>
+    <QtfyNumericsLinearAlgebraProjectPath>$(MSBuildThisFileDirectory)src/Qtfy.Numerics.LinearAlgebra/Qtfy.Numerics.LinearAlgebra.csproj</QtfyNumericsLinearAlgebraProjectPath>
+  </PropertyGroup>
+
   <!-- packaging properties, if the repository becomes a suite of dlls, some or all
   of these properties need to move to the individual project files. -->
   <PropertyGroup>

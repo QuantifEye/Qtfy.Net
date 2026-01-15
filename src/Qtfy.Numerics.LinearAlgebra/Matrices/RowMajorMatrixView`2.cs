@@ -1,7 +1,9 @@
-namespace Qtfy.Numerics.LinearAlgebra;
+using Qtfy.Numerics.LinearAlgebra.Vectors;
 
-public readonly ref struct RowMajorMatrixView<TElement, TAlignment>
-    : IMatrixView<TElement, VectorView<TElement, TAlignment>, StrideVectorView<TElement>>
+namespace Qtfy.Numerics.LinearAlgebra.Matrices;
+
+public readonly ref struct RowMajorMatrixView<TElement, TAlignment> :
+    IStridedMatrixView<TElement, VectorView<TElement, TAlignment>, StrideVectorView<TElement>>
     where TAlignment : unmanaged, IAlignmentPolicy<TAlignment>
 {
     private readonly ref TElement reference;
@@ -29,12 +31,28 @@ public readonly ref struct RowMajorMatrixView<TElement, TAlignment>
 
     public int Columns => this.columns;
 
+    public int RowStride => this.rowStride;
+
+    public int ColumnStride => 1;
+
+    public ref TElement GetPinnableReference()
+        => ref this.reference;
+
+    public static bool RowStrideIsAlwaysOne() => false;
+
+    public static bool ColumnStrideIsAlwaysOne() => true;
+
     public VectorView<TElement, TAlignment> Row(int row)
-        => new(ref Unsafe.Add(ref this.reference, row * this.rowStride), this.columns);
+        => new (ref Add(ref this.reference, row * this.rowStride), this.columns);
 
     public StrideVectorView<TElement> Column(int column)
-        => new(ref Unsafe.Add(ref this.reference, column), this.rowStride, this.rows);
+        => new (ref Add(ref this.reference, column), this.rowStride, this.rows);
 
     public ref TElement this[int row, int column]
-        => ref Unsafe.Add(ref this.reference, row * this.rowStride + column);
+        => ref Add(ref this.reference, row * this.rowStride + column);
+
+    public static bool IsPinned()
+    {
+        throw new NotImplementedException();
+    }
 }

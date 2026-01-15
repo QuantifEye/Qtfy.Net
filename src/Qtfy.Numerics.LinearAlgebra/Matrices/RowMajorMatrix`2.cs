@@ -1,6 +1,7 @@
 using Qtfy.Numerics.LinearAlgebra.Memory;
+using Qtfy.Numerics.LinearAlgebra.Vectors;
 
-namespace Qtfy.Numerics.LinearAlgebra;
+namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 public sealed class RowMajorMatrix<TElement, TAlignment> :
     IMatrix<TElement, RowMajorMatrixView<TElement, TAlignment>, VectorView<TElement, TAlignment>, StrideVectorView<TElement>>,
@@ -20,7 +21,7 @@ public sealed class RowMajorMatrix<TElement, TAlignment> :
 
     public RowMajorMatrix(int rows, int columns)
     {
-        var elementSize = (nuint)Unsafe.SizeOf<TElement>();
+        var elementSize = (nuint)SizeOf<TElement>();
         var bytesPerRow = elementSize * (nuint)columns;
         var alignedBytesPerRow = AddressMath.AlignUpTo(bytesPerRow, TAlignment.ByteAlignment());
         var totalBytes = alignedBytesPerRow * (nuint)rows;
@@ -39,35 +40,22 @@ public sealed class RowMajorMatrix<TElement, TAlignment> :
 
     public int Columns => this.columns;
 
+    public ref TElement GetPinnableReference()
+    {
+        unsafe
+        {
+            return ref AsRef<TElement>(this.pointer);
+        }
+    }
+
     public ref TElement this[int row, int column]
     {
         get
         {
             unsafe
             {
-                return ref this.pointer[(row * this.rowStride) + column];
+                return ref this.pointer[row * this.rowStride + column];
             }
-        }
-    }
-
-    public VectorView<TElement, TAlignment> Row(int row)
-    {
-        unsafe
-        {
-            return new(
-                ref this.pointer[row * this.rowStride],
-                this.columns);
-        }
-    }
-
-    public StrideVectorView<TElement> Column(int column)
-    {
-        unsafe
-        {
-            return new(
-                ref this.pointer[column],
-                this.rowStride,
-                this.rows);
         }
     }
 
@@ -75,7 +63,7 @@ public sealed class RowMajorMatrix<TElement, TAlignment> :
     {
         unsafe
         {
-            return new(ref Unsafe.AsRef<TElement>(this.pointer), this.rows, this.columns, this.rowStride);
+            return new (ref AsRef<TElement>(this.pointer), this.rows, this.columns, this.rowStride);
         }
     }
 
@@ -87,4 +75,6 @@ public sealed class RowMajorMatrix<TElement, TAlignment> :
             this.pointer = null;
         }
     }
+
+    public static bool IsPinned() => true;
 }
