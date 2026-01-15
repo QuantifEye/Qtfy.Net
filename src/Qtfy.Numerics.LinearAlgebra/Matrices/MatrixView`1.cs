@@ -8,7 +8,8 @@ using Qtfy.Numerics.LinearAlgebra.Vectors;
 
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
-public readonly ref struct MatrixView<TElement> : IStridedMatrixView<TElement, StrideVectorView<TElement>, StrideVectorView<TElement>>
+public readonly ref struct MatrixView<TElement> :
+    IStridedMatrixView<TElement, StrideVectorView<TElement>, StrideVectorView<TElement>, MatrixView<TElement>>
 {
     private readonly ref TElement data;
     private readonly int rows;

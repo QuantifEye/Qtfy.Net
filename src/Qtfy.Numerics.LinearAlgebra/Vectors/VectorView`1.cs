@@ -1,6 +1,6 @@
 namespace Qtfy.Numerics.LinearAlgebra.Vectors;
 
-public readonly ref struct VectorView<TElement> : IVectorView<TElement>
+public readonly ref struct VectorView<TElement> : IVectorView<TElement, VectorView<TElement>>
 {
     private readonly ref TElement reference;
 

@@ -4,9 +4,9 @@
 // See LICENSE.txt file in the project root for full license information.
 // </copyright>
 
-using Qtfy.Numerics.LinearAlgebra.Vectors;
-
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
+
+using Qtfy.Numerics.LinearAlgebra.Vectors;
 
 public sealed class Matrix<TElement> :
     IMatrix<TElement, MatrixView<TElement>, StrideVectorView<TElement>, StrideVectorView<TElement>>

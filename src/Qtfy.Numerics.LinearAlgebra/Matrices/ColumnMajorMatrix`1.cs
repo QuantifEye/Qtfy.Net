@@ -1,6 +1,6 @@
-using Qtfy.Numerics.LinearAlgebra.Vectors;
-
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
+
+using Qtfy.Numerics.LinearAlgebra.Vectors;
 
 public sealed class ColumnMajorMatrix<TElement> :
     IMatrix<

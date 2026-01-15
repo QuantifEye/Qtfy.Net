@@ -9,12 +9,12 @@ public partial struct Blas3<TNumber>
         TMatrixViewA a,
         TNumber beta,
         TMatrixViewC c)
-        where TMatrixViewA : struct, IStridedMatrixView<TNumber, TMatrixRowA, TMatrixColumnA>, allows ref struct
-        where TMatrixRowA : struct, IVectorView<TNumber>, allows ref struct
-        where TMatrixColumnA : struct, IVectorView<TNumber>, allows ref struct
-        where TMatrixViewC : struct, IStridedMatrixView<TNumber, TMatrixRowC, TMatrixColumnC>, allows ref struct
-        where TMatrixRowC : struct, IVectorView<TNumber>, allows ref struct
-        where TMatrixColumnC : struct, IVectorView<TNumber>, allows ref struct
+        where TMatrixViewA : struct, IStridedMatrixView<TNumber, TMatrixRowA, TMatrixColumnA, TMatrixViewA>, allows ref struct
+        where TMatrixRowA : struct, IVectorView<TNumber, TMatrixRowA>, allows ref struct
+        where TMatrixColumnA : struct, IVectorView<TNumber, TMatrixColumnA>, allows ref struct
+        where TMatrixViewC : struct, IStridedMatrixView<TNumber, TMatrixRowC, TMatrixColumnC, TMatrixViewC>, allows ref struct
+        where TMatrixRowC : struct, IVectorView<TNumber, TMatrixRowC>, allows ref struct
+        where TMatrixColumnC : struct, IVectorView<TNumber, TMatrixColumnC>, allows ref struct
     {
         var n = c.Rows;
         var k = a.Columns;

@@ -1,5 +1,7 @@
 namespace Qtfy.Numerics.LinearAlgebra.BLAS;
 
+using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
+
 public partial struct UnsafeBlas2
 {
     public static void TriangularMatrixVectorMultiply<TNumber>(
@@ -15,9 +17,78 @@ public partial struct UnsafeBlas2
         int strideY)
         where TNumber : INumberBase<TNumber>
     {
+        if (uplo == Uplo.Upper)
+        {
+            if (diag == Diag.Unit)
+            {
+                TriangularMatrixVectorMultiply<TNumber, Upper, UnitDiagonal>(
+                    n: n,
+                    matrix: ref matrix,
+                    rowStride: rowStride,
+                    colStride: colStride,
+                    x: ref x,
+                    strideX: strideX,
+                    y: ref y,
+                    strideY: strideY);
+            }
+            else
+            {
+                TriangularMatrixVectorMultiply<TNumber, Upper, NonUnitDiagonal>(
+                    n: n,
+                    matrix: ref matrix,
+                    rowStride: rowStride,
+                    colStride: colStride,
+                    x: ref x,
+                    strideX: strideX,
+                    y: ref y,
+                    strideY: strideY);
+            }
+        }
+        else
+        {
+            if (diag == Diag.Unit)
+            {
+                TriangularMatrixVectorMultiply<TNumber, Lower, UnitDiagonal>(
+                    n: n,
+                    matrix: ref matrix,
+                    rowStride: rowStride,
+                    colStride: colStride,
+                    x: ref x,
+                    strideX: strideX,
+                    y: ref y,
+                    strideY: strideY);
+            }
+            else
+            {
+                TriangularMatrixVectorMultiply<TNumber, Lower, NonUnitDiagonal>(
+                    n: n,
+                    matrix: ref matrix,
+                    rowStride: rowStride,
+                    colStride: colStride,
+                    x: ref x,
+                    strideX: strideX,
+                    y: ref y,
+                    strideY: strideY);
+            }
+        }
+    }
+
+    public static void TriangularMatrixVectorMultiply<TNumber, TUpperLower, TDiagonal>(
+        int n,
+        ref TNumber matrix,
+        int rowStride,
+        int colStride,
+        ref TNumber x,
+        int strideX,
+        ref TNumber y,
+        int strideY)
+        where TNumber : INumberBase<TNumber>
+        where TUpperLower : IUpperLower
+        where TDiagonal : IDiagonal
+    {
         DebugAssertNotZero(n);
 
-        if (uplo == Uplo.Upper)
+        if (TUpperLower.IsUpper())
         {
             for (int i = 0; i < n; i++)
             {
@@ -25,7 +96,7 @@ public partial struct UnsafeBlas2
                 ref var aRef = ref Add(ref matrix, (i * rowStride) + (i * colStride));
                 ref var xIRef = ref Add(ref x, i * strideX);
 
-                var sum = diag == Diag.Unit ? xIRef : aRef * xIRef;
+                var sum = TDiagonal.IsUnitDiagonal() ? xIRef : aRef * xIRef;
 
                 if (i + 1 < n)
                 {
@@ -65,7 +136,7 @@ public partial struct UnsafeBlas2
                     xRef = ref Add(ref xRef, strideX);
                 }
 
-                if (diag == Diag.Unit)
+                if (TDiagonal.IsUnitDiagonal())
                 {
                     sum += xRef;
                 }

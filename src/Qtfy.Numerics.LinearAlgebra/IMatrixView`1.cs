@@ -1,9 +1,10 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public interface IMatrixView<TElement, TRowView, TColumnView> :
+public interface IMatrixView<TElement, TRowView, TColumnView, TSelf> :
     IStorage
-    where TRowView : IVectorView<TElement>, allows ref struct
-    where TColumnView : IVectorView<TElement>, allows ref struct
+    where TRowView : IVectorView<TElement, TRowView>, allows ref struct
+    where TColumnView : IVectorView<TElement, TColumnView>, allows ref struct
+    where TSelf : IMatrixView<TElement, TRowView, TColumnView, TSelf>, allows ref struct
 {
     int Rows { get; }
 
@@ -14,6 +15,4 @@ public interface IMatrixView<TElement, TRowView, TColumnView> :
     TRowView Row(int row);
 
     TColumnView Column(int column);
-
-
 }

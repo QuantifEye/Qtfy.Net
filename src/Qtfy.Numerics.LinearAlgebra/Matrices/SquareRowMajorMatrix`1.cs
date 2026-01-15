@@ -2,34 +2,32 @@ namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 using Qtfy.Numerics.LinearAlgebra.Vectors;
 
-public sealed class RowMajorMatrix<TElement> :
+public sealed class SquareRowMajorMatrix<TElement> :
     IMatrix<TElement, RowMajorMatrixView<TElement>, VectorView<TElement>, StrideVectorView<TElement>>
 {
     private readonly TElement[] array;
+    private readonly int order;
 
-    private readonly int rows;
-
-    private readonly int columns;
-
-    public RowMajorMatrix(int rows, int columns)
+    public SquareRowMajorMatrix(int order)
     {
-        this.array = new TElement[rows * columns];
-        this.rows = rows;
-        this.columns = columns;
+        this.order = order;
+        this.array = new TElement[order * order];
     }
 
-    public int Rows => this.rows;
+    public int Order => this.order;
 
-    public int Columns => this.columns;
+    public int Rows => this.order;
+
+    public int Columns => this.order;
 
     public ref TElement GetPinnableReference()
         => ref this.array.Reference();
 
     public ref TElement this[int row, int column]
-        => ref this.array[row * this.columns + column];
+        => ref this.array[row * this.order + column];
 
     public RowMajorMatrixView<TElement> AsView()
-        => new (ref this.array.Reference(), this.rows, this.columns);
+        => new (ref this.array.Reference(), this.order, this.order);
 
     public static bool IsPinned() => false;
 }

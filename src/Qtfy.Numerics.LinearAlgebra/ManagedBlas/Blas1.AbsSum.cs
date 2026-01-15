@@ -4,7 +4,7 @@ public partial struct Blas1<TNumber>
     where TNumber : INumberBase<TNumber>
 {
     public static TNumber AbsSum<TVectorViewX>(TVectorViewX x)
-        where TVectorViewX : struct, IVectorView<TNumber>, allows ref struct
+        where TVectorViewX : struct, IVectorView<TNumber, TVectorViewX>, allows ref struct
     {
         var n = x.Length;
 

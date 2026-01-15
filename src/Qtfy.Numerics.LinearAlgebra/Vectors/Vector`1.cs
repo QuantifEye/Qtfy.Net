@@ -6,7 +6,7 @@
 
 namespace Qtfy.Numerics.LinearAlgebra.Vectors;
 
-public sealed class Vector<TNumber> : IVectorView<TNumber>
+public sealed class Vector<TNumber> : IStorage
     where TNumber : INumber<TNumber>
 {
     private readonly TNumber[] data;
@@ -18,24 +18,10 @@ public sealed class Vector<TNumber> : IVectorView<TNumber>
 
     public int Length => this.data.Length;
 
-    public int Stride
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => 1;
-    }
-
     public ref TNumber GetPinnableReference()
         => ref this.data.Reference();
 
     public ref TNumber this[int index] => ref this.data[index];
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool StrideIsAlwaysOne() => true;
-
-    public VectorView<TNumber> AsView()
-    {
-        return new VectorView<TNumber>(ref this.data.Reference(), this.Length);
-    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsPinned() => false;

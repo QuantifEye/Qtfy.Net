@@ -3,7 +3,7 @@ using Qtfy.Numerics.LinearAlgebra.Vectors;
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 public readonly ref struct RowMajorMatrixView<TElement>
-    : IStridedMatrixView<TElement, VectorView<TElement>, StrideVectorView<TElement>>
+    : IStridedMatrixView<TElement, VectorView<TElement>, StrideVectorView<TElement>, RowMajorMatrixView<TElement>>
 {
     private readonly ref TElement reference;
 
@@ -14,11 +14,16 @@ public readonly ref struct RowMajorMatrixView<TElement>
     private readonly int rowStride;
 
     public RowMajorMatrixView(ref TElement reference, int rows, int columns)
+        : this(ref reference, rows, columns, columns)
+    {
+    }
+
+    public RowMajorMatrixView(ref TElement reference, int rows, int columns, int rowStride)
     {
         this.reference = reference;
         this.rows = rows;
         this.columns = columns;
-        this.rowStride = columns;
+        this.rowStride = rowStride;
     }
 
     public int Rows => this.rows;

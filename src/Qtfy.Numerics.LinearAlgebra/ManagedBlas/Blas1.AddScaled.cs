@@ -4,8 +4,8 @@ public partial struct Blas1<TNumber>
     where TNumber : INumberBase<TNumber>
 {
     public static void AddScaled<TVectorViewX, TVectorViewY>(TNumber alpha, TVectorViewX x, TVectorViewY y)
-        where TVectorViewX : struct, IVectorView<TNumber>, allows ref struct
-        where TVectorViewY : struct, IVectorView<TNumber>, allows ref struct
+        where TVectorViewX : struct, IVectorView<TNumber, TVectorViewX>, allows ref struct
+        where TVectorViewY : struct, IVectorView<TNumber, TVectorViewY>, allows ref struct
     {
         var n = x.Length;
 
@@ -54,8 +54,8 @@ public partial struct Blas1<TNumber>
     }
 
     public static void AddScaled<TVectorViewX, TVectorViewY>(TVectorViewX x, TVectorViewY y)
-        where TVectorViewX : IVectorView<TNumber>
-        where TVectorViewY : IVectorView<TNumber>
+        where TVectorViewX : IVectorView<TNumber, TVectorViewX>
+        where TVectorViewY : IVectorView<TNumber, TVectorViewY>
     {
         var n = x.Length;
 

@@ -1,18 +1,19 @@
 namespace Qtfy.Numerics.LinearAlgebra.Vectors;
 
-public readonly ref struct StrideVectorView<TElement> : IVectorView<TElement>
+public readonly ref struct StrideVectorView<TElement> : IVectorView<TElement, StrideVectorView<TElement>>
 {
     private readonly ref TElement reference;
     private readonly int stride;
+    private readonly int length;
 
     public StrideVectorView(ref TElement reference, int stride, int length)
     {
         this.reference = reference;
         this.stride = stride;
-        this.Length = length;
+        this.length = length;
     }
 
-    public int Length { get; }
+    public int Length  => length;
 
     public int Stride
     {

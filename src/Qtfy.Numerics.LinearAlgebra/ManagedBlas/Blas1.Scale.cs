@@ -4,7 +4,7 @@ public partial struct Blas1<TNumber>
     where TNumber : INumberBase<TNumber>
 {
     public static void Scale<TVectorViewX>(TNumber alpha, TVectorViewX x)
-        where TVectorViewX : IVectorView<TNumber>
+        where TVectorViewX : IVectorView<TNumber, TVectorViewX>
     {
         if (TVectorViewX.StrideIsAlwaysOne())
         {
@@ -12,13 +12,14 @@ public partial struct Blas1<TNumber>
                 n: x.Length,
                 alpha: alpha,
                 x: ref x.GetPinnableReference());
-            return;
         }
-
-        UnsafeBlas1.Scale(
-            n: x.Length,
-            alpha: alpha,
-            x: ref x.GetPinnableReference(),
-            strideX: x.Stride);
+        else
+        {
+            UnsafeBlas1.Scale(
+                n: x.Length,
+                alpha: alpha,
+                x: ref x.GetPinnableReference(),
+                strideX: x.Stride);
+        }
     }
 }
