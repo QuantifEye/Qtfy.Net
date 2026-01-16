@@ -1,7 +1,7 @@
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 public sealed class LowerPackedMatrix<TElement> :
-    IMatrix<TElement, LowerPackedMatrixView<TElement>, LowerPackedRowView<TElement>, LowerPackedColumnView<TElement>>
+    IPackedMatrix<TElement, LowerPackedMatrixView<TElement>, LowerPackedRowView<TElement>, LowerPackedColumnView<TElement>>
 {
     private readonly TElement[] data;
     private readonly int order;
@@ -32,7 +32,6 @@ public sealed class LowerPackedMatrix<TElement> :
     public LowerPackedMatrixView<TElement> AsView()
         => new (ref this.data.Reference(), this.order);
 
-    public static bool IsPinned() => false;
 
     internal static int GetIndex(int row, int column)
         => (row * (row + 1) / 2) + column;

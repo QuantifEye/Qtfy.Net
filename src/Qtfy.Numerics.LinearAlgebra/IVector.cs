@@ -1,8 +1,8 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public interface IVector<TElement, TView> : IStorage
+public interface IVector<TElement, TView>
 {
-    ref TElement this[int row, int column] { get; }
+    ref TElement this[int index] { get; }
 
     TView AsView();
 }

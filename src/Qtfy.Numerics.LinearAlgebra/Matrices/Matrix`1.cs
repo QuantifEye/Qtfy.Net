@@ -61,5 +61,4 @@ public sealed class Matrix<TElement> :
     public MatrixView<TElement> AsView()
         => new (ref this.array.Reference(), this.rows, this.columns, this.rowSpan, this.colSpan);
 
-    public static bool IsPinned() => false;
 }

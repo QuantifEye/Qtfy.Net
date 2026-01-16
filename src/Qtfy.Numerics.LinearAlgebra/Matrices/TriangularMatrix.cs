@@ -3,21 +3,23 @@ namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
 using Qtfy.Numerics.LinearAlgebra.Vectors;
 
-public sealed class SymmetricMatrix<TElement, TUpperLower> :
-    ISymmetricMatrix<
+public sealed class TriangularMatrix<TElement, TUpperLower, TDiagonal> :
+    ITriangularMatrix<
         TElement,
-        SymmetricMatrixView<TElement, TUpperLower>,
-        SymmetricRowView<TElement>,
-        SymmetricColumnView<TElement>,
-        TUpperLower>
+        TriangularMatrixView<TElement, TUpperLower, TDiagonal>,
+        StrideVectorView<TElement>,
+        StrideVectorView<TElement>,
+        TUpperLower,
+        TDiagonal>
     where TUpperLower : IUpperLower
+    where TDiagonal : IDiagonal
 {
     private readonly TElement[] data;
     private readonly int order;
     private readonly int rowSpan;
     private readonly int colSpan;
 
-    public SymmetricMatrix(int order, bool isRowMajor = true)
+    public TriangularMatrix(int order, bool isRowMajor = true)
     {
         this.order = order;
         if (isRowMajor)
@@ -40,7 +42,11 @@ public sealed class SymmetricMatrix<TElement, TUpperLower> :
 
     public static bool IsUpper => TUpperLower.IsUpper();
 
+    public static bool IsUnitDiagonal => TDiagonal.IsUnitDiagonal();
+
     public static Uplo Uplo => IsUpper ? Uplo.Upper : Uplo.Lower;
+
+    public static Diag Diag => IsUnitDiagonal ? Diag.Unit : Diag.NonUnit;
 
     public ref TElement GetPinnableReference()
         => ref this.data.Reference();
@@ -49,13 +55,10 @@ public sealed class SymmetricMatrix<TElement, TUpperLower> :
     {
         get
         {
-            var offset = row * this.rowSpan + column * this.colSpan;
-            return ref this.data[offset];
+            return ref this.data[row * this.rowSpan + column * this.colSpan];
         }
     }
 
-    public SymmetricMatrixView<TElement, TUpperLower> AsView()
+    public TriangularMatrixView<TElement, TUpperLower, TDiagonal> AsView()
         => new (ref this.data.Reference(), this.order, this.rowSpan, this.colSpan);
-
-    public static bool IsPinned() => false;
 }

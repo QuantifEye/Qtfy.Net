@@ -3,7 +3,7 @@ namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 using Qtfy.Numerics.LinearAlgebra.Vectors;
 
 public sealed class SquareMatrix<TElement> :
-    IMatrix<TElement, MatrixView<TElement>, StrideVectorView<TElement>, StrideVectorView<TElement>>
+    IMatrix<TElement, SquareMatrixView<TElement>, StrideVectorView<TElement>, StrideVectorView<TElement>>
 {
     private readonly TElement[] array;
     private readonly int order;
@@ -46,8 +46,7 @@ public sealed class SquareMatrix<TElement> :
         }
     }
 
-    public MatrixView<TElement> AsView()
-        => new (ref this.array.Reference(), this.order, this.order, this.rowSpan, this.colSpan);
+    public SquareMatrixView<TElement> AsView()
+        => new (ref this.array.Reference(), this.order, this.rowSpan, this.colSpan);
 
-    public static bool IsPinned() => false;
 }

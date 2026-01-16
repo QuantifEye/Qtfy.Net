@@ -6,7 +6,7 @@
 
 namespace Qtfy.Numerics.LinearAlgebra.Vectors;
 
-public sealed class Vector<TNumber> : IStorage
+public sealed class Vector<TNumber>
     where TNumber : INumber<TNumber>
 {
     private readonly TNumber[] data;
@@ -22,7 +22,4 @@ public sealed class Vector<TNumber> : IStorage
         => ref this.data.Reference();
 
     public ref TNumber this[int index] => ref this.data[index];
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsPinned() => false;
 }

@@ -11,16 +11,16 @@ namespace Qtfy.Numerics.LinearAlgebra;
 public interface IGenericBlas
 {
     public static abstract TNumber Dot<TNumber, TVectorViewX, TVectorViewY>(TVectorViewX x, TVectorViewY y)
-        where TVectorViewX : IVectorView<TNumber, TVectorViewX>
-        where TVectorViewY : IVectorView<TNumber, TVectorViewY>
+        where TVectorViewX : IVectorView<TNumber>
+        where TVectorViewY : IVectorView<TNumber>
         where TNumber : INumberBase<TNumber>;
 
     public static abstract void AddScaled<TNumber, TVectorViewX, TVectorViewY>(
         TNumber alpha,
         TVectorViewX x,
         TVectorViewY y)
-        where TVectorViewX : IVectorView<TNumber, TVectorViewX>
-        where TVectorViewY : IVectorView<TNumber, TVectorViewY>
+        where TVectorViewX : IVectorView<TNumber>
+        where TVectorViewY : IVectorView<TNumber>
         where TNumber : INumberBase<TNumber>;
 
     public static abstract void MatrixVectorMultiply<TNumber, TMatrixView, TMatrixRow, TMatrixColumn, TVectorViewX, TVectorViewY>(
@@ -30,10 +30,10 @@ public interface IGenericBlas
         TNumber beta,
         TVectorViewY y)
         where TNumber : INumberBase<TNumber>
-        where TMatrixRow : IVectorView<TNumber, TMatrixRow>
-        where TMatrixColumn : IVectorView<TNumber, TMatrixColumn>
-        where TMatrixView : IMatrixView<TNumber, TMatrixRow, TMatrixColumn, TMatrixView>
-        where TVectorViewY : IVectorView<TNumber, TVectorViewY>;
+        where TMatrixRow : IVectorView<TNumber>
+        where TMatrixColumn : IVectorView<TNumber>
+        where TMatrixView : IMatrixView<TNumber, TMatrixRow, TMatrixColumn>
+        where TVectorViewY : IVectorView<TNumber>;
 
     public static abstract void MatrixMultiply<TNumber>(
         TNumber alpha,

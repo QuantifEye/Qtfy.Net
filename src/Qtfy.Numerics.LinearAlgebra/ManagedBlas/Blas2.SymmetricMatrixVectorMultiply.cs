@@ -10,11 +10,11 @@ public partial struct Blas2<TNumber>
         TVectorViewX x,
         TNumber beta,
         TVectorViewY y)
-        where TMatrixView : struct, IStridedMatrixView<TNumber, TMatrixRow, TMatrixColumn, TMatrixView>, allows ref struct
-        where TMatrixRow : struct, IVectorView<TNumber, TMatrixRow>, allows ref struct
-        where TMatrixColumn : struct, IVectorView<TNumber, TMatrixColumn>, allows ref struct
-        where TVectorViewX : struct, IVectorView<TNumber, TVectorViewX>, allows ref struct
-        where TVectorViewY : struct, IVectorView<TNumber, TVectorViewY>, allows ref struct
+        where TMatrixView : struct, IStridedMatrixView<TNumber, TMatrixRow, TMatrixColumn>, allows ref struct
+        where TMatrixRow : struct, IVectorView<TNumber>, allows ref struct
+        where TMatrixColumn : struct, IVectorView<TNumber>, allows ref struct
+        where TVectorViewX : struct, IVectorView<TNumber>, allows ref struct
+        where TVectorViewY : struct, IVectorView<TNumber>, allows ref struct
     {
         var n = matrix.Rows;
 
@@ -45,12 +45,12 @@ public partial struct Blas2<TNumber>
         TVectorViewX x,
         TNumber beta,
         TVectorViewY y)
-        where TMatrixView : struct, Qtfy.Numerics.LinearAlgebra.Matrices.ISymmetricMatrixView<TNumber, TMatrixRow, TMatrixColumn, TUpperLower, TMatrixView>, allows ref struct
-        where TMatrixRow : struct, IVectorView<TNumber, TMatrixRow>, allows ref struct
-        where TMatrixColumn : struct, IVectorView<TNumber, TMatrixColumn>, allows ref struct
+        where TMatrixView : struct, Qtfy.Numerics.LinearAlgebra.Matrices.ISymmetricMatrixView<TNumber, TMatrixRow, TMatrixColumn, TUpperLower>, allows ref struct
+        where TMatrixRow : struct, IVectorView<TNumber>, allows ref struct
+        where TMatrixColumn : struct, IVectorView<TNumber>, allows ref struct
         where TUpperLower : Qtfy.Numerics.LinearAlgebra.Matrices.Traits.IUpperLower
-        where TVectorViewX : struct, IVectorView<TNumber, TVectorViewX>, allows ref struct
-        where TVectorViewY : struct, IVectorView<TNumber, TVectorViewY>, allows ref struct
+        where TVectorViewX : struct, IVectorView<TNumber>, allows ref struct
+        where TVectorViewY : struct, IVectorView<TNumber>, allows ref struct
     {
         SymmetricMatrixVectorMultiply<TMatrixView, TMatrixRow, TMatrixColumn, TVectorViewX, TVectorViewY>(
             uplo: TMatrixView.Uplo,

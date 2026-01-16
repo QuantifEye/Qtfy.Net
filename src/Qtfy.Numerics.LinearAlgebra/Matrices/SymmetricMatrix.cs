@@ -3,23 +3,21 @@ namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
 using Qtfy.Numerics.LinearAlgebra.Vectors;
 
-public sealed class TriangularGeneralMatrix<TElement, TUpperLower, TDiagonal> :
-    ITriangularMatrix<
+public sealed class SymmetricMatrix<TElement, TUpperLower> :
+    ISymmetricMatrix<
         TElement,
-        TriangularGeneralMatrixView<TElement, TUpperLower, TDiagonal>,
+        SymmetricMatrixView<TElement, TUpperLower>,
         StrideVectorView<TElement>,
         StrideVectorView<TElement>,
-        TUpperLower,
-        TDiagonal>
+        TUpperLower>
     where TUpperLower : IUpperLower
-    where TDiagonal : IDiagonal
 {
     private readonly TElement[] data;
     private readonly int order;
     private readonly int rowSpan;
     private readonly int colSpan;
 
-    public TriangularGeneralMatrix(int order, bool isRowMajor = true)
+    public SymmetricMatrix(int order, bool isRowMajor = true)
     {
         this.order = order;
         if (isRowMajor)
@@ -42,11 +40,7 @@ public sealed class TriangularGeneralMatrix<TElement, TUpperLower, TDiagonal> :
 
     public static bool IsUpper => TUpperLower.IsUpper();
 
-    public static bool IsUnitDiagonal => TDiagonal.IsUnitDiagonal();
-
     public static Uplo Uplo => IsUpper ? Uplo.Upper : Uplo.Lower;
-
-    public static Diag Diag => IsUnitDiagonal ? Diag.Unit : Diag.NonUnit;
 
     public ref TElement GetPinnableReference()
         => ref this.data.Reference();
@@ -60,8 +54,6 @@ public sealed class TriangularGeneralMatrix<TElement, TUpperLower, TDiagonal> :
         }
     }
 
-    public TriangularGeneralMatrixView<TElement, TUpperLower, TDiagonal> AsView()
+    public SymmetricMatrixView<TElement, TUpperLower> AsView()
         => new (ref this.data.Reference(), this.order, this.rowSpan, this.colSpan);
-
-    public static bool IsPinned() => false;
 }

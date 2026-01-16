@@ -1,15 +1,20 @@
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
-public readonly ref struct LowerPackedRowView<TElement> : IVectorView<TElement, LowerPackedRowView<TElement>>
+public readonly ref struct LowerPackedRowView<TElement> : IVectorView<TElement>
 {
     private readonly ref TElement reference;
     private readonly int length;
 
     public LowerPackedRowView(ref TElement data, int row)
+        : this(ref data, row, 0, row + 1)
     {
-        var offset = LowerPackedMatrix<TElement>.GetIndex(row, 0);
+    }
+
+    public LowerPackedRowView(ref TElement data, int row, int columnOffset, int length)
+    {
+        var offset = LowerPackedMatrix<TElement>.GetIndex(row, columnOffset);
         this.reference = ref Add(ref data, offset);
-        this.length = row + 1;
+        this.length = length;
     }
 
     public int Length => this.length;
@@ -24,5 +29,4 @@ public readonly ref struct LowerPackedRowView<TElement> : IVectorView<TElement, 
 
     public static bool StrideIsAlwaysOne() => true;
 
-    public static bool IsPinned() => false;
 }

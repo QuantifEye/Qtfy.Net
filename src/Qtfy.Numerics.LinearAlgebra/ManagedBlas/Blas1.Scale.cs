@@ -4,7 +4,7 @@ public partial struct Blas1<TNumber>
     where TNumber : INumberBase<TNumber>
 {
     public static void Scale<TVectorViewX>(TNumber alpha, TVectorViewX x)
-        where TVectorViewX : IVectorView<TNumber, TVectorViewX>
+        where TVectorViewX : IVectorView<TNumber>
     {
         if (TVectorViewX.StrideIsAlwaysOne())
         {

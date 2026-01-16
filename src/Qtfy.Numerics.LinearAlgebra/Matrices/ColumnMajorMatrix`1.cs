@@ -35,5 +35,4 @@ public sealed class ColumnMajorMatrix<TElement> :
     public ColumnMajorMatrixView<TElement> AsView()
         => new (ref this.memory.Reference(), this.rows, this.columns);
 
-    public static bool IsPinned() => false;
 }

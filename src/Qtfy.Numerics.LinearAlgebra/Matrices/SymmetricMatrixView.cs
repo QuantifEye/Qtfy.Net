@@ -1,9 +1,10 @@
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
+using Qtfy.Numerics.LinearAlgebra.Vectors;
 
 public readonly ref struct SymmetricMatrixView<TElement, TUpperLower> :
-    ISymmetricMatrixView<TElement, SymmetricRowView<TElement>, SymmetricColumnView<TElement>, TUpperLower, SymmetricMatrixView<TElement, TUpperLower>>
+    ISymmetricMatrixView<TElement, StrideVectorView<TElement>, StrideVectorView<TElement>, TUpperLower>
     where TUpperLower : IUpperLower
 {
     private readonly ref TElement data;
@@ -13,7 +14,7 @@ public readonly ref struct SymmetricMatrixView<TElement, TUpperLower> :
 
     public SymmetricMatrixView(ref TElement data, int order, int rowSpan, int colSpan)
     {
-        this.data = data;
+        this.data = ref data;
         this.order = order;
         this.rowSpan = rowSpan;
         this.colSpan = colSpan;
@@ -22,6 +23,8 @@ public readonly ref struct SymmetricMatrixView<TElement, TUpperLower> :
     public int Rows => this.order;
 
     public int Columns => this.order;
+
+    public static bool IsAlwaysSquare() => true;
 
     public static bool IsUpper => TUpperLower.IsUpper();
 
@@ -43,15 +46,14 @@ public readonly ref struct SymmetricMatrixView<TElement, TUpperLower> :
         }
     }
 
-    public SymmetricRowView<TElement> Row(int row)
-        => new (ref this.data, this.order, this.rowSpan, this.colSpan, row);
+    public StrideVectorView<TElement> Row(int row)
+        => new (ref Add(ref this.data, row * this.rowSpan), this.colSpan, this.order);
 
-    public SymmetricColumnView<TElement> Column(int column)
-        => new (ref this.data, this.order, this.rowSpan, this.colSpan, column);
+    public StrideVectorView<TElement> Column(int column)
+        => new (ref Add(ref this.data, column * this.colSpan), this.rowSpan, this.order);
 
     public static bool RowStrideIsAlwaysOne() => false;
 
     public static bool ColumnStrideIsAlwaysOne() => false;
 
-    public static bool IsPinned() => false;
 }

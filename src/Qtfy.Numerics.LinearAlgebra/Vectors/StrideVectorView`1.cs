@@ -1,6 +1,6 @@
 namespace Qtfy.Numerics.LinearAlgebra.Vectors;
 
-public readonly ref struct StrideVectorView<TElement> : IVectorView<TElement, StrideVectorView<TElement>>
+public readonly ref struct StrideVectorView<TElement> : IVectorView<TElement>
 {
     private readonly ref TElement reference;
     private readonly int stride;
@@ -8,7 +8,7 @@ public readonly ref struct StrideVectorView<TElement> : IVectorView<TElement, St
 
     public StrideVectorView(ref TElement reference, int stride, int length)
     {
-        this.reference = reference;
+        this.reference = ref reference;
         this.stride = stride;
         this.length = length;
     }
@@ -29,7 +29,4 @@ public readonly ref struct StrideVectorView<TElement> : IVectorView<TElement, St
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool StrideIsAlwaysOne() => false;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsPinned() => false;
 }

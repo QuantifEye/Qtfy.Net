@@ -3,15 +3,16 @@ namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 using Qtfy.Numerics.LinearAlgebra.Vectors;
 
 public sealed class SquareRowMajorMatrix<TElement> :
-    IMatrix<TElement, RowMajorMatrixView<TElement>, VectorView<TElement>, StrideVectorView<TElement>>
+    IMatrix<TElement, SquareRowMajorMatrixView<TElement>, VectorView<TElement>, StrideVectorView<TElement>>
 {
     private readonly TElement[] array;
+
     private readonly int order;
 
     public SquareRowMajorMatrix(int order)
     {
-        this.order = order;
         this.array = new TElement[order * order];
+        this.order = order;
     }
 
     public int Order => this.order;
@@ -26,8 +27,6 @@ public sealed class SquareRowMajorMatrix<TElement> :
     public ref TElement this[int row, int column]
         => ref this.array[row * this.order + column];
 
-    public RowMajorMatrixView<TElement> AsView()
-        => new (ref this.array.Reference(), this.order, this.order);
-
-    public static bool IsPinned() => false;
+    public SquareRowMajorMatrixView<TElement> AsView()
+        => new (ref this.array.Reference(), this.order);
 }

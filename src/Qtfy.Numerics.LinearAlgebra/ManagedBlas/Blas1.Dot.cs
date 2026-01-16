@@ -4,8 +4,8 @@ public partial struct Blas1<TNumber>
     where TNumber : INumberBase<TNumber>
 {
     public static TNumber Dot<TVectorViewX, TVectorViewY>(TVectorViewX x, TVectorViewY y)
-        where TVectorViewX : struct, IVectorView<TNumber, TVectorViewX>, allows ref struct
-        where TVectorViewY : struct, IVectorView<TNumber, TVectorViewY>, allows ref struct
+        where TVectorViewX : struct, IVectorView<TNumber>, allows ref struct
+        where TVectorViewY : struct, IVectorView<TNumber>, allows ref struct
     {
         Debug.Assert(x.Length == y.Length, "x and y must have the same length.");
 

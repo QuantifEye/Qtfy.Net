@@ -9,7 +9,7 @@ using Qtfy.Numerics.LinearAlgebra.Vectors;
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 public readonly ref struct MatrixView<TElement> :
-    IStridedMatrixView<TElement, StrideVectorView<TElement>, StrideVectorView<TElement>, MatrixView<TElement>>
+    IStridedMatrixView<TElement, StrideVectorView<TElement>, StrideVectorView<TElement>>
 {
     private readonly ref TElement data;
     private readonly int rows;
@@ -19,7 +19,7 @@ public readonly ref struct MatrixView<TElement> :
 
     internal MatrixView(ref TElement data, int rows, int columns, int rowSpan, int colSpan)
     {
-        this.data = data;
+        this.data = ref data;
         this.rows = rows;
         this.columns = columns;
         this.rowSpan = rowSpan;
@@ -33,6 +33,8 @@ public readonly ref struct MatrixView<TElement> :
     public int RowStride => this.rowSpan;
 
     public int ColumnStride => this.colSpan;
+
+    public static bool IsAlwaysSquare() => false;
 
     public static bool RowStrideIsAlwaysOne() => false;
 
@@ -72,8 +74,4 @@ public readonly ref struct MatrixView<TElement> :
             this.rows);
     }
 
-    public static bool IsPinned()
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -3,14 +3,13 @@ namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
 using Qtfy.Numerics.LinearAlgebra.Vectors;
 
-public readonly ref struct TriangularGeneralMatrixView<TElement, TUpperLower, TDiagonal> :
+public readonly ref struct TriangularMatrixView<TElement, TUpperLower, TDiagonal> :
     ITriangularMatrixView<
         TElement,
         StrideVectorView<TElement>,
         StrideVectorView<TElement>,
         TUpperLower,
-        TDiagonal,
-        TriangularGeneralMatrixView<TElement, TUpperLower, TDiagonal>>
+        TDiagonal>
     where TUpperLower : IUpperLower
     where TDiagonal : IDiagonal
 {
@@ -19,9 +18,9 @@ public readonly ref struct TriangularGeneralMatrixView<TElement, TUpperLower, TD
     private readonly int rowSpan;
     private readonly int colSpan;
 
-    public TriangularGeneralMatrixView(ref TElement data, int order, int rowSpan, int colSpan)
+    public TriangularMatrixView(ref TElement data, int order, int rowSpan, int colSpan)
     {
-        this.data = data;
+        this.data = ref data;
         this.order = order;
         this.rowSpan = rowSpan;
         this.colSpan = colSpan;
@@ -30,6 +29,8 @@ public readonly ref struct TriangularGeneralMatrixView<TElement, TUpperLower, TD
     public int Rows => this.order;
 
     public int Columns => this.order;
+
+    public static bool IsAlwaysSquare() => true;
 
     public int RowStride => this.rowSpan;
 
@@ -48,28 +49,21 @@ public readonly ref struct TriangularGeneralMatrixView<TElement, TUpperLower, TD
 
     public ref TElement this[int row, int column]
     {
-        get
-        {
-            var offset = row * this.rowSpan + column * this.colSpan;
-            return ref Add(ref this.data, offset);
-        }
+        get => ref Add(ref this.data, row * this.rowSpan + column * this.colSpan);
     }
 
     public StrideVectorView<TElement> Row(int row)
     {
-        var offset = row * this.rowSpan;
-        return new (ref Add(ref this.data, offset), this.colSpan, this.order);
+        return new (ref Add(ref this.data, row * this.rowSpan), this.colSpan, this.order);
     }
 
     public StrideVectorView<TElement> Column(int column)
     {
-        var offset = column * this.colSpan;
-        return new (ref Add(ref this.data, offset), this.rowSpan, this.order);
+        return new (ref Add(ref this.data, column * this.colSpan), this.rowSpan, this.order);
     }
 
     public static bool RowStrideIsAlwaysOne() => false;
 
     public static bool ColumnStrideIsAlwaysOne() => false;
 
-    public static bool IsPinned() => false;
 }

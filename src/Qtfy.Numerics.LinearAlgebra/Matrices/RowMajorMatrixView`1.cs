@@ -3,7 +3,7 @@ using Qtfy.Numerics.LinearAlgebra.Vectors;
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 public readonly ref struct RowMajorMatrixView<TElement>
-    : IStridedMatrixView<TElement, VectorView<TElement>, StrideVectorView<TElement>, RowMajorMatrixView<TElement>>
+    : IStridedMatrixView<TElement, VectorView<TElement>, StrideVectorView<TElement>>
 {
     private readonly ref TElement reference;
 
@@ -20,7 +20,7 @@ public readonly ref struct RowMajorMatrixView<TElement>
 
     public RowMajorMatrixView(ref TElement reference, int rows, int columns, int rowStride)
     {
-        this.reference = reference;
+        this.reference = ref reference;
         this.rows = rows;
         this.columns = columns;
         this.rowStride = rowStride;
@@ -36,6 +36,8 @@ public readonly ref struct RowMajorMatrixView<TElement>
 
     public ref TElement GetPinnableReference()
         => ref this.reference;
+
+    public static bool IsAlwaysSquare() => false;
 
     public static bool RowStrideIsAlwaysOne() => false;
 
@@ -53,9 +55,4 @@ public readonly ref struct RowMajorMatrixView<TElement>
 
     public ref TElement this[int row, int column]
         => ref Add(ref this.reference, row * this.rowStride + column);
-
-    public static bool IsPinned()
-    {
-        throw new NotImplementedException();
-    }
 }

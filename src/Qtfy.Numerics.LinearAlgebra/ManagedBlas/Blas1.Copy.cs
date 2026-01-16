@@ -4,8 +4,8 @@ public partial struct Blas1<TNumber>
     where TNumber : INumberBase<TNumber>
 {
     public static void Copy<TVectorViewX, TVectorViewY>(TVectorViewX x, TVectorViewY y)
-        where TVectorViewX : struct, IVectorView<TNumber, TVectorViewX>, allows ref struct
-        where TVectorViewY : struct, IVectorView<TNumber, TVectorViewY>, allows ref struct
+        where TVectorViewX : struct, IVectorView<TNumber>, allows ref struct
+        where TVectorViewY : struct, IVectorView<TNumber>, allows ref struct
     {
         int n = x.Length;
         if (TVectorViewX.StrideIsAlwaysOne())

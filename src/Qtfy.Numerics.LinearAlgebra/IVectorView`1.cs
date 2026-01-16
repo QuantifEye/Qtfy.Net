@@ -1,8 +1,6 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public interface IVectorView<TElement, TSelf> :
-    IStorage
-    where TSelf : IVectorView<TElement, TSelf>, allows ref struct
+public interface IVectorView<TElement>
 {
     int Length { get; }
 

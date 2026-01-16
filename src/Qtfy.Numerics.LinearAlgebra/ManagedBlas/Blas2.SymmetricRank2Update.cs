@@ -9,11 +9,11 @@ public partial struct Blas2<TNumber>
         TVectorViewX x,
         TVectorViewY y,
         TMatrixView matrix)
-        where TMatrixView : struct, IStridedMatrixView<TNumber, TMatrixRow, TMatrixColumn, TMatrixView>, allows ref struct
-        where TMatrixRow : struct, IVectorView<TNumber, TMatrixRow>, allows ref struct
-        where TMatrixColumn : struct, IVectorView<TNumber, TMatrixColumn>, allows ref struct
-        where TVectorViewX : struct, IVectorView<TNumber, TVectorViewX>, allows ref struct
-        where TVectorViewY : struct, IVectorView<TNumber, TVectorViewY>, allows ref struct
+        where TMatrixView : struct, IStridedMatrixView<TNumber, TMatrixRow, TMatrixColumn>, allows ref struct
+        where TMatrixRow : struct, IVectorView<TNumber>, allows ref struct
+        where TMatrixColumn : struct, IVectorView<TNumber>, allows ref struct
+        where TVectorViewX : struct, IVectorView<TNumber>, allows ref struct
+        where TVectorViewY : struct, IVectorView<TNumber>, allows ref struct
     {
         var n = matrix.Rows;
 

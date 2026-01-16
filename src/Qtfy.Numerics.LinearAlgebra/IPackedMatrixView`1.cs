@@ -1,14 +1,12 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public interface IMatrixView<TElement, TRowView, TColumnView>
+public interface IPackedMatrixView<TElement, TRowView, TColumnView>
     where TRowView : IVectorView<TElement>, allows ref struct
-    where TColumnView : IVectorView<TElement>, allows ref struct
+    where TColumnView : IPackedVectorView<TElement>, allows ref struct
 {
     int Rows { get; }
 
     int Columns { get; }
-
-    static abstract bool IsAlwaysSquare();
 
     ref TElement this[int row, int column] { get; }
 

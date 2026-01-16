@@ -1,7 +1,7 @@
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
 public readonly ref struct LowerPackedMatrixView<TElement> :
-    IMatrixView<TElement, LowerPackedRowView<TElement>, LowerPackedColumnView<TElement>, LowerPackedMatrixView<TElement>>
+    IPackedMatrixView<TElement, LowerPackedRowView<TElement>, LowerPackedColumnView<TElement>>
 {
     private readonly ref TElement data;
     private readonly int order;
@@ -15,15 +15,15 @@ public readonly ref struct LowerPackedMatrixView<TElement> :
 
     public LowerPackedMatrixView(ref TElement data, int order, int rowOffset, int colOffset)
     {
-        this.data = data;
+        this.data = ref data;
         this.order = order;
         this.rowOffset = rowOffset;
         this.colOffset = colOffset;
     }
 
-    public int Rows => this.order;
+    public int Rows => this.order - this.rowOffset;
 
-    public int Columns => this.order;
+    public int Columns => this.order - this.colOffset;
 
     public ref TElement GetPinnableReference()
         => ref this.data;
@@ -43,10 +43,8 @@ public readonly ref struct LowerPackedMatrixView<TElement> :
     public LowerPackedRowView<TElement> Row(int row)
     {
         var adjustedRow = this.rowOffset + row;
-        var index = LowerPackedMatrix<TElement>.GetIndex(adjustedRow, this.colOffset);
-        var length = Math.Min(this.order, adjustedRow - this.colOffset + 1);
-        ref var reference = ref Add(ref this.data, index);
-        return new (ref reference, length);
+        var length = Math.Max(0, adjustedRow - this.colOffset + 1);
+        return new (ref this.data, adjustedRow, this.colOffset, length);
     }
 
     public LowerPackedColumnView<TElement> Column(int column)
@@ -54,9 +52,8 @@ public readonly ref struct LowerPackedMatrixView<TElement> :
         var columnIndex = this.colOffset + column;
         var rowStart = this.rowOffset >= columnIndex ? this.rowOffset : columnIndex;
         var rowOffset = rowStart - columnIndex;
-        var length = this.order - (rowStart - this.rowOffset);
-        return new (ref this.data, this.order, columnIndex, rowOffset, length);
+        var length = this.order - rowStart;
+        return new (ref this.data, columnIndex, rowOffset, length);
     }
 
-    public static bool IsPinned() => false;
 }

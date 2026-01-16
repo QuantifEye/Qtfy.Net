@@ -1,9 +1,9 @@
 namespace Qtfy.Numerics.LinearAlgebra;
 
-public interface IMatrix<TElement, TMatrixView, TRowView, TColumnView>
-    where TMatrixView : IMatrixView<TElement, TRowView, TColumnView>, allows ref struct
+public interface IPackedMatrix<TElement, TMatrixView, TRowView, TColumnView>
+    where TMatrixView : IPackedMatrixView<TElement, TRowView, TColumnView>, allows ref struct
     where TRowView : IVectorView<TElement>, allows ref struct
-    where TColumnView : IVectorView<TElement>, allows ref struct
+    where TColumnView : IPackedVectorView<TElement>, allows ref struct
 {
     int Rows { get; }
 
