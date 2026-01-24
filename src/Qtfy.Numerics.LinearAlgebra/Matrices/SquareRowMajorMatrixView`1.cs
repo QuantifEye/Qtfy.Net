@@ -1,6 +1,6 @@
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
-using Qtfy.Numerics.LinearAlgebra.Vectors;
+using Vectors;
 
 public readonly ref struct SquareRowMajorMatrixView<TElement> :
     IStridedMatrixView<TElement, VectorView<TElement>, StrideVectorView<TElement>>
@@ -14,13 +14,13 @@ public readonly ref struct SquareRowMajorMatrixView<TElement> :
         this.order = order;
     }
 
-    public int Order => this.order;
+    public int Order => order;
 
-    public int Rows => this.order;
+    public int Rows => order;
 
-    public int Columns => this.order;
+    public int Columns => order;
 
-    public int RowStride => this.order;
+    public int RowStride => order;
 
     public int ColumnStride => 1;
 
@@ -31,14 +31,14 @@ public readonly ref struct SquareRowMajorMatrixView<TElement> :
     public static bool ColumnStrideIsAlwaysOne() => true;
 
     public ref TElement GetPinnableReference()
-        => ref this.reference;
+        => ref reference;
 
     public VectorView<TElement> Row(int row)
-        => new (ref Add(ref this.reference, row * this.order), this.order);
+        => new (ref Add(ref reference, row * order), order);
 
     public StrideVectorView<TElement> Column(int column)
-        => new (ref Add(ref this.reference, column), this.order, this.order);
+        => new (ref Add(ref reference, column), order, order);
 
     public ref TElement this[int row, int column]
-        => ref Add(ref this.reference, row * this.order + column);
+        => ref Add(ref reference, row * order + column);
 }

@@ -1,7 +1,7 @@
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
-using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
-using Qtfy.Numerics.LinearAlgebra.Vectors;
+using Traits;
+using Vectors;
 
 public readonly ref struct TriangularMatrixView<TElement, TUpperLower, TDiagonal> :
     ITriangularMatrixView<
@@ -10,8 +10,8 @@ public readonly ref struct TriangularMatrixView<TElement, TUpperLower, TDiagonal
         StrideVectorView<TElement>,
         TUpperLower,
         TDiagonal>
-    where TUpperLower : IUpperLower
-    where TDiagonal : IDiagonal
+    where TUpperLower : IUpperLower, allows ref struct
+    where TDiagonal : IDiagonal, allows ref struct
 {
     private readonly ref TElement data;
     private readonly int order;
@@ -26,44 +26,41 @@ public readonly ref struct TriangularMatrixView<TElement, TUpperLower, TDiagonal
         this.colSpan = colSpan;
     }
 
-    public int Rows => this.order;
+    public int Rows => order;
 
-    public int Columns => this.order;
+    public int Columns => order;
 
-    public static bool IsAlwaysSquare() => true;
+    public int RowStride => rowSpan;
 
-    public int RowStride => this.rowSpan;
+    public int ColumnStride => colSpan;
 
-    public int ColumnStride => this.colSpan;
-
-    public static bool IsUpper => TUpperLower.IsUpper();
-
-    public static bool IsUnitDiagonal => TDiagonal.IsUnitDiagonal();
-
-    public static Uplo Uplo => IsUpper ? Uplo.Upper : Uplo.Lower;
-
-    public static Diag Diag => IsUnitDiagonal ? Diag.Unit : Diag.NonUnit;
 
     public ref TElement GetPinnableReference()
-        => ref this.data;
+        => ref data;
 
     public ref TElement this[int row, int column]
     {
-        get => ref Add(ref this.data, row * this.rowSpan + column * this.colSpan);
+        get => ref Add(ref data, row * rowSpan + column * colSpan);
     }
 
     public StrideVectorView<TElement> Row(int row)
     {
-        return new (ref Add(ref this.data, row * this.rowSpan), this.colSpan, this.order);
+        return new(ref Add(ref data, row * rowSpan), colSpan, order);
     }
 
     public StrideVectorView<TElement> Column(int column)
     {
-        return new (ref Add(ref this.data, column * this.colSpan), this.rowSpan, this.order);
+        return new(ref Add(ref data, column * colSpan), rowSpan, order);
     }
 
     public static bool RowStrideIsAlwaysOne() => false;
 
     public static bool ColumnStrideIsAlwaysOne() => false;
+
+    public static bool IsAlwaysSquare() => true;
+
+    public static bool IsUpper() => TUpperLower.IsUpper();
+
+    public static bool IsUnitDiagonal() => TDiagonal.IsUnitDiagonal();
 
 }

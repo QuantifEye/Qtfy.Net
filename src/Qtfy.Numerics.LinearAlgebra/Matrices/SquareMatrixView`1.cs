@@ -1,6 +1,6 @@
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
-using Qtfy.Numerics.LinearAlgebra.Vectors;
+using Vectors;
 
 public readonly ref struct SquareMatrixView<TElement> :
     IStridedMatrixView<TElement, StrideVectorView<TElement>, StrideVectorView<TElement>>
@@ -18,15 +18,15 @@ public readonly ref struct SquareMatrixView<TElement> :
         this.colSpan = colSpan;
     }
 
-    public int Order => this.order;
+    public int Order => order;
 
-    public int Rows => this.order;
+    public int Rows => order;
 
-    public int Columns => this.order;
+    public int Columns => order;
 
-    public int RowStride => this.rowSpan;
+    public int RowStride => rowSpan;
 
-    public int ColumnStride => this.colSpan;
+    public int ColumnStride => colSpan;
 
     public static bool IsAlwaysSquare() => true;
 
@@ -35,20 +35,20 @@ public readonly ref struct SquareMatrixView<TElement> :
     public static bool ColumnStrideIsAlwaysOne() => false;
 
     public ref TElement GetPinnableReference()
-        => ref this.data;
+        => ref data;
 
     public ref TElement this[int row, int column]
-        => ref Add(ref this.data, row * this.rowSpan + column * this.colSpan);
+        => ref Add(ref data, row * rowSpan + column * colSpan);
 
     public StrideVectorView<TElement> Row(int row)
     {
-        var offset = row * this.rowSpan;
-        return new (ref Add(ref this.data, offset), this.colSpan, this.order);
+        var offset = row * rowSpan;
+        return new (ref Add(ref data, offset), colSpan, order);
     }
 
     public StrideVectorView<TElement> Column(int column)
     {
-        var offset = column * this.colSpan;
-        return new (ref Add(ref this.data, offset), this.rowSpan, this.order);
+        var offset = column * colSpan;
+        return new (ref Add(ref data, offset), rowSpan, order);
     }
 }

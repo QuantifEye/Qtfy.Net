@@ -7,19 +7,23 @@
 namespace Qtfy.Numerics.LinearAlgebra.Vectors;
 
 public sealed class Vector<TNumber>
+    : IVector<TNumber, VectorView<TNumber>>
     where TNumber : INumber<TNumber>
 {
     private readonly TNumber[] data;
 
     public Vector(int length)
     {
-        this.data = new TNumber[length];
+        data = new TNumber[length];
     }
 
-    public int Length => this.data.Length;
+    public int Length => data.Length;
 
     public ref TNumber GetPinnableReference()
-        => ref this.data.Reference();
+        => ref data.Reference();
 
-    public ref TNumber this[int index] => ref this.data[index];
+    public ref TNumber this[int index] => ref data[index];
+
+    public VectorView<TNumber> AsView()
+        => new (ref data.Reference(), data.Length);
 }

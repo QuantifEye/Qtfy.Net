@@ -1,11 +1,11 @@
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
-using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
-using Qtfy.Numerics.LinearAlgebra.Vectors;
+using Traits;
+using Vectors;
 
 public readonly ref struct SymmetricMatrixView<TElement, TUpperLower> :
     ISymmetricMatrixView<TElement, StrideVectorView<TElement>, StrideVectorView<TElement>, TUpperLower>
-    where TUpperLower : IUpperLower
+    where TUpperLower : IUpperLower, allows ref struct
 {
     private readonly ref TElement data;
     private readonly int order;
@@ -20,37 +20,35 @@ public readonly ref struct SymmetricMatrixView<TElement, TUpperLower> :
         this.colSpan = colSpan;
     }
 
-    public int Rows => this.order;
+    public int Rows => order;
 
-    public int Columns => this.order;
+    public int Columns => order;
 
     public static bool IsAlwaysSquare() => true;
 
-    public static bool IsUpper => TUpperLower.IsUpper();
+    public static bool IsUpper() => TUpperLower.IsUpper();
 
-    public static Uplo Uplo => IsUpper ? Uplo.Upper : Uplo.Lower;
+    public int RowStride => rowSpan;
 
-    public int RowStride => this.rowSpan;
-
-    public int ColumnStride => this.colSpan;
+    public int ColumnStride => colSpan;
 
     public ref TElement GetPinnableReference()
-        => ref this.data;
+        => ref data;
 
     public ref TElement this[int row, int column]
     {
         get
         {
-            var offset = row * this.rowSpan + column * this.colSpan;
-            return ref Add(ref this.data, offset);
+            var offset = row * rowSpan + column * colSpan;
+            return ref Add(ref data, offset);
         }
     }
 
     public StrideVectorView<TElement> Row(int row)
-        => new (ref Add(ref this.data, row * this.rowSpan), this.colSpan, this.order);
+        => new (ref Add(ref data, row * rowSpan), colSpan, order);
 
     public StrideVectorView<TElement> Column(int column)
-        => new (ref Add(ref this.data, column * this.colSpan), this.rowSpan, this.order);
+        => new (ref Add(ref data, column * colSpan), rowSpan, order);
 
     public static bool RowStrideIsAlwaysOne() => false;
 

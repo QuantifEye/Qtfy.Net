@@ -6,7 +6,7 @@
 
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
-using Qtfy.Numerics.LinearAlgebra.Vectors;
+using Vectors;
 
 public sealed class Matrix<TElement> :
     IMatrix<TElement, MatrixView<TElement>, StrideVectorView<TElement>, StrideVectorView<TElement>>
@@ -24,41 +24,41 @@ public sealed class Matrix<TElement> :
 
         if (isRowMajor)
         {
-            this.rowSpan = columns;
-            this.colSpan = 1;
+            rowSpan = columns;
+            colSpan = 1;
         }
         else
         {
-            this.rowSpan = 1;
-            this.colSpan = rows;
+            rowSpan = 1;
+            colSpan = rows;
         }
 
-        this.array = new TElement[rows * columns];
+        array = new TElement[rows * columns];
     }
 
-    public int Rows => this.rows;
+    public int Rows => rows;
 
-    public int Columns => this.columns;
+    public int Columns => columns;
 
     public ref TElement GetPinnableReference()
-        => ref this.array.Reference();
+        => ref array.Reference();
 
-    internal TElement[] Data => this.array;
+    internal TElement[] Data => array;
 
-    internal int RowSpan => this.rowSpan;
+    internal int RowSpan => rowSpan;
 
-    internal int ColSpan => this.colSpan;
+    internal int ColSpan => colSpan;
 
     public ref TElement this[int row, int column]
     {
         get
         {
-            var offset = row * this.rowSpan + column * this.colSpan;
-            return ref this.array[offset];
+            var offset = row * rowSpan + column * colSpan;
+            return ref array[offset];
         }
     }
 
     public MatrixView<TElement> AsView()
-        => new (ref this.array.Reference(), this.rows, this.columns, this.rowSpan, this.colSpan);
+        => new (ref array.Reference(), rows, columns, rowSpan, colSpan);
 
 }

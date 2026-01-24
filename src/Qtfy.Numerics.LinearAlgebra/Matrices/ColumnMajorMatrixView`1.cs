@@ -11,31 +11,23 @@ public readonly ref struct ColumnMajorMatrixView<TElement> :
 
     private readonly int columns;
 
-    private readonly int columnStride;
-
     public ColumnMajorMatrixView(ref TElement reference, int rows, int columns)
-        : this(ref reference, rows, columns, rows)
-    {
-    }
-
-    public ColumnMajorMatrixView(ref TElement reference, int rows, int columns, int columnStride)
     {
         this.reference = ref reference;
         this.rows = rows;
         this.columns = columns;
-        this.columnStride = columnStride;
     }
 
-    public int Rows => this.rows;
+    public int Rows => rows;
 
-    public int Columns => this.columns;
+    public int Columns => columns;
 
     public int RowStride => 1;
 
-    public int ColumnStride => this.columnStride;
+    public int ColumnStride => rows;
 
     public ref TElement GetPinnableReference()
-        => ref this.reference;
+        => ref reference;
 
     public static bool IsAlwaysSquare() => false;
 
@@ -45,17 +37,17 @@ public readonly ref struct ColumnMajorMatrixView<TElement> :
 
     public StrideVectorView<TElement> Row(int row)
     {
-        return new (ref Add(ref this.reference, row), this.columnStride, this.columns);
+        return new (ref Add(ref reference, row), rows, columns);
     }
 
     public VectorView<TElement> Column(int column)
     {
         return new (
-            ref Add(ref this.reference, column * this.columnStride),
-            this.rows);
+            ref Add(ref reference, column * rows),
+            rows);
     }
 
     public ref TElement this[int row, int column]
-        => ref Add(ref this.reference, row + column * this.columnStride);
+        => ref Add(ref reference, row + column * rows);
 
 }

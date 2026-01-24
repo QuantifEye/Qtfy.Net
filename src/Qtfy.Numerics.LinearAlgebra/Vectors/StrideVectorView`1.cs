@@ -18,14 +18,14 @@ public readonly ref struct StrideVectorView<TElement> : IVectorView<TElement>
     public int Stride
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => this.stride;
+        get => stride;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ref TElement GetPinnableReference() => ref this.reference;
+    public ref TElement GetPinnableReference() => ref reference;
 
     public ref TElement this[int index]
-        => ref Add(ref this.reference, index * this.stride);
+        => ref Add(ref reference, index * stride);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool StrideIsAlwaysOne() => false;

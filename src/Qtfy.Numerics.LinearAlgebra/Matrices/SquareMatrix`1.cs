@@ -1,6 +1,6 @@
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
-using Qtfy.Numerics.LinearAlgebra.Vectors;
+using Vectors;
 
 public sealed class SquareMatrix<TElement> :
     IMatrix<TElement, SquareMatrixView<TElement>, StrideVectorView<TElement>, StrideVectorView<TElement>>
@@ -16,37 +16,36 @@ public sealed class SquareMatrix<TElement> :
 
         if (isRowMajor)
         {
-            this.rowSpan = order;
-            this.colSpan = 1;
+            rowSpan = order;
+            colSpan = 1;
         }
         else
         {
-            this.rowSpan = 1;
-            this.colSpan = order;
+            rowSpan = 1;
+            colSpan = order;
         }
 
-        this.array = new TElement[order * order];
+        array = new TElement[order * order];
     }
 
-    public int Order => this.order;
+    public int Order => order;
 
-    public int Rows => this.order;
+    public int Rows => order;
 
-    public int Columns => this.order;
+    public int Columns => order;
 
     public ref TElement GetPinnableReference()
-        => ref this.array.Reference();
+        => ref array.Reference();
 
     public ref TElement this[int row, int column]
     {
         get
         {
-            var offset = row * this.rowSpan + column * this.colSpan;
-            return ref this.array[offset];
+            var offset = row * rowSpan + column * colSpan;
+            return ref array[offset];
         }
     }
 
     public SquareMatrixView<TElement> AsView()
-        => new (ref this.array.Reference(), this.order, this.rowSpan, this.colSpan);
-
+        => new (ref array.Reference(), order, rowSpan, colSpan);
 }

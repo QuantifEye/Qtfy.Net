@@ -1,19 +1,15 @@
 namespace Qtfy.Numerics.LinearAlgebra.Matrices;
 
-using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
+using Traits;
 
 public interface ITriangularMatrixView<TElement, TRowView, TColumnView, TUpperLower, TDiagonal> :
     IStridedMatrixView<TElement, TRowView, TColumnView>
     where TRowView : IVectorView<TElement>, allows ref struct
     where TColumnView : IVectorView<TElement>, allows ref struct
-    where TUpperLower : IUpperLower
-    where TDiagonal : IDiagonal
+    where TUpperLower : IUpperLower, allows ref struct
+    where TDiagonal : IDiagonal, allows ref struct
 {
-    static abstract bool IsUpper { get; }
+    static abstract bool IsUpper();
 
-    static abstract bool IsUnitDiagonal { get; }
-
-    static abstract Uplo Uplo { get; }
-
-    static abstract Diag Diag { get; }
+    static abstract bool IsUnitDiagonal();
 }

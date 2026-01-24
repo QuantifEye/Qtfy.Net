@@ -26,13 +26,13 @@ public readonly ref struct MatrixView<TElement> :
         this.colSpan = colSpan;
     }
 
-    public int Rows => this.rows;
+    public int Rows => rows;
 
-    public int Columns => this.columns;
+    public int Columns => columns;
 
-    public int RowStride => this.rowSpan;
+    public int RowStride => rowSpan;
 
-    public int ColumnStride => this.colSpan;
+    public int ColumnStride => colSpan;
 
     public static bool IsAlwaysSquare() => false;
 
@@ -40,38 +40,38 @@ public readonly ref struct MatrixView<TElement> :
 
     public static bool ColumnStrideIsAlwaysOne() => false;
 
-    public int RowSpan => this.rowSpan;
+    public int RowSpan => rowSpan;
 
-    public int ColSpan => this.colSpan;
+    public int ColSpan => colSpan;
 
     public ref TElement GetPinnableReference()
-        => ref this.data;
+        => ref data;
 
     public ref TElement this[int row, int column]
     {
         get
         {
-            var offset = row * this.rowSpan + column * this.colSpan;
-            return ref Add(ref this.data, offset);
+            var offset = row * rowSpan + column * colSpan;
+            return ref Add(ref data, offset);
         }
     }
 
     public StrideVectorView<TElement> Row(int row)
     {
-        var offset = row * this.rowSpan;
+        var offset = row * rowSpan;
         return new (
-            ref Add(ref this.data, offset),
-            this.colSpan,
-            this.columns);
+            ref Add(ref data, offset),
+            colSpan,
+            columns);
     }
 
     public StrideVectorView<TElement> Column(int column)
     {
-        var offset = column * this.colSpan;
+        var offset = column * colSpan;
         return new (
-            ref Add(ref this.data, offset),
-            this.rowSpan,
-            this.rows);
+            ref Add(ref data, offset),
+            rowSpan,
+            rows);
     }
 
 }

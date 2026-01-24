@@ -7,7 +7,7 @@ public readonly ref struct VectorView<TElement> : IVectorView<TElement>
     public VectorView(ref TElement reference, int length)
     {
         this.reference = ref reference;
-        this.Length = length;
+        Length = length;
     }
 
     public int Length { get; }
@@ -19,10 +19,10 @@ public readonly ref struct VectorView<TElement> : IVectorView<TElement>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ref TElement GetPinnableReference() => ref this.reference;
+    public ref TElement GetPinnableReference() => ref reference;
 
     public ref TElement this[int index]
-        => ref Add(ref this.reference, index);
+        => ref Add(ref reference, index);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool StrideIsAlwaysOne() => true;

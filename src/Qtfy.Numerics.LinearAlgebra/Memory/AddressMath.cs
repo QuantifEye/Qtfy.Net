@@ -36,18 +36,18 @@ public struct AddressMath
     public static unsafe bool TryGetVectorAlignedRange<T>(
         T* begin,
         T* end,
-        out System.Numerics.Vector<T> * vBegin,
-        out System.Numerics.Vector<T> * vEnd)
+        out Vector<T> * vBegin,
+        out Vector<T> * vEnd)
         where T : unmanaged
     {
-        if (System.Numerics.Vector<T>.IsSupported && Vector.IsHardwareAccelerated)
+        if (Vector<T>.IsSupported && Vector.IsHardwareAccelerated)
         {
-            var u = AlignUpTo<System.Numerics.Vector<T>>((nuint)begin);
-            var d = AlignDownTo<System.Numerics.Vector<T>>((nuint)end);
+            var u = AlignUpTo<Vector<T>>((nuint)begin);
+            var d = AlignDownTo<Vector<T>>((nuint)end);
             if (u != 0 && u < d)
             {
-                vBegin = (System.Numerics.Vector<T> *)u;
-                vEnd = (System.Numerics.Vector<T> *)d;
+                vBegin = (Vector<T> *)u;
+                vEnd = (Vector<T> *)d;
                 return true;
             }
         }

@@ -54,11 +54,11 @@ public sealed class NativeMemoryOwner : IDisposable
                 throw new OutOfMemoryException();
             }
 
-            this.pointer = (nuint)allocated;
+            pointer = (nuint)allocated;
         }
 
-        this.ByteLength = alignedByteLength;
-        this.Alignment = alignment;
+        ByteLength = alignedByteLength;
+        Alignment = alignment;
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public sealed class NativeMemoryOwner : IDisposable
     /// </summary>
     ~NativeMemoryOwner()
     {
-        Dispose(ref this.pointer);
+        Dispose(ref pointer);
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public sealed class NativeMemoryOwner : IDisposable
     /// </exception>
     public nuint Pointer()
     {
-        var ptr = this.pointer;
+        var ptr = pointer;
         if (ptr == 0)
         {
             ThrowDisposed();
@@ -114,13 +114,13 @@ public sealed class NativeMemoryOwner : IDisposable
     public unsafe ref T Reference<T>()
         where T : unmanaged
     {
-        return ref AsRef<T>((void*)this.Pointer());
+        return ref AsRef<T>((void*)Pointer());
     }
 
     /// <inheritdoc />
     public void Dispose()
     {
-        Dispose(ref this.pointer);
+        Dispose(ref pointer);
         GC.SuppressFinalize(this);
     }
 
