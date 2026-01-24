@@ -1,7 +1,7 @@
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct Blas<TNumber>
-    where TNumber : INumberBase<TNumber>
+    where TNumber : INumber<TNumber>
 {
     public static void SymmetricMatrixVectorMultiply<TMatrixView, TMatrixRow, TMatrixColumn, TUpperLower, TVectorViewX, TVectorViewY>(
         TNumber alpha,
@@ -9,12 +9,12 @@ public partial struct Blas<TNumber>
         TVectorViewX x,
         TNumber beta,
         TVectorViewY y)
-        where TMatrixView :  Matrices.ISymmetricMatrixView<TNumber, TMatrixRow, TMatrixColumn, TUpperLower>, allows ref struct
-        where TMatrixRow :  IVectorView<TNumber>, allows ref struct
-        where TMatrixColumn :  IVectorView<TNumber>, allows ref struct
+        where TMatrixView : Matrices.ISymmetricMatrixView<TNumber, TMatrixRow, TMatrixColumn, TUpperLower>, allows ref struct
+        where TMatrixRow : IVectorView<TNumber>, allows ref struct
+        where TMatrixColumn : IVectorView<TNumber>, allows ref struct
         where TUpperLower : Matrices.Traits.IUpperLower
-        where TVectorViewX :  IVectorView<TNumber>, allows ref struct
-        where TVectorViewY :  IVectorView<TNumber>, allows ref struct
+        where TVectorViewX : IVectorView<TNumber>, allows ref struct
+        where TVectorViewY : IVectorView<TNumber>, allows ref struct
     {
         var n = matrix.Rows;
 

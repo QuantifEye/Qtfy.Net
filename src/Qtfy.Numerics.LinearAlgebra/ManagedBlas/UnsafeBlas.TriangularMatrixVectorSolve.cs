@@ -1,10 +1,10 @@
+using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
+
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct UnsafeBlas
 {
-    public static void TriangularMatrixVectorSolve<TNumber>(
-        Uplo uplo,
-        Diag diag,
+    public static void TriangularMatrixVectorSolve<TNumber, TUpperLower, TDiagonal>(
         int n,
         ref TNumber matrix,
         int rowStride,
@@ -13,11 +13,15 @@ public partial struct UnsafeBlas
         int strideB,
         ref TNumber x,
         int strideX)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
+        where TUpperLower : IUpperLower
+        where TDiagonal : IDiagonal
     {
         DebugAssertNotZero(n);
 
-        if (uplo == Uplo.Upper)
+        var isUnit = TDiagonal.IsUnitDiagonal();
+
+        if (TUpperLower.IsUpper())
         {
             for (int i = n - 1; i >= 0; i--)
             {
@@ -43,7 +47,7 @@ public partial struct UnsafeBlas
                     }
                 }
 
-                if (diag == Diag.NonUnit)
+                if (!isUnit)
                 {
                     ref var aDiag = ref Add(ref matrix, (i * rowStride) + (i * colStride));
                     sum /= aDiag;
@@ -73,7 +77,7 @@ public partial struct UnsafeBlas
                     }
                 }
 
-                if (diag == Diag.NonUnit)
+                if (!isUnit)
                 {
                     ref var aDiag = ref Add(ref matrix, (i * rowStride) + (i * colStride));
                     sum /= aDiag;

@@ -13,7 +13,7 @@ public readonly ref struct StrideVectorView<TElement> : IVectorView<TElement>
         this.length = length;
     }
 
-    public int Length  => length;
+    public int Length => length;
 
     public int Stride
     {

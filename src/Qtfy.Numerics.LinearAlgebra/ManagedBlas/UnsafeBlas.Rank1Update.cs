@@ -13,7 +13,7 @@ public partial struct UnsafeBlas
         ref TNumber matrix,
         int rowStride,
         int colStride)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         DebugAssertNotZero(rows, columns);
 

@@ -1,19 +1,19 @@
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct Blas<TNumber>
-    where TNumber : INumberBase<TNumber>
+    where TNumber : INumber<TNumber>
 {
     public static void SymmetricRank2Update<TMatrixView, TMatrixRow, TMatrixColumn, TUpperLower, TVectorViewX, TVectorViewY>(
         TNumber alpha,
         TVectorViewX x,
         TVectorViewY y,
         TMatrixView matrix)
-        where TMatrixView :  Matrices.ISymmetricMatrixView<TNumber, TMatrixRow, TMatrixColumn, TUpperLower>, allows ref struct
-        where TMatrixRow :  IVectorView<TNumber>, allows ref struct
-        where TMatrixColumn :  IVectorView<TNumber>, allows ref struct
+        where TMatrixView : Matrices.ISymmetricMatrixView<TNumber, TMatrixRow, TMatrixColumn, TUpperLower>, allows ref struct
+        where TMatrixRow : IVectorView<TNumber>, allows ref struct
+        where TMatrixColumn : IVectorView<TNumber>, allows ref struct
         where TUpperLower : Matrices.Traits.IUpperLower
-        where TVectorViewX :  IVectorView<TNumber>, allows ref struct
-        where TVectorViewY :  IVectorView<TNumber>, allows ref struct
+        where TVectorViewX : IVectorView<TNumber>, allows ref struct
+        where TVectorViewY : IVectorView<TNumber>, allows ref struct
     {
         var n = matrix.Rows;
 

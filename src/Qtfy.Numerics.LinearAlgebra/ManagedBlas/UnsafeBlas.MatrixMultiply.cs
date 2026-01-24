@@ -17,37 +17,50 @@ public partial struct UnsafeBlas
         ref TNumber c,
         int rowStrideC,
         int colStrideC)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
-        DebugAssertNotZero(m, n, k);
-
-        for (int row = 0; row < m; row++)
+        if (m <= 0 || n <= 0 || k <= 0)
         {
-            ref var aRowRef = ref Add(ref a, row * rowStrideA);
-            ref var cRowRef = ref Add(ref c, row * rowStrideC);
+            return;
+        }
 
-            for (int col = 0; col < n; col++)
+        ref var aRowRef = ref a;
+        ref var cRowRef = ref c;
+        var rowsRemaining = m;
+
+        while (true)
+        {
+            ref var bColRef = ref b;
+            ref var cColRef = ref cRowRef;
+            var colsRemaining = n;
+
+            while (true)
             {
                 var sum = TNumber.Zero;
                 ref var aRef = ref aRowRef;
-                ref var bRef = ref Add(ref b, col * colStrideB);
+                ref var bRef = ref bColRef;
 
-                for (int inner = 0; inner < k; inner++)
+                var innerRemaining = k;
+                while (--innerRemaining != 0)
                 {
                     sum += aRef * bRef;
-
-                    if (inner + 1 == k)
-                    {
-                        break;
-                    }
-
                     aRef = ref Add(ref aRef, colStrideA);
                     bRef = ref Add(ref bRef, rowStrideB);
                 }
 
-                ref var cRef = ref Add(ref cRowRef, col * colStrideC);
-                cRef = (beta * cRef) + (alpha * sum);
+                sum += aRef * bRef;
+
+                cColRef = (beta * cColRef) + (alpha * sum);
+
+                if (--colsRemaining == 0) break;
+                bColRef = ref Add(ref bColRef, colStrideB);
+                cColRef = ref Add(ref cColRef, colStrideC);
             }
+
+            if (--rowsRemaining == 0) return;
+
+            aRowRef = ref Add(ref aRowRef, rowStrideA);
+            cRowRef = ref Add(ref cRowRef, rowStrideC);
         }
     }
 }

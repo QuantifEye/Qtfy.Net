@@ -1,10 +1,10 @@
+using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
+
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct UnsafeBlas
 {
-    public static void SymmetricMatrixMultiply<TNumber>(
-        Side side,
-        Uplo uplo,
+    public static void SymmetricMatrixMultiply<TNumber, TSide, TUpperLower>(
         int rows,
         int columns,
         TNumber alpha,
@@ -18,13 +18,15 @@ public partial struct UnsafeBlas
         ref TNumber c,
         int rowStrideC,
         int colStrideC)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
+        where TSide : ISide
+        where TUpperLower : IUpperLower
     {
         DebugAssertNotZero(rows, columns);
 
-        if (side == Side.Left)
+        if (TSide.IsLeft())
         {
-            if (uplo == Uplo.Upper)
+            if (TUpperLower.IsUpper())
             {
                 for (int i = 0; i < rows; i++)
                 {
@@ -127,7 +129,7 @@ public partial struct UnsafeBlas
         }
         else
         {
-            if (uplo == Uplo.Upper)
+            if (TUpperLower.IsUpper())
             {
                 for (int i = 0; i < rows; i++)
                 {

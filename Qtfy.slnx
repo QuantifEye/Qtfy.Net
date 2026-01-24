@@ -11,4 +11,8 @@
     <Project Path="test/Qtfy.Numerics.Tests.LinearAlgebra/Qtfy.Numerics.Tests.LinearAlgebra.csproj" />
   </Folder>
   <Folder Name="/samples/" />
+  <Folder Name="/samples/benchmarks/">
+    <Project Path="samples/benchmarks/IteratorBenchmarks/IteratorBenchmarks.csproj" />
+    <Project Path="samples/benchmarks/Qtfy.LoopBenchmarks/Qtfy.LoopBenchmarks.csproj" />
+  </Folder>
 </Solution>

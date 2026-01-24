@@ -13,7 +13,7 @@ public partial struct UnsafeBlas
         int strideX,
         ref TNumber y,
         int strideY)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
         where TUpperLower : IUpperLower
         where TDiagonal : IDiagonal
     {

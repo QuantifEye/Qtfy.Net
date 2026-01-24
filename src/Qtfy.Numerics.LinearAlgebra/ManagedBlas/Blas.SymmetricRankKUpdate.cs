@@ -1,19 +1,19 @@
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct Blas<TNumber>
-    where TNumber : INumberBase<TNumber>
+    where TNumber : INumber<TNumber>
 {
     public static void SymmetricRankKUpdate<TMatrixViewA, TMatrixRowA, TMatrixColumnA, TMatrixViewC, TMatrixRowC, TMatrixColumnC, TUpperLower>(
         TNumber alpha,
         TMatrixViewA a,
         TNumber beta,
         TMatrixViewC c)
-        where TMatrixViewA :  IStridedMatrixView<TNumber, TMatrixRowA, TMatrixColumnA>, allows ref struct
-        where TMatrixRowA :  IVectorView<TNumber>, allows ref struct
-        where TMatrixColumnA :  IVectorView<TNumber>, allows ref struct
-        where TMatrixViewC :  Matrices.ISymmetricMatrixView<TNumber, TMatrixRowC, TMatrixColumnC, TUpperLower>, allows ref struct
-        where TMatrixRowC :  IVectorView<TNumber>, allows ref struct
-        where TMatrixColumnC :  IVectorView<TNumber>, allows ref struct
+        where TMatrixViewA : IStridedMatrixView<TNumber, TMatrixRowA, TMatrixColumnA>, allows ref struct
+        where TMatrixRowA : IVectorView<TNumber>, allows ref struct
+        where TMatrixColumnA : IVectorView<TNumber>, allows ref struct
+        where TMatrixViewC : Matrices.ISymmetricMatrixView<TNumber, TMatrixRowC, TMatrixColumnC, TUpperLower>, allows ref struct
+        where TMatrixRowC : IVectorView<TNumber>, allows ref struct
+        where TMatrixColumnC : IVectorView<TNumber>, allows ref struct
         where TUpperLower : Matrices.Traits.IUpperLower
     {
         var n = c.Rows;

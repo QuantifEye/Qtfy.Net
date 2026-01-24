@@ -1,11 +1,10 @@
+using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
+
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct UnsafeBlas
 {
-    public static void TriangularMatrixSolve<TNumber>(
-        Side side,
-        Uplo uplo,
-        Diag diag,
+    public static void TriangularMatrixSolve<TNumber, TSide, TUpperLower, TDiagonal>(
         int rows,
         int columns,
         TNumber alpha,
@@ -15,13 +14,18 @@ public partial struct UnsafeBlas
         ref TNumber b,
         int rowStrideB,
         int colStrideB)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
+        where TSide : ISide
+        where TUpperLower : IUpperLower
+        where TDiagonal : IDiagonal
     {
         DebugAssertNotZero(rows, columns);
 
-        if (side == Side.Left)
+        var isUnit = TDiagonal.IsUnitDiagonal();
+
+        if (TSide.IsLeft())
         {
-            if (uplo == Uplo.Upper)
+            if (TUpperLower.IsUpper())
             {
                 for (int j = 0; j < columns; j++)
                 {
@@ -49,7 +53,7 @@ public partial struct UnsafeBlas
                             }
                         }
 
-                        if (diag == Diag.NonUnit)
+                        if (!isUnit)
                         {
                             ref var aDiag = ref Add(ref matrix, (i * rowStrideA) + (i * colStrideA));
                             sum /= aDiag;
@@ -87,7 +91,7 @@ public partial struct UnsafeBlas
                             }
                         }
 
-                        if (diag == Diag.NonUnit)
+                        if (!isUnit)
                         {
                             ref var aDiag = ref Add(ref matrix, (i * rowStrideA) + (i * colStrideA));
                             sum /= aDiag;
@@ -100,7 +104,7 @@ public partial struct UnsafeBlas
         }
         else
         {
-            if (uplo == Uplo.Upper)
+            if (TUpperLower.IsUpper())
             {
                 for (int i = 0; i < rows; i++)
                 {
@@ -130,7 +134,7 @@ public partial struct UnsafeBlas
                             }
                         }
 
-                        if (diag == Diag.NonUnit)
+                        if (!isUnit)
                         {
                             ref var aDiag = ref Add(ref matrix, (j * rowStrideA) + (j * colStrideA));
                             sum /= aDiag;
@@ -170,7 +174,7 @@ public partial struct UnsafeBlas
                             }
                         }
 
-                        if (diag == Diag.NonUnit)
+                        if (!isUnit)
                         {
                             ref var aDiag = ref Add(ref matrix, (j * rowStrideA) + (j * colStrideA));
                             sum /= aDiag;

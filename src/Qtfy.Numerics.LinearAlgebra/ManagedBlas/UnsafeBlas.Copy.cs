@@ -3,7 +3,7 @@ namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 public partial struct UnsafeBlas
 {
     public static void Copy<TNumber>(int n, ref TNumber x, int strideX, ref TNumber y, int strideY)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {
@@ -12,21 +12,20 @@ public partial struct UnsafeBlas
 
         ref var xRef = ref x;
         ref var yRef = ref y;
-        while (true)
-        {
-            yRef = xRef;
-            if (--n == 0)
-            {
-                break;
-            }
 
+        yRef = xRef;
+
+        while (--n != 0)
+        {
             xRef = ref Add(ref xRef, strideX);
             yRef = ref Add(ref yRef, strideY);
+
+            yRef = xRef;
         }
     }
 
     public static void Copy<TNumber>(int n, ref TNumber x, int strideX, ref TNumber y)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {
@@ -35,21 +34,20 @@ public partial struct UnsafeBlas
 
         ref var xRef = ref x;
         ref var yRef = ref y;
-        while (true)
-        {
-            yRef = xRef;
-            if (--n == 0)
-            {
-                break;
-            }
 
+        yRef = xRef;
+
+        while (--n != 0)
+        {
             xRef = ref Add(ref xRef, strideX);
             yRef = ref Add(ref yRef, 1);
+
+            yRef = xRef;
         }
     }
 
     public static void Copy<TNumber>(int n, ref TNumber x, ref TNumber y)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {
@@ -58,16 +56,15 @@ public partial struct UnsafeBlas
 
         ref var xRef = ref x;
         ref var yRef = ref y;
-        while (true)
-        {
-            yRef = xRef;
-            if (--n == 0)
-            {
-                break;
-            }
 
+        yRef = xRef;
+
+        while (--n != 0)
+        {
             xRef = ref Add(ref xRef, 1);
             yRef = ref Add(ref yRef, 1);
+
+            yRef = xRef;
         }
     }
 }

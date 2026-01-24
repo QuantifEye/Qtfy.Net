@@ -11,22 +11,20 @@ public partial struct UnsafeBlas
         }
 
         ref var xRef = ref x;
-        var maxAbs = TNumber.Abs(xRef);
-        var maxIndex = 0;
-        var index = 0;
-        while (true)
-        {
-            if (--n == 0)
-            {
-                break;
-            }
 
+        var abs = TNumber.Abs(xRef);
+        var maxAbs = abs;
+        var maxIndex = 0;
+
+        var index = 0;
+        while (++index != n)
+        {
             xRef = ref Add(ref xRef, strideX);
-            ++index;
-            var absx = TNumber.Abs(xRef);
-            if (absx > maxAbs)
+
+            abs = TNumber.Abs(xRef);
+            if (abs > maxAbs)
             {
-                maxAbs = absx;
+                maxAbs = abs;
                 maxIndex = index;
             }
         }
@@ -43,22 +41,20 @@ public partial struct UnsafeBlas
         }
 
         ref var xRef = ref x;
-        var maxAbs = TNumber.Abs(xRef);
+
+        var abs = TNumber.Abs(xRef);
+        var maxAbs = abs;
         var maxIndex = 0;
         var index = 0;
-        while (true)
-        {
-            if (--n == 0)
-            {
-                break;
-            }
 
+        while (++index != n)
+        {
             xRef = ref Add(ref xRef, 1);
-            ++index;
-            var absx = TNumber.Abs(xRef);
-            if (absx > maxAbs)
+
+            abs = TNumber.Abs(xRef);
+            if (abs > maxAbs)
             {
-                maxAbs = absx;
+                maxAbs = abs;
                 maxIndex = index;
             }
         }

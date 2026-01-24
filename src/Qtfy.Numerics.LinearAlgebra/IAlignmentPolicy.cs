@@ -4,7 +4,7 @@ namespace Qtfy.Numerics.LinearAlgebra;
 
 
 public interface IAlignmentPolicy<TAlignment>
-    where TAlignment :  IAlignmentPolicy<TAlignment>
+    where TAlignment : IAlignmentPolicy<TAlignment>
 {
     public static abstract nuint ByteAlignment();
 

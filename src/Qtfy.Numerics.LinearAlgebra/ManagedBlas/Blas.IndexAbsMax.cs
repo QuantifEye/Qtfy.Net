@@ -4,7 +4,7 @@ public partial struct Blas<TNumber>
     where TNumber : INumber<TNumber>
 {
     public static int IndexAbsMax<TVectorViewX>(TVectorViewX x)
-        where TVectorViewX :  IVectorView<TNumber>, allows ref struct
+        where TVectorViewX : IVectorView<TNumber>, allows ref struct
     {
         var n = x.Length;
 

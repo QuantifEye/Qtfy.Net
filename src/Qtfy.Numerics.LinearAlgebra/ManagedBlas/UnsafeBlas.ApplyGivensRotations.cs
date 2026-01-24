@@ -10,7 +10,7 @@ public partial struct UnsafeBlas
         int strideY,
         TNumber c,
         TNumber s)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {
@@ -19,21 +19,21 @@ public partial struct UnsafeBlas
 
         ref var xRef = ref x;
         ref var yRef = ref y;
-        while (true)
+
+        var xValue = xRef;
+        var yValue = yRef;
+        yRef = (c * yValue) - (s * xValue);
+        xRef = (c * xValue) + (s * yValue);
+
+        while (--n != 0)
         {
-            var xValue = xRef;
-            var yValue = yRef;
-            var temp = (c * xValue) + (s * yValue);
-            yRef = (c * yValue) - (s * xValue);
-            xRef = temp;
-
-            if (--n == 0)
-            {
-                break;
-            }
-
             xRef = ref Add(ref xRef, strideX);
             yRef = ref Add(ref yRef, strideY);
+
+            xValue = xRef;
+            yValue = yRef;
+            yRef = (c * yValue) - (s * xValue);
+            xRef = (c * xValue) + (s * yValue);
         }
     }
 
@@ -44,7 +44,7 @@ public partial struct UnsafeBlas
         ref TNumber y,
         TNumber c,
         TNumber s)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {
@@ -53,21 +53,21 @@ public partial struct UnsafeBlas
 
         ref var xRef = ref x;
         ref var yRef = ref y;
-        while (true)
+
+        var xValue = xRef;
+        var yValue = yRef;
+        yRef = (c * yValue) - (s * xValue);
+        xRef = (c * xValue) + (s * yValue);
+
+        while (--n != 0)
         {
-            var xValue = xRef;
-            var yValue = yRef;
-            var temp = (c * xValue) + (s * yValue);
-            yRef = (c * yValue) - (s * xValue);
-            xRef = temp;
-
-            if (--n == 0)
-            {
-                break;
-            }
-
             xRef = ref Add(ref xRef, strideX);
             yRef = ref Add(ref yRef, 1);
+
+            xValue = xRef;
+            yValue = yRef;
+            yRef = (c * yValue) - (s * xValue);
+            xRef = (c * xValue) + (s * yValue);
         }
     }
 
@@ -77,7 +77,7 @@ public partial struct UnsafeBlas
         ref TNumber y,
         TNumber c,
         TNumber s)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {
@@ -86,21 +86,21 @@ public partial struct UnsafeBlas
 
         ref var xRef = ref x;
         ref var yRef = ref y;
-        while (true)
+
+        var xValue = xRef;
+        var yValue = yRef;
+        yRef = (c * yValue) - (s * xValue);
+        xRef = (c * xValue) + (s * yValue);
+
+        while (--n != 0)
         {
-            var xValue = xRef;
-            var yValue = yRef;
-            var temp = (c * xValue) + (s * yValue);
-            yRef = (c * yValue) - (s * xValue);
-            xRef = temp;
-
-            if (--n == 0)
-            {
-                break;
-            }
-
             xRef = ref Add(ref xRef, 1);
             yRef = ref Add(ref yRef, 1);
+
+            xValue = xRef;
+            yValue = yRef;
+            yRef = (c * yValue) - (s * xValue);
+            xRef = (c * xValue) + (s * yValue);
         }
     }
 }

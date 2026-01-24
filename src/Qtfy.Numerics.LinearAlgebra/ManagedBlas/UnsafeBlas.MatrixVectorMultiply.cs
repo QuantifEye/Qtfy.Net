@@ -14,7 +14,7 @@ public partial struct UnsafeBlas
         TNumber beta,
         ref TNumber y,
         int strideY)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         DebugAssertNotZero(rows, columns);
 

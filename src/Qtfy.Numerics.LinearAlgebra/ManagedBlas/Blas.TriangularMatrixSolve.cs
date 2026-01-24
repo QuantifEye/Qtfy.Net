@@ -1,18 +1,18 @@
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct Blas<TNumber>
-    where TNumber : INumberBase<TNumber>
+    where TNumber : INumber<TNumber>
 {
     public static void TriangularMatrixSolve<TMatrixViewA, TMatrixRowA, TMatrixColumnA, TMatrixViewB, TMatrixRowB, TMatrixColumnB, TSide, TUpperLower, TDiagonal>(
         TNumber alpha,
         TMatrixViewA matrix,
         TMatrixViewB b)
-        where TMatrixViewA :  Matrices.ITriangularMatrixView<TNumber, TMatrixRowA, TMatrixColumnA, TUpperLower, TDiagonal>, allows ref struct
-        where TMatrixRowA :  IVectorView<TNumber>, allows ref struct
-        where TMatrixColumnA :  IVectorView<TNumber>, allows ref struct
-        where TMatrixViewB :  IStridedMatrixView<TNumber, TMatrixRowB, TMatrixColumnB>, allows ref struct
-        where TMatrixRowB :  IVectorView<TNumber>, allows ref struct
-        where TMatrixColumnB :  IVectorView<TNumber>, allows ref struct
+        where TMatrixViewA : Matrices.ITriangularMatrixView<TNumber, TMatrixRowA, TMatrixColumnA, TUpperLower, TDiagonal>, allows ref struct
+        where TMatrixRowA : IVectorView<TNumber>, allows ref struct
+        where TMatrixColumnA : IVectorView<TNumber>, allows ref struct
+        where TMatrixViewB : IStridedMatrixView<TNumber, TMatrixRowB, TMatrixColumnB>, allows ref struct
+        where TMatrixRowB : IVectorView<TNumber>, allows ref struct
+        where TMatrixColumnB : IVectorView<TNumber>, allows ref struct
         where TSide : Matrices.Traits.ISide
         where TUpperLower : Matrices.Traits.IUpperLower
         where TDiagonal : Matrices.Traits.IDiagonal

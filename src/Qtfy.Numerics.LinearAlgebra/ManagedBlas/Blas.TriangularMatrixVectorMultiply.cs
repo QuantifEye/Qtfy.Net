@@ -1,7 +1,7 @@
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct Blas<TNumber>
-    where TNumber : INumberBase<TNumber>
+    where TNumber : INumber<TNumber>
 {
     public static void TriangularMatrixVectorMultiply<TMatrixView, TMatrixRow, TMatrixColumn, TUpperLower, TDiagonal, TVectorViewX, TVectorViewY>(
         TMatrixView matrix,

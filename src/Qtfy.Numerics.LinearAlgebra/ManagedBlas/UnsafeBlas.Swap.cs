@@ -8,7 +8,7 @@ public partial struct UnsafeBlas
         int strideX,
         ref TNumber y,
         int strideY)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {
@@ -39,7 +39,7 @@ public partial struct UnsafeBlas
         ref TNumber x,
         int strideX,
         ref TNumber y)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {
@@ -69,7 +69,7 @@ public partial struct UnsafeBlas
         int n,
         ref TNumber x,
         ref TNumber y)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {

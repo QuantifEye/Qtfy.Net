@@ -1,7 +1,7 @@
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct Blas<TNumber>
-    where TNumber : INumberBase<TNumber>
+    where TNumber : INumber<TNumber>
 {
     public static void SymmetricRank2KUpdate<TMatrixViewA, TMatrixRowA, TMatrixColumnA, TMatrixViewB, TMatrixRowB, TMatrixColumnB, TMatrixViewC, TMatrixRowC, TMatrixColumnC, TUpperLower>(
         TNumber alpha,
@@ -9,15 +9,15 @@ public partial struct Blas<TNumber>
         TMatrixViewB b,
         TNumber beta,
         TMatrixViewC c)
-        where TMatrixViewA :  IStridedMatrixView<TNumber, TMatrixRowA, TMatrixColumnA>, allows ref struct
-        where TMatrixRowA :  IVectorView<TNumber>, allows ref struct
-        where TMatrixColumnA :  IVectorView<TNumber>, allows ref struct
-        where TMatrixViewB :  IStridedMatrixView<TNumber, TMatrixRowB, TMatrixColumnB>, allows ref struct
-        where TMatrixRowB :  IVectorView<TNumber>, allows ref struct
-        where TMatrixColumnB :  IVectorView<TNumber>, allows ref struct
-        where TMatrixViewC :  Matrices.ISymmetricMatrixView<TNumber, TMatrixRowC, TMatrixColumnC, TUpperLower>, allows ref struct
-        where TMatrixRowC :  IVectorView<TNumber>, allows ref struct
-        where TMatrixColumnC :  IVectorView<TNumber>, allows ref struct
+        where TMatrixViewA : IStridedMatrixView<TNumber, TMatrixRowA, TMatrixColumnA>, allows ref struct
+        where TMatrixRowA : IVectorView<TNumber>, allows ref struct
+        where TMatrixColumnA : IVectorView<TNumber>, allows ref struct
+        where TMatrixViewB : IStridedMatrixView<TNumber, TMatrixRowB, TMatrixColumnB>, allows ref struct
+        where TMatrixRowB : IVectorView<TNumber>, allows ref struct
+        where TMatrixColumnB : IVectorView<TNumber>, allows ref struct
+        where TMatrixViewC : Matrices.ISymmetricMatrixView<TNumber, TMatrixRowC, TMatrixColumnC, TUpperLower>, allows ref struct
+        where TMatrixRowC : IVectorView<TNumber>, allows ref struct
+        where TMatrixColumnC : IVectorView<TNumber>, allows ref struct
         where TUpperLower : Matrices.Traits.IUpperLower
     {
         var n = c.Rows;

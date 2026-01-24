@@ -1,9 +1,10 @@
+using Qtfy.Numerics.LinearAlgebra.Matrices.Traits;
+
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct UnsafeBlas
 {
-    public static void SymmetricRank1Update<TNumber>(
-        Uplo uplo,
+    public static void SymmetricRank1Update<TNumber, TUpperLower>(
         int n,
         TNumber alpha,
         ref TNumber x,
@@ -11,11 +12,12 @@ public partial struct UnsafeBlas
         ref TNumber matrix,
         int rowStride,
         int colStride)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
+        where TUpperLower : IUpperLower
     {
         DebugAssertNotZero(n);
 
-        if (uplo == Uplo.Upper)
+        if (TUpperLower.IsUpper())
         {
             ref var xIRef = ref x;
             for (int i = 0; i < n; i++)

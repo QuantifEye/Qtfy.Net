@@ -15,7 +15,7 @@ public partial struct UnsafeBlas
         TNumber beta,
         ref TNumber y,
         int strideY)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
         where TUpperLower : IUpperLower
     {
         if (n <= 0)
@@ -94,7 +94,7 @@ public partial struct UnsafeBlas
                     {
                         break;
                     }
-                }    }
+                } }
 
             yIRef += alpha * aDiagRef * xIRef;
         }
@@ -159,7 +159,7 @@ public partial struct UnsafeBlas
                     {
                         break;
                     }
-                }         {
+                } {
                     var xVal = xIRef;
                     ref var aRef = ref rowRef;
                     ref var xJRef = ref x;

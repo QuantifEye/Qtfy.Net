@@ -8,7 +8,7 @@ public partial struct UnsafeBlas
         int strideX,
         ref TNumber y,
         int strideY)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {
@@ -17,48 +17,15 @@ public partial struct UnsafeBlas
 
         ref var xRef = ref x;
         ref var yRef = ref y;
-        var total = TNumber.Zero;
-        while (true)
-        {
-            total += xRef * yRef;
-            if (--n == 0)
-            {
-                break;
-            }
 
+        var total = xRef * yRef;
+
+        while (--n != 0)
+        {
             xRef = ref Add(ref xRef, strideX);
             yRef = ref Add(ref yRef, strideY);
-        }
 
-        return total;
-    }
-
-    public static TNumber DotAlternative<TNumber>(
-        int n,
-        ref TNumber x,
-        int strideX,
-        ref TNumber y,
-        int strideY)
-        where TNumber : INumberBase<TNumber>
-    {
-        if (n <= 0)
-        {
-            return TNumber.Zero;
-        }
-
-        ref var xRef = ref x;
-        ref var yRef = ref y;
-        var total = TNumber.Zero;
-        while (true)
-        {
             total += xRef * yRef;
-            if (--n == 0)
-            {
-                break;
-            }
-
-            xRef = ref Add(ref xRef, strideX);
-            yRef = ref Add(ref yRef, strideY);
         }
 
         return total;
@@ -69,7 +36,7 @@ public partial struct UnsafeBlas
         ref TNumber x,
         int strideX,
         ref TNumber y)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {
@@ -78,17 +45,15 @@ public partial struct UnsafeBlas
 
         ref var xRef = ref x;
         ref var yRef = ref y;
-        var total = TNumber.Zero;
-        while (true)
-        {
-            total += xRef * yRef;
-            if (--n == 0)
-            {
-                break;
-            }
 
+        var total = xRef * yRef;
+
+        while (--n != 0)
+        {
             xRef = ref Add(ref xRef, strideX);
             yRef = ref Add(ref yRef, 1);
+
+            total += xRef * yRef;
         }
 
         return total;
@@ -98,7 +63,7 @@ public partial struct UnsafeBlas
         int n,
         ref TNumber x,
         ref TNumber y)
-        where TNumber : INumberBase<TNumber>
+        where TNumber : INumber<TNumber>
     {
         if (n <= 0)
         {
@@ -107,17 +72,15 @@ public partial struct UnsafeBlas
 
         ref var xRef = ref x;
         ref var yRef = ref y;
-        var total = TNumber.Zero;
-        while (true)
-        {
-            total += xRef * yRef;
-            if (--n == 0)
-            {
-                break;
-            }
 
+        var total = xRef * yRef;
+
+        while (--n != 0)
+        {
             xRef = ref Add(ref xRef, 1);
             yRef = ref Add(ref yRef, 1);
+
+            total += xRef * yRef;
         }
 
         return total;

@@ -1,19 +1,19 @@
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct Blas<TNumber>
-    where TNumber : INumberBase<TNumber>
+    where TNumber : INumber<TNumber>
 {
     public static void TriangularMatrixVectorSolve<TMatrixView, TMatrixRow, TMatrixColumn, TUpperLower, TDiagonal, TVectorViewB, TVectorViewX>(
         TMatrixView matrix,
         TVectorViewB b,
         TVectorViewX x)
-        where TMatrixView :  Matrices.ITriangularMatrixView<TNumber, TMatrixRow, TMatrixColumn, TUpperLower, TDiagonal>, allows ref struct
-        where TMatrixRow :  IVectorView<TNumber>, allows ref struct
-        where TMatrixColumn :  IVectorView<TNumber>, allows ref struct
+        where TMatrixView : Matrices.ITriangularMatrixView<TNumber, TMatrixRow, TMatrixColumn, TUpperLower, TDiagonal>, allows ref struct
+        where TMatrixRow : IVectorView<TNumber>, allows ref struct
+        where TMatrixColumn : IVectorView<TNumber>, allows ref struct
         where TUpperLower : Matrices.Traits.IUpperLower
         where TDiagonal : Matrices.Traits.IDiagonal
-        where TVectorViewB :  IVectorView<TNumber>, allows ref struct
-        where TVectorViewX :  IVectorView<TNumber>, allows ref struct
+        where TVectorViewB : IVectorView<TNumber>, allows ref struct
+        where TVectorViewX : IVectorView<TNumber>, allows ref struct
     {
         var n = matrix.Rows;
 

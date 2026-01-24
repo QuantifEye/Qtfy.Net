@@ -5,8 +5,8 @@ public partial struct Blas<TNumber>
 {
     public static void ApplyGivensRotation<TVectorViewX, TVectorViewY>(
         TVectorViewX x, TVectorViewY y, TNumber c, TNumber s)
-        where TVectorViewX :  IVectorView<TNumber>, allows ref struct
-        where TVectorViewY :  IVectorView<TNumber>, allows ref struct
+        where TVectorViewX : IVectorView<TNumber>, allows ref struct
+        where TVectorViewY : IVectorView<TNumber>, allows ref struct
     {
         Debug.Assert(x.Length == y.Length, "x and y must have the same length.");
 

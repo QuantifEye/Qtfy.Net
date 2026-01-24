@@ -1,18 +1,18 @@
 namespace Qtfy.Numerics.LinearAlgebra.ManagedBlas;
 
 public partial struct Blas<TNumber>
-    where TNumber : INumberBase<TNumber>
+    where TNumber : INumber<TNumber>
 {
     public static void Rank1Update<TMatrixView, TMatrixRow, TMatrixColumn, TVectorViewX, TVectorViewY>(
         TNumber alpha,
         TVectorViewX x,
         TVectorViewY y,
         TMatrixView matrix)
-        where TMatrixView :  IStridedMatrixView<TNumber, TMatrixRow, TMatrixColumn>, allows ref struct
-        where TMatrixRow :  IVectorView<TNumber>, allows ref struct
-        where TMatrixColumn :  IVectorView<TNumber>, allows ref struct
-        where TVectorViewX :  IVectorView<TNumber>, allows ref struct
-        where TVectorViewY :  IVectorView<TNumber>, allows ref struct
+        where TMatrixView : IStridedMatrixView<TNumber, TMatrixRow, TMatrixColumn>, allows ref struct
+        where TMatrixRow : IVectorView<TNumber>, allows ref struct
+        where TMatrixColumn : IVectorView<TNumber>, allows ref struct
+        where TVectorViewX : IVectorView<TNumber>, allows ref struct
+        where TVectorViewY : IVectorView<TNumber>, allows ref struct
     {
         var rows = matrix.Rows;
         var columns = matrix.Columns;
